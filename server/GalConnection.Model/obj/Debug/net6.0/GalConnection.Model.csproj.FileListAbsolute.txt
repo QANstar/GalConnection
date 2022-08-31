@@ -1,0 +1,12 @@
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\bin\Debug\net6.0\GalConnection.Model.deps.json
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\bin\Debug\net6.0\GalConnection.Model.dll
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\bin\Debug\net6.0\GalConnection.Model.pdb
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.csproj.AssemblyReference.cache
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.AssemblyInfoInputs.cache
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.AssemblyInfo.cs
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.csproj.CoreCompileInputs.cache
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.dll
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\refint\GalConnection.Model.dll
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\GalConnection.Model.pdb
+D:\QAN_Program\Web\Project\GalConnection\server\GalConnection.Model\obj\Debug\net6.0\ref\GalConnection.Model.dll

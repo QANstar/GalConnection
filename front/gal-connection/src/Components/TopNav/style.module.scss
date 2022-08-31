@@ -1,0 +1,17 @@
+.topNav {
+  height: 100%;
+  box-shadow: 0 2px 8px #f0f1f2;
+  background-color: rgba($color: #fff, $alpha: 0.8);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.right {
+  margin-right: 20px;
+}
+
+.avatar {
+  cursor: pointer;
+}
