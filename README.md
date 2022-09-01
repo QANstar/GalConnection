@@ -45,12 +45,13 @@
 
 ### 游戏(Galgame)
 
-| 属性   | 解释     | 类型   |
-| ------ | -------- | ------ |
-| id     | 游戏id   | string |
-| userId | 所有者id | string |
-| homeBg | 首页背景 | string |
-| cover  | 封面     | string |
+| 属性   | 解释     | 类型     |
+| ------ | -------- | -------- |
+| id     | 游戏id   | string   |
+| userId | 所有者id | string   |
+| homeBg | 首页背景 | string   |
+| cover  | 封面     | string   |
+| tag    | 标签     | string[] |
 
 ### 台词(Lines)
 
@@ -95,3 +96,15 @@
 | OPTION   | 选项     |
 | NEXT     | 下一事件 |
 | END      | 游戏结束 |
+
+## 社区
+
+### 用户(User)
+
+| 属性     | 解释   | 类型   |
+| -------- | ------ | ------ |
+| id       | 用户id | string |
+| email    | 邮箱   | string |
+| password | 密码   | string |
+| nickname | 名称   | string |
+| avatar   | 头像   | string |

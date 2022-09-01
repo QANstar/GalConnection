@@ -1,10 +1,13 @@
 import { action, makeAutoObservable } from 'mobx'
 import { IUser } from '../types/type'
 class User implements IUser {
-  token: string = ''
+  token: string = JSON.parse(localStorage.getItem('user') || '').token
   nickname: string = ''
   avatar: string = ''
   email: string = ''
+  createdAt: number = 0
+  introduce: string = ''
+  banner: string = ''
 
   constructor () {
     makeAutoObservable(this)
@@ -16,10 +19,12 @@ class User implements IUser {
   }
 
   @action setUser (data: IUser) {
-    this.token = data.token
     this.nickname = data.nickname
     this.email = data.email
     this.avatar = data.avatar
+    this.createdAt = data.createdAt
+    this.introduce = data.introduce
+    this.banner = data.banner
     this.saveLocation()
   }
 
@@ -28,6 +33,9 @@ class User implements IUser {
     this.nickname = ''
     this.email = ''
     this.avatar = ''
+    this.createdAt = 0
+    this.introduce = ''
+    this.banner = ''
     this.saveLocation()
   }
 

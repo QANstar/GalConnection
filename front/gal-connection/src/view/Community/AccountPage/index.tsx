@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Login from './Login'
-import Signin from './Signin'
+import Signin from './Signup'
 import style from './style.module.scss'
 
 interface IAccountPageProps {
-  type: 'login' | 'signin'
+  type: 'login' | 'signup'
 }
 
 function AccountPage (props: IAccountPageProps) {

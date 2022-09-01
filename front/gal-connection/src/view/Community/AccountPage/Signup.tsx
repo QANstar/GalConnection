@@ -1,16 +1,30 @@
-import { Button, Form, Input } from 'antd'
-import React from 'react'
+import { Button, Form, Input, message } from 'antd'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import useUser from '../../../Hooks/useUser'
+import { IRegister } from '../../../types/type'
 import style from './style.module.scss'
 
-function Signin () {
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+interface ISignupData extends IRegister {
+  repassword: string
+}
+
+function Signup () {
+  const { signup, error, loading } = useUser()
+  const onFinish = (values: ISignupData) => {
+    if (values.password !== values.repassword) {
+      message.error('两次输入密码不相同')
+    } else {
+      signup(values)
+    }
   }
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
+  useEffect(() => {
+    if (error !== '') {
+      message.error(error)
+    }
+  }, [error])
+
   return (
     <div className={style.card}>
       <div className={style.title}>注册</div>
@@ -21,7 +35,6 @@ function Signin () {
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         layout="vertical"
       >
@@ -55,7 +68,12 @@ function Signin () {
         </Form.Item>
         <Form.Item>
           <div className={style.btn_wapper}>
-            <Button shape="round" type="primary" htmlType="submit">
+            <Button
+              loading={loading}
+              shape="round"
+              type="primary"
+              htmlType="submit"
+            >
               注册
             </Button>
           </div>
@@ -65,4 +83,4 @@ function Signin () {
   )
 }
 
-export default Signin
+export default Signup

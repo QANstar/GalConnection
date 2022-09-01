@@ -22,7 +22,14 @@ namespace GalConnection.Entity
         [StringLength(50)]
         public string nickname { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(1000)]
         public string avatar { get; set; }
+        [Required]
+        [StringLength(300)]
+        public string introduce { get; set; }
+        [Required]
+        [StringLength(1000)]
+        public string banner { get; set; }
+        public long createdAt { get; set; }
     }
 }

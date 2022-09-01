@@ -18,5 +18,8 @@ namespace GalConnection.Model
         [StringLength(30)]
         public string email { get; set; }
         public string avatar { get; set; }
+        public string banner { get; set; }
+        public string introduce { get; set; }
+        public long createdAt { get; set; }
     }
 }

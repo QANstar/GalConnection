@@ -1,27 +1,32 @@
-import { Button, Form, Input } from 'antd'
-import React from 'react'
+import { Button, Form, Input, message } from 'antd'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import useUser from '../../../Hooks/useUser'
+import { ILogin } from '../../../types/type'
 import style from './style.module.scss'
 
 function Login () {
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+  const { login, error, loading } = useUser()
+  const onFinish = (values: ILogin) => {
+    login(values)
   }
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
+  useEffect(() => {
+    if (error !== '') {
+      message.error(error)
+    }
+  }, [error])
+
   return (
     <div className={style.card}>
       <div className={style.title}>登录</div>
       <div className={style.tip}>
-        未拥有账号？<Link to="/signin">注册</Link>
+        未拥有账号？<Link to="/signup">注册</Link>
       </div>
       <Form
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         layout="vertical"
       >
@@ -41,7 +46,12 @@ function Login () {
         </Form.Item>
         <Form.Item>
           <div className={style.btn_wapper}>
-            <Button shape="round" type="primary" htmlType="submit">
+            <Button
+              loading={loading}
+              shape="round"
+              type="primary"
+              htmlType="submit"
+            >
               登录
             </Button>
           </div>

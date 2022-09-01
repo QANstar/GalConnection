@@ -12,7 +12,7 @@ using System.Text;
 namespace GalConnection.Server.Controllers.User
 {
     [ApiController]
-    [Route("api/User/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
         GalConnectionContext Context;
@@ -83,21 +83,40 @@ namespace GalConnection.Server.Controllers.User
             }
             else
             {
-                return BadRequest();
+                return BadRequest("账号或密码错误");
             }
         }
         /// <summary>
-        /// 显示用户信息
+        /// 显示本人用户信息
         /// </summary>
         /// <returns></returns>
         [EnableCors("any")]
         [Authorize]
         [HttpGet]
-        public IActionResult showUserInfo()
+        public IActionResult getSelfInfo()
         {
             var auth = HttpContext.AuthenticateAsync();
             int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
+            if (user != null)
+            {
+                return Ok(Utils.ChangeModel.userToShowModel(user));
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// 显示用户信息
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        public IActionResult getUserInfo(string nickname)
+        {
+            Entity.User user = Context.User.FirstOrDefault(x => x.nickname == nickname);
             if (user != null)
             {
                 return Ok(Utils.ChangeModel.userToShowModel(user));
