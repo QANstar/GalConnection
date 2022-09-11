@@ -1,12 +1,22 @@
-import { Avatar, Dropdown, Menu } from 'antd'
+import { AlignLeftOutlined } from '@ant-design/icons'
+import { Avatar, Drawer, Dropdown, Menu } from 'antd'
 import { Observer } from 'mobx-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useUser from '../../Hooks/useUser'
 import style from './style.module.scss'
 
 function TopNav () {
   const { user, logout } = useUser()
+  const [drawervisible, setDrawerVisible] = useState(false)
+
+  const showDrawer = () => {
+    setDrawerVisible(true)
+  }
+
+  const onClose = () => {
+    setDrawerVisible(false)
+  }
   const menu = (
     <Menu
       items={
@@ -38,12 +48,27 @@ function TopNav () {
     <Observer>
       {() => (
         <header className={style.topNav}>
-          <div></div>
+          <div className={style.left}>
+            <AlignLeftOutlined
+              onClick={showDrawer}
+              className={style.menu_btn}
+            />
+            <Link to="/" className={style.title}>
+              GalConnection
+            </Link>
+          </div>
           <div className={style.right}>
             <Dropdown overlay={menu}>
               <Avatar className={style.avatar} src={user.avatar} size={40} />
             </Dropdown>
           </div>
+          <Drawer
+            width="300px"
+            title={<div className={style.title}>GalConnection</div>}
+            placement="left"
+            onClose={onClose}
+            visible={drawervisible}
+          ></Drawer>
         </header>
       )}
     </Observer>

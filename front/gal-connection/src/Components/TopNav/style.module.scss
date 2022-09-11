@@ -1,3 +1,4 @@
+@import '../../assets/styles/color.scss';
 .topNav {
   height: 100%;
   box-shadow: 0 2px 8px #f0f1f2;
@@ -8,10 +9,34 @@
   justify-content: space-between;
 }
 
+.left {
+  display: flex;
+  align-items: center;
+}
+
 .right {
   margin-right: 20px;
 }
 
 .avatar {
   cursor: pointer;
+}
+
+.title {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 21px;
+  line-height: 21px;
+  color: $theme;
+  a {
+    &:hover {
+      color: $theme_hover;
+    }
+  }
+}
+
+.menu_btn {
+  cursor: pointer;
+  margin: 0 20px;
+  font-size: 21px;
 }

@@ -26,7 +26,7 @@ request.interceptors.response.use(
       switch (response.status) {
         case 401:
           // 返回 401 清除token信息并跳转到登录页面
-          store.user.init()
+          // store.user.init()
           console.log(window.location.href)
 
           if (!window.location.href.includes('login')) {

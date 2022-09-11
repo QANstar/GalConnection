@@ -1,7 +1,10 @@
 import { action, makeAutoObservable } from 'mobx'
 import { IUser } from '../types/type'
 class User implements IUser {
-  token: string = JSON.parse(localStorage.getItem('user') || '').token
+  token: string = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user') || '{}').token
+    : ''
+
   nickname: string = ''
   avatar: string = ''
   email: string = ''

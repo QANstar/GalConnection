@@ -1,4 +1,4 @@
-import { Avatar } from 'antd'
+import { Avatar, Button } from 'antd'
 import { Observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -40,9 +40,18 @@ function UserCenter () {
                   size={130}
                 />
                 <div className={style.user_info}>
-                  {userInfo ? userInfo.nickname : ''}
+                  <div className={style.nickname}>
+                    {userInfo ? userInfo.nickname : 'test'}
+                  </div>
+                  <div className={style.introuduce}>介绍</div>
                 </div>
               </div>
+              <div className={style.top_info_action}>
+                <Button type="primary">关注</Button>
+              </div>
+            </div>
+            <div className={style.mygame}>
+              <div className={style.title}>我的创作</div>
             </div>
           </div>
         </div>
