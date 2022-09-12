@@ -11,7 +11,7 @@ export interface ITab {
 interface ITabsProps {
   items: ITab[]
   active: string
-  setActive: (link: string) => void
+  onItemClick: (link: string) => void
 }
 
 function Tabs (props: ITabsProps) {
@@ -30,9 +30,12 @@ function Tabs (props: ITabsProps) {
     <div className={style.tabs}>
       {props.items.map((item) => (
         <TabsItem
+          isActive={props.active === item.link}
           key={item.key}
           data={item}
-          onClick={() => props.setActive(item.link)}
+          onClick={() => {
+            props.onItemClick(item.link)
+          }}
         />
       ))}
 

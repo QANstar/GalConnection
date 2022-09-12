@@ -7,7 +7,9 @@ import Home from '../Community/Home'
 import AccountPage from '../Community/AccountPage'
 import useUser from '../../Hooks/useUser'
 import UserCenter from '../Community/UserCenter.tsx'
-import MyGame from '../Community/MyGame'
+import CreationLayout from '../Community/CreationLayout'
+import MyCreation from '../Community/MyCreation'
+import MyMaterial from '../Community/MyMaterial'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -21,7 +23,10 @@ function App () {
       <Route path="/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="/userCenter/:nickname" element={<UserCenter />} />
-        <Route path="/mygame" element={<MyGame />} />
+        <Route path="/creation" element={<CreationLayout />}>
+          <Route path="" element={<MyCreation />} />
+          <Route path="myMaterial" element={<MyMaterial />} />
+        </Route>
       </Route>
       <Route path="/engine">
         <Route path="" element={<PlayHomeLayout />} />

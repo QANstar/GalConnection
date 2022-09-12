@@ -20,10 +20,15 @@ $tabWidth: 120px;
   width: $tabWidth;
   line-height: $tabHeight;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
   border-radius: 99px; // just a high number to create pill effect
   cursor: pointer;
   transition: color 0.15s ease-in;
+}
+
+.tab_active {
+  @extend .tab;
+  color: #185ee0;
 }
 
 .glider {
