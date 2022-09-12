@@ -27,6 +27,10 @@ function TopNav () {
                 label: <Link to={`/userCenter/${user.nickname}`}>用户中心</Link>
               },
               {
+                key: 'mygame',
+                label: <Link to={'/mygame'}>我的作品</Link>
+              },
+              {
                 key: 'logout',
                 label: <div onClick={logout}>退出</div>
               }
