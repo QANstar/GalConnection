@@ -1,7 +1,6 @@
-﻿using GalConnection.Entity;
+﻿using Microsoft.IdentityModel.Tokens;
+using GalConnection.Entity;
 using GalConnection.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,7 +9,7 @@ namespace GalConnection.Server.Services
 {
     public class UserServices
     {
-        GalConnectionContext Context;
+        readonly GalConnectionContext Context;
         public UserServices(GalConnectionContext context)
         {
             Context = context;
@@ -39,7 +38,6 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return true;
         }
-
         /// <summary>
         /// 用户登录
         /// </summary>
@@ -74,5 +72,70 @@ namespace GalConnection.Server.Services
                 throw new Exception("账号或密码错误");
             }
         }
+        /// <summary>
+        /// 显示本人用户信息
+        /// </summary>
+        /// <returns></returns>
+        public UserShowModel GetSelfInfo(int userID)
+        {
+            Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
+            if (user != null)
+            {
+                return Utils.ChangeModel.userToShowModel(user);
+            }
+            else
+            {
+                throw new Exception("用户不存在");
+            }
+        }
+        /// <summary>
+        /// 显示用户信息
+        /// </summary>
+        /// <returns></returns>
+        public UserShowModel GetUserInfo(string nickname)
+        {
+            Entity.User user = Context.User.FirstOrDefault(x => x.nickname == nickname);
+            if (user != null)
+            {
+                return Utils.ChangeModel.userToShowModel(user);
+            }
+            else
+            {
+                throw new Exception("用户不存在");
+            }
+        }
+        /// <summary>
+        /// 编辑用户信息
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+
+        public bool EditUserInfo(UserShowModel user, int userID)
+        {
+            bool isEmailHave = Context.User.ToList().Exists(x => x.email == user.email && x.id != userID);
+            bool isNameHave = Context.User.ToList().Exists(x => x.nickname == user.nickname && x.id != userID);
+            if (isEmailHave)
+            {
+                throw new Exception("邮箱已被注册");
+            }
+            if (isNameHave)
+            {
+                throw new Exception("用户名已被注册");
+            }
+            Entity.User userT = Context.User.FirstOrDefault(x => x.id == userID);
+            if (userT != null)
+            {
+                userT.nickname = user.nickname;
+                userT.avatar = user.avatar;
+                userT.email = user.email;
+                Context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                throw new Exception("用户不存在");
+            }
+        }
     }
 }
+

@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using GalConnection.Entity;
 using GalConnection.Model;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using GalConnection.Server.Services;
 
 namespace GalConnection.Server.Controllers.User
@@ -41,9 +38,8 @@ namespace GalConnection.Server.Controllers.User
             {
                 return BadRequest(ex.Message);
             }
-            
-        }
 
+        }
         /// <summary>
         /// 登录
         /// </summary>
@@ -52,7 +48,14 @@ namespace GalConnection.Server.Controllers.User
         [HttpPost]
         public IActionResult Login(LoginModel user)
         {
-            return Ok(userServices.Login(user));
+            try
+            {
+                return Ok(userServices.Login(user));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// 显示本人用户信息
@@ -61,37 +64,34 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [Authorize]
         [HttpGet]
-        public IActionResult getSelfInfo()
+        public IActionResult GetSelfInfo()
         {
-            var auth = HttpContext.AuthenticateAsync();
-            int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-            Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
-            if (user != null)
+            try
             {
-                return Ok(Utils.ChangeModel.userToShowModel(user));
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.GetSelfInfo(userID));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
-
         /// <summary>
         /// 显示用户信息
         /// </summary>
         /// <returns></returns>
         [EnableCors("any")]
         [HttpGet]
-        public IActionResult getUserInfo(string nickname)
+        public IActionResult GetUserInfo(string nickname)
         {
-            Entity.User user = Context.User.FirstOrDefault(x => x.nickname == nickname);
-            if (user != null)
+            try
             {
-                return Ok(Utils.ChangeModel.userToShowModel(user));
+                return Ok(userServices.GetUserInfo(nickname));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -105,30 +105,15 @@ namespace GalConnection.Server.Controllers.User
         [Authorize]
         public IActionResult editUserInfo(UserShowModel user)
         {
-            var auth = HttpContext.AuthenticateAsync();
-            int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-            bool isEmailHave = Context.User.ToList().Exists(x => x.email == user.email && x.id!= userID);
-            bool isNameHave = Context.User.ToList().Exists(x => x.nickname == user.nickname && x.id != userID);
-            if (isEmailHave)
+            try
             {
-                return BadRequest("邮箱已被注册");
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.EditUserInfo(user, userID));
             }
-            if (isNameHave)
+            catch (Exception ex)
             {
-                return BadRequest("用户名已被注册");
-            }
-            Entity.User userT = Context.User.FirstOrDefault(x => x.id == userID);
-            if (userT != null)
-            {
-                userT.nickname = user.nickname;
-                userT.avatar = user.avatar;
-                userT.email = user.email;
-                Context.SaveChanges();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }
