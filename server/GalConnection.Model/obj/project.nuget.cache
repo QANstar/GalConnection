@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lfAwmMZOYIc4orEWwCobHmz/F+w0ezOTCAAteu2m+jQgKtGm8FLT+OQ8COWSC3+q9cawFDwqpZcVCIm4wivOUQ==",
+  "dgSpecHash": "+L7SihCvDxa1n4GFzgZCHoUPYtDoFNMXU8o42Ofeo889xKXmuUXD/jEuuV8pyb0QSNVov2Y4eURKOFyHkPnEVw==",
   "success": true,
-  "projectFilePath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
+  "projectFilePath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

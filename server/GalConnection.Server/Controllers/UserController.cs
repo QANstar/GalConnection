@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using GalConnection.Entity;
 using GalConnection.Model;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+using GalConnection.Server.Services;
 
 namespace GalConnection.Server.Controllers.User
 {
@@ -15,10 +13,12 @@ namespace GalConnection.Server.Controllers.User
     [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
-        GalConnectionContext Context;
+        readonly GalConnectionContext Context;
+        readonly UserServices userServices;
         public UserController(GalConnectionContext context)
         {
             Context = context;
+            userServices = new UserServices(Context);
         }
         /// <summary>
         /// 注册
@@ -27,31 +27,19 @@ namespace GalConnection.Server.Controllers.User
         /// <returns></returns>
         [EnableCors("any")]
         [HttpPost]
-        public IActionResult userSginUp(SignUpModel userInfo)
+        public IActionResult UserSginUp(SignUpModel userInfo)
         {
             try
             {
-                bool isEmailHave = Context.User.ToList().Exists(x => x.email == userInfo.email );
-                bool isNameHave = Context.User.ToList().Exists(x => x.nickname == userInfo.nickname);
-                if (isEmailHave)
-                {
-                    return BadRequest("邮箱已被注册");
-                }
-                if (isNameHave)
-                {
-                    return BadRequest("用户名已被注册");
-                }
-                Entity.User user = Utils.ChangeModel.signUpToUser(userInfo);
-                Context.User.Add(user);
-                Context.SaveChanges();
+                userServices.UserSginUp(userInfo);
                 return Ok("注册成功");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
 
+        }
         /// <summary>
         /// 登录
         /// </summary>
@@ -60,30 +48,13 @@ namespace GalConnection.Server.Controllers.User
         [HttpPost]
         public IActionResult Login(LoginModel user)
         {
-            Entity.User result = Context.User.FirstOrDefault(x => x.email == user.email && x.password == user.password);
-            if (result != null)
+            try
             {
-                var claims = new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
-                    new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddMinutes(60*24*7)).ToUnixTimeSeconds()}"),
-                    new Claim(ClaimTypes.Sid, result.id.ToString())
-                };
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("QANstarAndSuoMi1931"));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    issuer: "QANstar",
-                    audience: "QANstar",
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(60 * 24 * 7),
-                    signingCredentials: creds);
-
-                var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-                return Ok(jwtToken);
+                return Ok(userServices.Login(user));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("账号或密码错误");
+                return BadRequest(ex.Message);
             }
         }
         /// <summary>
@@ -93,37 +64,34 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [Authorize]
         [HttpGet]
-        public IActionResult getSelfInfo()
+        public IActionResult GetSelfInfo()
         {
-            var auth = HttpContext.AuthenticateAsync();
-            int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-            Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
-            if (user != null)
+            try
             {
-                return Ok(Utils.ChangeModel.userToShowModel(user));
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.GetSelfInfo(userID));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
-
         /// <summary>
         /// 显示用户信息
         /// </summary>
         /// <returns></returns>
         [EnableCors("any")]
         [HttpGet]
-        public IActionResult getUserInfo(string nickname)
+        public IActionResult GetUserInfo(string nickname)
         {
-            Entity.User user = Context.User.FirstOrDefault(x => x.nickname == nickname);
-            if (user != null)
+            try
             {
-                return Ok(Utils.ChangeModel.userToShowModel(user));
+                return Ok(userServices.GetUserInfo(nickname));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -137,30 +105,15 @@ namespace GalConnection.Server.Controllers.User
         [Authorize]
         public IActionResult editUserInfo(UserShowModel user)
         {
-            var auth = HttpContext.AuthenticateAsync();
-            int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-            bool isEmailHave = Context.User.ToList().Exists(x => x.email == user.email && x.id!= userID);
-            bool isNameHave = Context.User.ToList().Exists(x => x.nickname == user.nickname && x.id != userID);
-            if (isEmailHave)
+            try
             {
-                return BadRequest("邮箱已被注册");
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.EditUserInfo(user, userID));
             }
-            if (isNameHave)
+            catch (Exception ex)
             {
-                return BadRequest("用户名已被注册");
-            }
-            Entity.User userT = Context.User.FirstOrDefault(x => x.id == userID);
-            if (userT != null)
-            {
-                userT.nickname = user.nickname;
-                userT.avatar = user.avatar;
-                userT.email = user.email;
-                Context.SaveChanges();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }

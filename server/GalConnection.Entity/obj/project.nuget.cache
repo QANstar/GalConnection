@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8tR+rCH2V3omOSdD/ky/yAzRg0qhtapiHlALkxkKVl8TiBkPNjNrdnlSu8QX1Vbti90t/3T3Br7hjaAvTouk5A==",
+  "dgSpecHash": "lq9ylOfvpo71PJNl3aqN25eM/9Z8BwzY/8hUBf1pm/g+cA5EOo7pTGs5UR5i75kbGTH3nEkFfpW7Rld0oV2uGQ==",
   "success": true,
-  "projectFilePath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
+  "projectFilePath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\14353\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\14353\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
