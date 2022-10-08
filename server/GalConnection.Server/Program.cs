@@ -1,4 +1,5 @@
 using GalConnection.Entity;
+using GalConnection.Server.Config;
 using GalConnection.Server.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -60,7 +61,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,//是否验证Issuer
@@ -68,9 +70,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateLifetime = true,//是否验证失效时间
         ClockSkew = TimeSpan.FromSeconds(60 * 60 * 24 * 7),
         ValidateIssuerSigningKey = true,//是否验证SecurityKey
-        ValidAudience = "QANstar",//Audience
-        ValidIssuer = "QANstar",//Issuer，这两项和前面签发jwt的设置一致
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("QANstarAndSuoMi1931"))//拿到SecurityKey
+        ValidAudience = JwtConfig.audience,//Audience
+        ValidIssuer = JwtConfig.issuer,//Issuer，这两项和前面签发jwt的设置一致
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey))//拿到SecurityKey
     };
 });
 builder.Services.AddDbContext<GalConnectionContext>(options =>
@@ -101,7 +103,7 @@ app.Use(async (context, next) =>
     {
         await next.Invoke();
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         context.Response.StatusCode = 500;
         await context.Response.WriteAsync(ex.Message);

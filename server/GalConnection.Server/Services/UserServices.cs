@@ -4,6 +4,7 @@ using GalConnection.Model;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using GalConnection.Server.Config;
 
 namespace GalConnection.Server.Services
 {
@@ -55,11 +56,11 @@ namespace GalConnection.Server.Services
                     new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddMinutes(60*24*7)).ToUnixTimeSeconds()}"),
                     new Claim(ClaimTypes.Sid, result.id.ToString())
                 };
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("QANstarAndSuoMi1931"));
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
-                    issuer: "QANstar",
-                    audience: "QANstar",
+                    issuer: JwtConfig.issuer,
+                    audience: JwtConfig.audience,
                     claims: claims,
                     expires: DateTime.Now.AddMinutes(60 * 24 * 7),
                     signingCredentials: creds);
@@ -92,9 +93,9 @@ namespace GalConnection.Server.Services
         /// 显示用户信息
         /// </summary>
         /// <returns></returns>
-        public UserShowModel GetUserInfo(string nickname)
+        public UserShowModel GetUserInfo(int userId)
         {
-            Entity.User user = Context.User.FirstOrDefault(x => x.nickname == nickname);
+            Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
             if (user != null)
             {
                 return Utils.ChangeModel.userToShowModel(user);
@@ -110,14 +111,10 @@ namespace GalConnection.Server.Services
         /// <param name="user"></param>
         /// <returns></returns>
 
-        public bool EditUserInfo(UserShowModel user, int userID)
+        public bool EditUserInfo(UserEditModel user, int userID)
         {
-            bool isEmailHave = Context.User.ToList().Exists(x => x.email == user.email && x.id != userID);
             bool isNameHave = Context.User.ToList().Exists(x => x.nickname == user.nickname && x.id != userID);
-            if (isEmailHave)
-            {
-                throw new Exception("邮箱已被注册");
-            }
+
             if (isNameHave)
             {
                 throw new Exception("用户名已被注册");
@@ -126,8 +123,7 @@ namespace GalConnection.Server.Services
             if (userT != null)
             {
                 userT.nickname = user.nickname;
-                userT.avatar = user.avatar;
-                userT.email = user.email;
+                userT.introduce = user.introduce;
                 Context.SaveChanges();
                 return true;
             }

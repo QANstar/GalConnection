@@ -22,7 +22,7 @@ function App () {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
-        <Route path="/userCenter/:nickname" element={<UserCenter />} />
+        <Route path="/userCenter/:id" element={<UserCenter />} />
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
           <Route path="myMaterial" element={<MyMaterial />} />

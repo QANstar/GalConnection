@@ -52,6 +52,15 @@
   margin-top: 30px;
 }
 
+.editBtnWapper {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  button {
+    margin-left: 20px;
+  }
+}
+
 @media screen and (max-width: 1200px) {
   .content {
     width: 100%;

@@ -83,11 +83,11 @@ namespace GalConnection.Server.Controllers.User
         /// <returns></returns>
         [EnableCors("any")]
         [HttpGet]
-        public IActionResult GetUserInfo(string nickname)
+        public IActionResult GetUserInfo(int userId)
         {
             try
             {
-                return Ok(userServices.GetUserInfo(nickname));
+                return Ok(userServices.GetUserInfo(userId));
             }
             catch (Exception ex)
             {
@@ -103,7 +103,11 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
+<<<<<<< HEAD
         public IActionResult EditUserInfo(UserShowModel user)
+=======
+        public IActionResult editUserInfo(UserEditModel user)
+>>>>>>> 9fdb90985979753009d309d5a308d2453f3236a8
         {
             try
             {
