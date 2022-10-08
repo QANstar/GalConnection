@@ -103,7 +103,11 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
+<<<<<<< HEAD
+        public IActionResult EditUserInfo(UserShowModel user)
+=======
         public IActionResult editUserInfo(UserEditModel user)
+>>>>>>> 9fdb90985979753009d309d5a308d2453f3236a8
         {
             try
             {
