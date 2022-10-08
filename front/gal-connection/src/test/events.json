@@ -1,0 +1,26 @@
+[
+  {
+    "id": "event-1",
+    "gameId": "game-1",
+    "eventName": "event-1",
+    "pid": "",
+    "endType": 1,
+    "enterCondition": []
+  },
+  {
+    "id": "event-2",
+    "gameId": "game-1",
+    "eventName": "event-2",
+    "pid": "event-1",
+    "endType": 3,
+    "enterCondition": ["option-1"]
+  },
+  {
+    "id": "event-3",
+    "gameId": "game-1",
+    "eventName": "event-3",
+    "pid": "event-1",
+    "endType": 3,
+    "enterCondition": ["option-2"]
+  }
+]

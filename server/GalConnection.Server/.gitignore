@@ -1,0 +1,6 @@
+# Build and Object Folders
+bin/
+obj/
+.vs/
+Config/
+appsettings.json

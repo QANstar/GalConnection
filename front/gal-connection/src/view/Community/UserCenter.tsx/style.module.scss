@@ -1,0 +1,64 @@
+.banner {
+  width: 100%;
+  height: 10vw;
+  background: 50% / cover fixed no-repeat;
+  background-color: rgb(211, 211, 211);
+}
+
+.content {
+  width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.top_info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.avatar {
+  transform: translateY(-20px);
+}
+
+.user_info_cover {
+  display: flex;
+}
+
+.user_info {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.nickname {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.top_info_action {
+  margin-top: 40px;
+}
+
+.introuduce {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.mygame {
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 1200px) {
+  .content {
+    width: 100%;
+    margin: auto;
+  }
+
+  .banner {
+    height: 15vw;
+  }
+}
