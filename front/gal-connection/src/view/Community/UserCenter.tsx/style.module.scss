@@ -32,6 +32,7 @@
 .nickname {
   font-size: 24px;
   font-weight: 700;
+  margin-right: 20px;
 }
 
 .top_info_action {
@@ -43,22 +44,63 @@
   margin-top: 10px;
 }
 
-.mygame {
-}
-
 .title {
   font-size: 28px;
   font-weight: bold;
   margin-top: 30px;
 }
 
-.editBtnWapper {
+.btnWapper {
   display: flex;
   justify-content: flex-end;
   flex-direction: row;
+  margin-top: 20px;
   button {
     margin-left: 20px;
   }
+}
+
+.infoTop {
+  display: flex;
+  align-items: center;
+}
+
+.avatarCover {
+  position: relative;
+  &:hover {
+    .avatarMask {
+      opacity: 1;
+    }
+  }
+}
+
+.userAvatarInput {
+  transform: translateY(-20px);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.avatarMask {
+  transform: translateY(-20px);
+  transition: 0.2s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media screen and (max-width: 1200px) {

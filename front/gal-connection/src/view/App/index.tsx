@@ -10,6 +10,7 @@ import UserCenter from '../Community/UserCenter.tsx'
 import CreationLayout from '../Community/CreationLayout'
 import MyCreation from '../Community/MyCreation'
 import MyMaterial from '../Community/MyMaterial'
+import UserNotFound from '../Community/UserNotFound'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -23,6 +24,7 @@ function App () {
       <Route path="/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="/userCenter/:id" element={<UserCenter />} />
+        <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
           <Route path="myMaterial" element={<MyMaterial />} />

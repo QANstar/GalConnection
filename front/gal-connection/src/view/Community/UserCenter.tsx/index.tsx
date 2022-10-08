@@ -1,8 +1,18 @@
-import { Avatar, Button, Form, FormInstance, Input, message, Modal } from 'antd'
+import {
+  Avatar,
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  message,
+  Modal,
+  Tag
+} from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { Observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Cropper } from 'react-cropper'
+import { useNavigate, useParams } from 'react-router-dom'
 import useUser from '../../../Hooks/useUser'
 import { IUser } from '../../../types/type'
 import style from './style.module.scss'
@@ -13,11 +23,20 @@ function UserCenter () {
   const [userInfo, setUserInfo] = useState<IUser>()
   const { getUserInfo, editUserInfo, user, error, loading } = useUser()
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [isAvatarModalOpen, setIsAvatarModal] = useState<boolean>(false)
+  const [avatarImage, setAvatarImage] = useState(user.avatar)
+  // const [avatarCropData, setAvatarCropData] = useState('#')
+  const [avatarCropper, setAvatarCropper] = useState<any>()
+  const navigate = useNavigate()
 
   const getUser = async () => {
     if (id) {
       const res = await getUserInfo(parseInt(id))
-      if (res) setUserInfo(res)
+      if (res) {
+        setUserInfo(res)
+      } else {
+        navigate('/userNotFound')
+      }
     }
   }
 
@@ -29,13 +48,27 @@ function UserCenter () {
     }
   }
 
-  const showEditModal = () => {
-    setEditModalOpen(true)
-  }
-
   useEffect(() => {
     getUser()
   }, [id])
+
+  const onAvatarChange = (e: any) => {
+    console.log(avatarCropper)
+
+    e.preventDefault()
+    setIsAvatarModal(true)
+    let files
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files
+    } else if (e.target) {
+      files = e.target.files
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      setAvatarImage(reader.result as any)
+    }
+    reader.readAsDataURL(files[0])
+  }
 
   useEffect(() => {
     if (error) {
@@ -50,7 +83,7 @@ function UserCenter () {
           <Modal
             visible={editModalOpen}
             title="编辑用户资料"
-            onOk={showEditModal}
+            onOk={() => setEditModalOpen(true)}
             onCancel={() => setEditModalOpen(false)}
             footer={null}
           >
@@ -71,7 +104,7 @@ function UserCenter () {
               <Form.Item label="介绍" name="introduce">
                 <TextArea rows={8} showCount maxLength={300} />
               </Form.Item>
-              <div className={style.editBtnWapper}>
+              <div className={style.btnWapper}>
                 <Form.Item>
                   <Button loading={loading} type="primary" htmlType="submit">
                     确认
@@ -91,6 +124,34 @@ function UserCenter () {
               </div>
             </Form>
           </Modal>
+          <Modal
+            visible={isAvatarModalOpen}
+            title="头像"
+            onOk={() => setIsAvatarModal(true)}
+            onCancel={() => setIsAvatarModal(false)}
+            footer={null}
+          >
+            <Cropper
+              style={{ height: 400, width: '100%' }}
+              zoomTo={0.5}
+              aspectRatio={1 / 1}
+              preview=".img-preview"
+              src={avatarImage}
+              viewMode={1}
+              background={false}
+              responsive={true}
+              autoCropArea={1}
+              checkOrientation={false}
+              onInitialized={(instance) => {
+                setAvatarCropper(instance)
+              }}
+              guides={true}
+            />
+            <div className={style.btnWapper}>
+              <Button type="primary">确认</Button>
+              <Button>取消</Button>
+            </div>
+          </Modal>
           <div
             className={style.banner}
             style={{
@@ -100,14 +161,25 @@ function UserCenter () {
           <div className={style.content}>
             <div className={style.top_info}>
               <div className={style.user_info_cover}>
-                <Avatar
-                  className={style.avatar}
-                  src={userInfo ? userInfo.avatar : ''}
-                  size={130}
-                />
+                <div className={style.avatarCover}>
+                  <Avatar
+                    className={style.avatar}
+                    src={userInfo ? userInfo.avatar : ''}
+                    size={130}
+                  />
+                  <div className={style.avatarMask}>更换头像</div>
+                  <input
+                    onChange={onAvatarChange}
+                    type="file"
+                    className={style.userAvatarInput}
+                  />
+                </div>
                 <div className={style.user_info}>
-                  <div className={style.nickname}>
-                    {userInfo ? userInfo.nickname : ''}
+                  <div className={style.infoTop}>
+                    <div className={style.nickname}>
+                      {userInfo ? userInfo.nickname : ''}
+                    </div>
+                    <Tag color="#87d068">id: {userInfo?.id}</Tag>
                   </div>
                   <div className={style.introuduce}>
                     {userInfo ? userInfo.introduce : ''}
@@ -117,7 +189,7 @@ function UserCenter () {
               <div className={style.top_info_action}>
                 {user.id === parseInt(id!)
                   ? (
-                  <Button onClick={showEditModal}>编辑</Button>
+                  <Button onClick={() => setEditModalOpen(true)}>编辑</Button>
                     )
                   : (
                   <Button type="primary">关注</Button>

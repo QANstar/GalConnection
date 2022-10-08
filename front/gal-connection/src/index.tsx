@@ -6,6 +6,7 @@ import 'antd/dist/antd.css'
 import './assets/styles/global.scss'
 import { Provider } from 'mobx-react'
 import store from './store'
+import 'cropperjs/dist/cropper.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
