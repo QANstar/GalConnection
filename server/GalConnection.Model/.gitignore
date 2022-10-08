@@ -1,6 +1,7 @@
 # Build and Object Folders
-bin/
-obj/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
 .vs/
 Config/
 appsettings.json
