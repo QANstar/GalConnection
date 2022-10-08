@@ -24,7 +24,7 @@ function TopNav () {
           ? [
               {
                 key: 'userCenter',
-                label: <Link to={`/userCenter/${user.nickname}`}>用户中心</Link>
+                label: <Link to={`/userCenter/${user.id}`}>用户中心</Link>
               },
               {
                 key: 'creation',

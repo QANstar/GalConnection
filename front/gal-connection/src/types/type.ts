@@ -1,4 +1,5 @@
 export interface IUser {
+  id: number
   email: string
   nickname: string
   avatar: string
@@ -17,4 +18,9 @@ export interface IRegister {
 export interface ILogin {
   email: string
   password: string
+}
+
+export interface IEditUserInfo {
+  nickname: string
+  introduce: string
 }

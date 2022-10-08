@@ -5,6 +5,7 @@ class User implements IUser {
     ? JSON.parse(localStorage.getItem('user') || '{}').token
     : ''
 
+  id: number = 0
   nickname: string = ''
   avatar: string = ''
   email: string = ''
@@ -28,6 +29,7 @@ class User implements IUser {
     this.createdAt = data.createdAt
     this.introduce = data.introduce
     this.banner = data.banner
+    this.id = data.id
     this.saveLocation()
   }
 
@@ -39,6 +41,7 @@ class User implements IUser {
     this.createdAt = 0
     this.introduce = ''
     this.banner = ''
+    this.id = 0
     this.saveLocation()
   }
 

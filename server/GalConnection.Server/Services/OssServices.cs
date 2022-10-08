@@ -49,6 +49,7 @@ namespace GalConnection.Server.Services
         /// <param name="objectName"></param>
         public async Task<string> OssUpload(IFormFile file, string folderPath, OssFileType type)
         {
+            string url = "https://galbucket.oss-cn-hangzhou.aliyuncs.com/";
             try
             {
                 string ossFolder = "";
@@ -75,16 +76,17 @@ namespace GalConnection.Server.Services
                 }
                 string guid = Guid.NewGuid().ToString();
                 string fileName = guid + Path.GetExtension(file.FileName);
+                url = url + ossFolder + fileName;
                 await Upload(file, folderPath, fileName);
                 // 上传文件。
                 client.PutObject(OssConfig.bucketName, ossFolder + fileName, folderPath + fileName);
-                File.Delete(folderPath + file.FileName);
+                File.Delete(folderPath + fileName);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return "";
+            return url;
         }
     }
 }

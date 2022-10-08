@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ILogin, IRegister } from '../types/type'
+import { IEditUserInfo, ILogin, IRegister } from '../types/type'
 import * as userService from '../service/user'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
@@ -67,11 +67,11 @@ const useUser = () => {
   }, [])
 
   // 获取用户信息
-  const getUserInfo = useCallback(async (nickname: string) => {
+  const getUserInfo = useCallback(async (userId: number) => {
     try {
       setLoading(true)
       setError('')
-      const { data, status } = await userService.getUserInfo({ nickname })
+      const { data, status } = await userService.getUserInfo({ userId })
       if (status === 200) {
         return data
       }
@@ -88,12 +88,34 @@ const useUser = () => {
     window.location.href = '/'
   }, [])
 
+  // 编辑用户信息
+  const editUserInfo = useCallback(async (params: IEditUserInfo) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.editUserInfo(params)
+      if (status === 200) {
+        message.success('编辑成功')
+        await getSelfInfo()
+        return true
+      } else {
+        setError(data)
+        return false
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     signup,
     login,
     logout,
     getSelfInfo,
     getUserInfo,
+    editUserInfo,
     user,
     error,
     loading

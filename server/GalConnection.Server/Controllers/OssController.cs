@@ -35,8 +35,8 @@ namespace GalConnection.Server.Controllers
         {
             try
             {
-                await ossServices.OssUpload(file, filepath, ossFileType);
-                return Ok("上传成功");
+                string url = await ossServices.OssUpload(file, filepath, ossFileType);
+                return Ok(url);
             }
             catch (Exception ex)
             {
