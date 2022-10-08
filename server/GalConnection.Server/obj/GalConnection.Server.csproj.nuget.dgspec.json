@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj": {}
+    "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj": {}
   },
   "projects": {
-    "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj": {
+    "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
+        "projectUniqueName": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
         "projectName": "GalConnection.Entity",
-        "projectPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
+        "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj",
         "packagesPath": "C:\\Users\\14353\\.nuget\\packages\\",
-        "outputPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\obj\\",
+        "outputPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\14353\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -51,8 +51,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -61,18 +60,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj": {
+    "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
+        "projectUniqueName": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
         "projectName": "GalConnection.Model",
-        "projectPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
+        "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj",
         "packagesPath": "C:\\Users\\14353\\.nuget\\packages\\",
-        "outputPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\obj\\",
+        "outputPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\14353\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -88,7 +87,11 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj": {
+                "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -106,8 +109,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -116,18 +118,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj": {
+    "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
+        "projectUniqueName": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
         "projectName": "GalConnection.Server",
-        "projectPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
+        "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
         "packagesPath": "C:\\Users\\14353\\.nuget\\packages\\",
-        "outputPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\obj\\",
+        "outputPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\14353\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -144,11 +146,11 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj": {
-                "projectPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj"
+              "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj": {
+                "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Entity\\GalConnection.Entity.csproj"
               },
-              "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj": {
-                "projectPath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj"
+              "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj": {
+                "projectPath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Model\\GalConnection.Model.csproj"
               }
             }
           }
@@ -206,8 +208,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -219,7 +220,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

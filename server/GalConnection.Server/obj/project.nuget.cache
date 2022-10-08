@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "euugA17AeK8BeXUSLCMxjtu7k8XnDzJpehv0Bt32jSh2hpsMz2ByEBDIFruu9RXAWk0nJeRUMIac8hlsgrOkOw==",
+  "dgSpecHash": "K4lViqks1C30aZhy3VO82bEdSumjbI/3AI4vMUtLz7pAM9axB/as9J5h0CfO8n0G36cf4HtXx3N73qQagqNz5A==",
   "success": true,
-  "projectFilePath": "D:\\Code\\Projects\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
+  "projectFilePath": "D:\\QAN_Program\\Web\\Project\\GalConnection\\server\\GalConnection.Server\\GalConnection.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\14353\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\14353\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.8\\microsoft.aspnetcore.authentication.jwtbearer.6.0.8.nupkg.sha512",

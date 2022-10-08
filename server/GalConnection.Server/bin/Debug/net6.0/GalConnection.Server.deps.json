@@ -559,6 +559,9 @@
         }
       },
       "GalConnection.Model/1.0.0": {
+        "dependencies": {
+          "GalConnection.Entity": "1.0.0"
+        },
         "runtime": {
           "GalConnection.Model.dll": {}
         }

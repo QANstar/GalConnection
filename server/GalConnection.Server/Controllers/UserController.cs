@@ -103,7 +103,7 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
-        public IActionResult editUserInfo(UserShowModel user)
+        public IActionResult EditUserInfo(UserShowModel user)
         {
             try
             {
