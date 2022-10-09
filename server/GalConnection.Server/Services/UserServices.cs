@@ -132,6 +132,48 @@ namespace GalConnection.Server.Services
                 throw new Exception("用户不存在");
             }
         }
+        /// <summary>
+        /// 上传用户头像
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool AvatarUpload(string url,int userId)
+        {
+            Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
+            if (user != null)
+            {
+                user.avatar = url;
+                Context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                throw new Exception("用户不存在");
+            }
+        }
+        /// <summary>
+        /// 上传用户头图
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool BannerUpload(string url, int userId)
+        {
+            Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
+            if (user != null)
+            {
+                user.banner = url;
+                Context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                throw new Exception("用户不存在");
+            }
+        }
     }
 }
 

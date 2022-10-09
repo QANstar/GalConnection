@@ -99,7 +99,49 @@ const useUser = () => {
         await getSelfInfo()
         return true
       } else {
-        setError(data)
+        setError(data.toString())
+        return false
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // 上传用户头像
+  const avatarUpload = useCallback(async (params: FormData) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.avatarUpload(params)
+      if (status === 200) {
+        message.success('上传成功')
+        await getSelfInfo()
+        return true
+      } else {
+        setError(data.toString())
+        return false
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // 上传用户头图
+  const bannerUpload = useCallback(async (params: FormData) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.bannerUpload(params)
+      if (status === 200) {
+        message.success('上传成功')
+        await getSelfInfo()
+        return true
+      } else {
+        setError(data.toString())
         return false
       }
     } catch (e: any) {
@@ -116,6 +158,8 @@ const useUser = () => {
     getSelfInfo,
     getUserInfo,
     editUserInfo,
+    avatarUpload,
+    bannerUpload,
     user,
     error,
     loading

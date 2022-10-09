@@ -1,7 +1,8 @@
 .banner {
   width: 100%;
   height: 10vw;
-  background: 50% / cover fixed no-repeat;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-color: rgb(211, 211, 211);
 }
 
@@ -67,15 +68,28 @@
 
 .avatarCover {
   position: relative;
+  .uploadInput,
+  .mask {
+    transform: translateY(-20px);
+    border-radius: 50%;
+  }
   &:hover {
-    .avatarMask {
+    .mask {
       opacity: 1;
     }
   }
 }
 
-.userAvatarInput {
-  transform: translateY(-20px);
+.bannerMain {
+  position: relative;
+  &:hover {
+    .mask {
+      opacity: 1;
+    }
+  }
+}
+
+.uploadInput {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -83,11 +97,9 @@
   right: 0;
   opacity: 0;
   cursor: pointer;
-  border-radius: 50%;
 }
 
-.avatarMask {
-  transform: translateY(-20px);
+.mask {
   transition: 0.2s;
   position: absolute;
   top: 0;
@@ -95,7 +107,6 @@
   left: 0;
   right: 0;
   opacity: 0;
-  border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
   display: flex;

@@ -6,6 +6,7 @@ using GalConnection.Entity;
 using GalConnection.Model;
 using System.Security.Claims;
 using GalConnection.Server.Services;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GalConnection.Server.Controllers.User
 {
@@ -13,11 +14,17 @@ namespace GalConnection.Server.Controllers.User
     [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        string filepath;
         readonly GalConnectionContext Context;
+        readonly OssServices ossServices;
         readonly UserServices userServices;
-        public UserController(GalConnectionContext context)
+        public UserController(GalConnectionContext context, IWebHostEnvironment webHostEnvironment)
         {
             Context = context;
+            ossServices = new OssServices(Context);
+            _webHostEnvironment = webHostEnvironment;
+            filepath = _webHostEnvironment.ContentRootPath + "/fileCache/";
             userServices = new UserServices(Context);
         }
         /// <summary>
@@ -103,17 +110,57 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
-<<<<<<< HEAD
-        public IActionResult EditUserInfo(UserShowModel user)
-=======
-        public IActionResult editUserInfo(UserEditModel user)
->>>>>>> 9fdb90985979753009d309d5a308d2453f3236a8
+        public IActionResult EditUserInfo(UserEditModel user)
         {
             try
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(userServices.EditUserInfo(user, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 上传用户头像
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AvatarUpload(IFormFile file)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                string url = await ossServices.OssUpload(file, filepath, OssFileType.Avatar);
+                return Ok(userServices.AvatarUpload(url,userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 上传用户头图
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> BannerUpload(IFormFile file)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                string url = await ossServices.OssUpload(file, filepath, OssFileType.Banner);
+                return Ok(userServices.BannerUpload(url, userID));
             }
             catch (Exception ex)
             {
