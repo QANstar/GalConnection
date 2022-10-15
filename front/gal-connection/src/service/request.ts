@@ -27,8 +27,6 @@ request.interceptors.response.use(
         case 401:
           // 返回 401 清除token信息并跳转到登录页面
           // store.user.init()
-          console.log(window.location.href)
-
           if (!window.location.href.includes('login')) {
             message.error('请先登录')
             window.location.href = '/login'

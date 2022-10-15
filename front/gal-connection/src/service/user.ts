@@ -16,8 +16,8 @@ export const getUserInfo = (params: { userId: number }) =>
 export const editUserInfo = (params: IEditUserInfo) =>
   request.post<boolean>('/api/User/EditUserInfo', params)
 // 上传用户头像
-export const avatarUpload = (params: FormData) =>
-  request.post<boolean>('/api/User/AvatarUpload', params)
+export const avatarUpdate = (params: { url: string }) =>
+  request.post<boolean>(`/api/User/EditAvatar?url=${params.url}`)
 // 上传用户头图
-export const bannerUpload = (params: FormData) =>
-  request.post<boolean>('/api/User/BannerUpload', params)
+export const bannerUpdate = (params: { url: string }) =>
+  request.post<boolean>(`/api/User/EditBanner?url=${params.url}`)

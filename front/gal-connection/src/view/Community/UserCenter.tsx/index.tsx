@@ -11,10 +11,10 @@ import {
 import TextArea from 'antd/lib/input/TextArea'
 import { Observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { Cropper } from 'react-cropper'
 import { useNavigate, useParams } from 'react-router-dom'
+import ImgCropper from '../../../Components/ImgCropper'
 import useUser from '../../../Hooks/useUser'
-import { IUser } from '../../../types/type'
+import { IUser, OssFileType } from '../../../types/type'
 import style from './style.module.scss'
 
 function UserCenter () {
@@ -24,21 +24,13 @@ function UserCenter () {
   const {
     getUserInfo,
     editUserInfo,
-    avatarUpload,
-    bannerUpload,
+    bannerUpdate,
+    avatarUpdate,
     user,
     error,
     loading
   } = useUser()
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
-  const [isAvatarModalOpen, setIsAvatarModal] = useState<boolean>(false)
-  const [avatarImage, setAvatarImage] = useState(user.avatar)
-  const avatarInputRef = useRef<HTMLInputElement>(null)
-  const [avatarCropper, setAvatarCropper] = useState<any>()
-  const [isBannerModalOpen, setIsBannerModal] = useState<boolean>(false)
-  const [bannerImage, setBannerImage] = useState(user.banner)
-  const bannerInputRef = useRef<HTMLInputElement>(null)
-  const [bannerCropper, setBannerCropper] = useState<any>()
   const navigate = useNavigate()
 
   const getUser = async () => {
@@ -63,79 +55,6 @@ function UserCenter () {
   useEffect(() => {
     getUser()
   }, [id])
-
-  const onAvatarChange = (e: any) => {
-    e.preventDefault()
-    setIsAvatarModal(true)
-    let files
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files
-    } else if (e.target) {
-      files = e.target.files
-    }
-    const reader = new FileReader()
-    reader.onload = () => {
-      setAvatarImage(reader.result as any)
-    }
-    reader.readAsDataURL(files[0])
-  }
-
-  const avatarUploadClick = () => {
-    if (typeof avatarCropper !== 'undefined') {
-      avatarCropper.getCroppedCanvas().toBlob(async (blob: Blob) => {
-        // 创造提交表单数据对象
-        const formData = new FormData()
-        // 添加要上传的文件
-        formData.append('file', blob, 'avatar')
-        // 上传图片
-        const res = await avatarUpload(formData)
-        if (res === true) {
-          setIsAvatarModal(false)
-          getUser()
-          if (avatarInputRef.current) {
-            avatarInputRef.current.value = ''
-          }
-        }
-      })
-    }
-  }
-
-  const onBannerChange = (e: any) => {
-    e.preventDefault()
-    setIsBannerModal(true)
-    let files
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files
-    } else if (e.target) {
-      files = e.target.files
-    }
-    const reader = new FileReader()
-    reader.onload = () => {
-      setBannerImage(reader.result as any)
-    }
-    reader.readAsDataURL(files[0])
-  }
-
-  const bannerUploadClick = () => {
-    if (typeof bannerCropper !== 'undefined') {
-      bannerCropper.getCroppedCanvas().toBlob(async (blob: Blob) => {
-        // 创造提交表单数据对象
-        const formData = new FormData()
-        // 添加要上传的文件
-        formData.append('file', blob, 'banner')
-        // 上传图片
-        const res = await bannerUpload(formData)
-        if (res === true) {
-          setIsBannerModal(false)
-          getUser()
-          if (bannerInputRef.current) {
-            bannerInputRef.current.value = ''
-          }
-        }
-      })
-    }
-  }
-
   useEffect(() => {
     if (error) {
       message.error(error)
@@ -190,103 +109,6 @@ function UserCenter () {
               </div>
             </Form>
           </Modal>
-          <Modal
-            visible={isAvatarModalOpen}
-            title="头像"
-            onOk={() => setIsAvatarModal(true)}
-            onCancel={() => {
-              setIsAvatarModal(false)
-              if (avatarInputRef.current) {
-                avatarInputRef.current.value = ''
-              }
-            }}
-            footer={null}
-          >
-            <Cropper
-              style={{ height: 400, width: '100%' }}
-              zoomTo={0.5}
-              aspectRatio={1 / 1}
-              preview=".img-preview"
-              src={avatarImage}
-              viewMode={1}
-              background={false}
-              responsive={true}
-              autoCropArea={1}
-              checkOrientation={false}
-              onInitialized={(instance) => {
-                setAvatarCropper(instance)
-              }}
-              guides={true}
-            />
-            <div className={style.btnWapper}>
-              <Button
-                loading={loading}
-                type="primary"
-                onClick={avatarUploadClick}
-              >
-                确认
-              </Button>
-              <Button
-                onClick={() => {
-                  if (avatarInputRef.current) {
-                    avatarInputRef.current.value = ''
-                  }
-                  setIsAvatarModal(false)
-                }}
-              >
-                取消
-              </Button>
-            </div>
-          </Modal>
-          <Modal
-            visible={isBannerModalOpen}
-            title="头图"
-            onOk={() => setIsBannerModal(true)}
-            onCancel={() => {
-              setIsBannerModal(false)
-              if (bannerInputRef.current) {
-                bannerInputRef.current.value = ''
-              }
-            }}
-            width="80%"
-            footer={null}
-          >
-            <Cropper
-              style={{ height: 200, width: '100%' }}
-              zoomTo={0.5}
-              aspectRatio={10 / 1}
-              preview=".img-preview"
-              src={bannerImage}
-              viewMode={1}
-              background={false}
-              responsive={true}
-              autoCropArea={1}
-              checkOrientation={false}
-              onInitialized={(instance) => {
-                setBannerCropper(instance)
-              }}
-              guides={true}
-            />
-            <div className={style.btnWapper}>
-              <Button
-                loading={loading}
-                type="primary"
-                onClick={bannerUploadClick}
-              >
-                确认
-              </Button>
-              <Button
-                onClick={() => {
-                  if (bannerInputRef.current) {
-                    bannerInputRef.current.value = ''
-                  }
-                  setIsBannerModal(false)
-                }}
-              >
-                取消
-              </Button>
-            </div>
-          </Modal>
           <div className={style.bannerMain}>
             <div
               className={style.banner}
@@ -297,11 +119,17 @@ function UserCenter () {
             {user.id === parseInt(id!) && (
               <>
                 <div className={style.mask}>更换头图</div>
-                <input
-                  ref={bannerInputRef}
-                  onChange={onBannerChange}
-                  type="file"
-                  className={style.uploadInput}
+                <ImgCropper
+                  ossFileType={OssFileType.Banner}
+                  type="hidden"
+                  title="头图"
+                  width="100%"
+                  height={200}
+                  aspectRatio={10 / 1}
+                  onFinished={async (url: string) => {
+                    await bannerUpdate({ url })
+                    getUser()
+                  }}
                 />
               </>
             )}
@@ -318,11 +146,17 @@ function UserCenter () {
                   {user.id === parseInt(id!) && (
                     <>
                       <div className={style.mask}>更换头像</div>
-                      <input
-                        ref={avatarInputRef}
-                        onChange={onAvatarChange}
-                        type="file"
-                        className={style.uploadInput}
+                      <ImgCropper
+                        ossFileType={OssFileType.Avatar}
+                        type="hidden"
+                        title="头像"
+                        width="100%"
+                        height={400}
+                        aspectRatio={1 / 1}
+                        onFinished={async (url: string) => {
+                          await avatarUpdate({ url })
+                          getUser()
+                        }}
                       />
                     </>
                   )}

@@ -24,3 +24,12 @@ export interface IEditUserInfo {
   nickname: string
   introduce: string
 }
+
+export enum OssFileType {
+  Background,
+  CG,
+  Character,
+  Cover,
+  Avatar,
+  Banner
+}

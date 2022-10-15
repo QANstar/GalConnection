@@ -131,13 +131,12 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AvatarUpload(IFormFile file)
+        public async Task<IActionResult> EditAvatar(string url)
         {
             try
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                string url = await ossServices.OssUpload(file, filepath, OssFileType.Avatar);
                 return Ok(userServices.AvatarUpload(url,userID));
             }
             catch (Exception ex)
@@ -153,13 +152,12 @@ namespace GalConnection.Server.Controllers.User
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> BannerUpload(IFormFile file)
+        public async Task<IActionResult> EditBanner(string url)
         {
             try
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                string url = await ossServices.OssUpload(file, filepath, OssFileType.Banner);
                 return Ok(userServices.BannerUpload(url, userID));
             }
             catch (Exception ex)

@@ -110,13 +110,13 @@ const useUser = () => {
   }, [])
 
   // 上传用户头像
-  const avatarUpload = useCallback(async (params: FormData) => {
+  const avatarUpdate = useCallback(async (params: { url: string }) => {
     try {
       setLoading(true)
       setError('')
-      const { data, status } = await userService.avatarUpload(params)
+      const { data, status } = await userService.avatarUpdate(params)
       if (status === 200) {
-        message.success('上传成功')
+        message.success('修改成功')
         await getSelfInfo()
         return true
       } else {
@@ -131,13 +131,13 @@ const useUser = () => {
   }, [])
 
   // 上传用户头图
-  const bannerUpload = useCallback(async (params: FormData) => {
+  const bannerUpdate = useCallback(async (params: { url: string }) => {
     try {
       setLoading(true)
       setError('')
-      const { data, status } = await userService.bannerUpload(params)
+      const { data, status } = await userService.bannerUpdate(params)
       if (status === 200) {
-        message.success('上传成功')
+        message.success('修改成功')
         await getSelfInfo()
         return true
       } else {
@@ -158,8 +158,8 @@ const useUser = () => {
     getSelfInfo,
     getUserInfo,
     editUserInfo,
-    avatarUpload,
-    bannerUpload,
+    avatarUpdate,
+    bannerUpdate,
     user,
     error,
     loading

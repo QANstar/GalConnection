@@ -28,11 +28,11 @@ function TopNav () {
               },
               {
                 key: 'creation',
-                label: <Link to={'/creation'}>我的作品</Link>
+                label: <Link to={'/creation'}>创作中心</Link>
               },
               {
                 key: 'logout',
-                label: <div onClick={logout}>退出</div>
+                label: <div onClick={logout}>登出</div>
               }
             ]
           : [
