@@ -11,6 +11,7 @@ import CreationLayout from '../Community/CreationLayout'
 import MyCreation from '../Community/MyCreation'
 import MyMaterial from '../Community/MyMaterial'
 import UserNotFound from '../Community/UserNotFound'
+import StartCreate from '../Community/StartCreate'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -29,6 +30,7 @@ function App () {
           <Route path="" element={<MyCreation />} />
           <Route path="myMaterial" element={<MyMaterial />} />
         </Route>
+        <Route path="/startCreate" element={<StartCreate />} />
       </Route>
       <Route path="/engine">
         <Route path="" element={<PlayHomeLayout />} />

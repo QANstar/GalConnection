@@ -140,6 +140,29 @@
 | nickname | 名称   | string |
 | avatar   | 头像   | string |
 
+### 素材文件(MaterialFile)
+
+| 属性       | 解释             | 类型    |
+| ---------- | ---------------- | ------- |
+| name       | 文件名称         | string  |
+| userId     | 文件拥有者       | string  |
+| isFolder   | 是否是文件夹     | Boolean |
+| pid        | 文件所处文件夹id | number  |
+| creactTime | 创建时间         | number  |
+| editTime   | 编辑时间         | number  |
+
+### 素材(Material)
+
+| 属性       | 解释       | 类型   |
+| ---------- | ---------- | ------ |
+| id         | 素材id     | string |
+| type       | 素材类型   | string |
+| link       | 素材链接   | string |
+| pid        | 父文件夹id | number |
+| useId      | 拥有者id   | number |
+| createTime | 创建时间   | number |
+| editTime   | 编辑时间   | number |
+
 ## 使用技术
 
 前端：React、Typescript
