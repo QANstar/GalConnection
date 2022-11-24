@@ -34,6 +34,7 @@
 - 推荐算法
 - 响应式
 - 弹幕
+- 团队协作
 
 # 数据结构
 
@@ -146,6 +147,7 @@
 | ---------- | ---------------- | ------- |
 | name       | 文件名称         | string  |
 | userId     | 文件拥有者       | string  |
+| parentId   | 组id             | string  |
 | isFolder   | 是否是文件夹     | Boolean |
 | pid        | 文件所处文件夹id | number  |
 | creactTime | 创建时间         | number  |
@@ -196,3 +198,5 @@ AI合成音：VITS
 - 美化、响应式
 - 新玩法：roguelike
 - 多语言
+- 团队制作
+- 素材分享
