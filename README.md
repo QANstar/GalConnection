@@ -147,6 +147,7 @@
 | ---------- | ---------------- | ------- |
 | name       | 文件名称         | string  |
 | userId     | 文件拥有者       | string  |
+| parentId   | 组id             | string  |
 | isFolder   | 是否是文件夹     | Boolean |
 | pid        | 文件所处文件夹id | number  |
 | creactTime | 创建时间         | number  |
