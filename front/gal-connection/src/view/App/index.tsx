@@ -28,8 +28,8 @@ function App () {
         <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
-          <Route path="myMaterial" element={<MyMaterial />} />
         </Route>
+        <Route path="/myMaterial" element={<MyMaterial />} />
         <Route path="/startCreate" element={<StartCreate />} />
       </Route>
       <Route path="/engine">

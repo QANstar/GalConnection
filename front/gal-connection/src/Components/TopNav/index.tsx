@@ -27,6 +27,10 @@ function TopNav () {
                 label: <Link to={`/userCenter/${user.id}`}>用户中心</Link>
               },
               {
+                key: 'material',
+                label: <Link to={'/myMaterial'}>素材中心</Link>
+              },
+              {
                 key: 'creation',
                 label: <Link to={'/creation'}>创作中心</Link>
               },
