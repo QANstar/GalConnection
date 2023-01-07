@@ -5,6 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using GalConnection.Server.Config;
+using GalConnection.Server.Setting;
+using GalConnection.Server.Utils;
 
 namespace GalConnection.Server.Services
 {
@@ -35,7 +37,23 @@ namespace GalConnection.Server.Services
                 throw new Exception("用户名已被注册");
             }
             Entity.User user = Utils.ChangeModel.signUpToUser(userInfo);
+            Group group = new()
+            {
+                createTime = TimeUtils.GetNowTime(),
+                type = GroupType.PRIVATE
+            };
+
+            Context.Group.Add(group);
             Context.User.Add(user);
+            Context.SaveChanges();
+            UserGroup userGroup = new()
+            {
+                groupId = group.id,
+                userId = user.id,
+                role = GroupRole.OWNER,
+                joinTime = TimeUtils.GetNowTime()
+            };
+            Context.UserGroup.Add(userGroup);
             Context.SaveChanges();
             return true;
         }
@@ -139,7 +157,7 @@ namespace GalConnection.Server.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public bool AvatarUpload(string url,int userId)
+        public bool AvatarUpload(string url, int userId)
         {
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
             if (user != null)

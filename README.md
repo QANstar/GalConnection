@@ -133,37 +133,59 @@
 
 ### 用户(User)
 
-| 属性     | 解释   | 类型   |
-| -------- | ------ | ------ |
-| id       | 用户id | string |
-| email    | 邮箱   | string |
-| password | 密码   | string |
-| nickname | 名称   | string |
-| avatar   | 头像   | string |
+| 属性      | 解释     | 类型   |
+| --------- | -------- | ------ |
+| id        | 用户id   | string |
+| email     | 邮箱     | string |
+| password  | 密码     | string |
+| nickname  | 名称     | string |
+| avatar    | 头像     | string |
+| banner    | 首页大图 | string |
+| introduce | 介绍     | string |
+| createAt  | 注册时间 | number |
+
+### 组详情(Group)
+
+| 属性       | 解释     | 类型   |
+| ---------- | -------- | ------ |
+| id         | 组id     | int    |
+| type       | 类型     | int    |
+| creactTime | 创建时间 | number |
+
+### 组用户信息(UserGroup)
+
+| 属性     | 解释         | 类型   |
+| -------- | ------------ | ------ |
+| id       | id           | int    |
+| groupId  | 组id         | int    |
+| userId   | 用户id       | int    |
+| role     | 权限（角色） | int    |
+| joinTime | 加入时间     | number |
 
 ### 素材文件(MaterialFile)
 
-| 属性       | 解释             | 类型    |
-| ---------- | ---------------- | ------- |
-| name       | 文件名称         | string  |
-| userId     | 文件拥有者       | string  |
-| groupId    | 组id             | string  |
-| isFolder   | 是否是文件夹     | Boolean |
-| pid        | 文件所处文件夹id | number  |
-| creactTime | 创建时间         | number  |
-| editTime   | 编辑时间         | number  |
+| 属性       | 解释             | 类型   |
+| ---------- | ---------------- | ------ |
+| name       | 文件名称         | string |
+| userId     | 文件拥有者       | string |
+| groupId    | 组id             | string |
+| type       | 文件类型         | string |
+| pid        | 文件所处文件夹id | number |
+| creactTime | 创建时间         | number |
+| editTime   | 编辑时间         | number |
 
 ### 素材(Material)
 
-| 属性       | 解释       | 类型   |
-| ---------- | ---------- | ------ |
-| id         | 素材id     | string |
-| type       | 素材类型   | string |
-| link       | 素材链接   | string |
-| pid        | 父文件夹id | number |
-| useId      | 拥有者id   | number |
-| createTime | 创建时间   | number |
-| editTime   | 编辑时间   | number |
+| 属性       | 解释     | 类型   |
+| ---------- | -------- | ------ |
+| id         | 素材id   | string |
+| type       | 素材类型 | string |
+| link       | 素材链接 | string |
+| fileId     | 文件id   | number |
+| useId      | 拥有者id | number |
+| createTime | 创建时间 | number |
+| editTime   | 编辑时间 | number |
+| state      | 状态     | int    |
 
 ## 使用技术
 

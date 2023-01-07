@@ -20,11 +20,15 @@ namespace GalConnection.Entity
 
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Lines> Lines { get; set; }
         public virtual DbSet<LinesContent> LinesContent { get; set; }
         public virtual DbSet<LinesVoice> LinesVoice { get; set; }
+        public virtual DbSet<Material> Material { get; set; }
+        public virtual DbSet<MaterialFile> MaterialFile { get; set; }
         public virtual DbSet<Option> Option { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<UserPlayedGame> UserPlayedGame { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

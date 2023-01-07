@@ -23,6 +23,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Group]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Lines]",
          "ObjectType": 0
       },
@@ -35,11 +39,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Material]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MaterialFile]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Option]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserGroup]",
          "ObjectType": 0
       },
       {

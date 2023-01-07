@@ -15,7 +15,7 @@ namespace GalConnection.Server.Utils
                 avatar = "",
                 banner = "",
                 introduce = "",
-                createdAt = (DateTime.Now.Ticks - new DateTime(1970, 1, 1, 0, 0, 0, 0).Ticks) / 10000
+                createdAt = TimeUtils.GetNowTime()
             };
         }
 
