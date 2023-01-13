@@ -29,7 +29,7 @@ function App () {
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
         </Route>
-        <Route path="/myMaterial" element={<MyMaterial />} />
+        <Route path="/myMaterial/:groupId/:pid" element={<MyMaterial />} />
         <Route path="/startCreate" element={<StartCreate />} />
       </Route>
       <Route path="/engine">

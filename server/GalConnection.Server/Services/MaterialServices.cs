@@ -150,6 +150,34 @@ namespace GalConnection.Server.Services
             return materialFiles;
         }
         /// <summary>
+        /// 获取指定文件夹下所有文件夹
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="pid"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<MaterialFile> GetFoldersByPid(int groupId, int pid, int userId)
+        {
+            if (!CheckRole(groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("权限不足");
+            }
+            List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.groupId == groupId && x.pid == pid && x.type == FileType.FOLDER && x.state != FileState.DELETE).ToList();
+            return materialFiles;
+        }
+        /// <summary>
+        /// 获取该用户所有的group
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<View_Group> GetGroupOfUser(int userId)
+        {
+            List<View_Group> groups = Context.View_Group.Where(x => x.userId == userId).ToList();
+            return groups;
+        }
+        /// <summary>
         /// 获取文件资源url
         /// </summary>
         /// <param name="groupId"></param>

@@ -149,6 +149,48 @@ namespace GalConnection.Server.Controllers
             }
         }
         /// <summary>
+        /// 获取指定文件夹下所有文件夹
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFoldersByPid(int groupId, int pid)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(materialServices.GetFoldersByPid(groupId, pid, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取该用户所有的group
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetGroupOfUser()
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(materialServices.GetGroupOfUser(userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// 获取文件url
         /// </summary>
         /// <param name="groupId"></param>

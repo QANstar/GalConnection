@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalConnection.Entity
 {
-    public partial class Group
+    [Keyless]
+    public partial class View_Group
     {
-        [Key]
-        public int id { get; set; }
+        public int groupId { get; set; }
+        public int userId { get; set; }
+        public int role { get; set; }
+        public long joinTime { get; set; }
         public int type { get; set; }
         public long createTime { get; set; }
         [Required]

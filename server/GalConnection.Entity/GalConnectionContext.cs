@@ -30,6 +30,7 @@ namespace GalConnection.Entity
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<UserPlayedGame> UserPlayedGame { get; set; }
+        public virtual DbSet<View_Group> View_Group { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,6 +41,11 @@ namespace GalConnection.Entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<View_Group>(entity =>
+            {
+                entity.ToView("View_Group");
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 

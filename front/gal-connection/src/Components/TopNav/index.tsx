@@ -28,7 +28,9 @@ function TopNav () {
               },
               {
                 key: 'material',
-                label: <Link to={'/myMaterial'}>素材中心</Link>
+                label: (
+                  <Link to={`/myMaterial/${user.groupId}/0`}>素材中心</Link>
+                )
               },
               {
                 key: 'creation',

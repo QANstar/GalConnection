@@ -19,7 +19,7 @@ namespace GalConnection.Server.Utils
             };
         }
 
-        public static UserShowModel userToShowModel(User x)
+        public static UserShowModel userToShowModel(User x, int groupId)
         {
             return new UserShowModel()
             {
@@ -29,7 +29,8 @@ namespace GalConnection.Server.Utils
                 avatar = x.avatar,
                 createdAt = x.createdAt,
                 introduce = x.introduce,
-                banner = x.banner
+                banner = x.banner,
+                groupId = groupId
             };
         }
     }

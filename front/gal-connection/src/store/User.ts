@@ -12,6 +12,7 @@ class User implements IUser {
   createdAt: number = 0
   introduce: string = ''
   banner: string = ''
+  groupId: number = 0
 
   constructor () {
     makeAutoObservable(this)
@@ -30,6 +31,7 @@ class User implements IUser {
     this.introduce = data.introduce
     this.banner = data.banner
     this.id = data.id
+    this.groupId = data.groupId
     this.saveLocation()
   }
 
@@ -42,6 +44,7 @@ class User implements IUser {
     this.introduce = ''
     this.banner = ''
     this.id = 0
+    this.groupId = 0
     this.saveLocation()
   }
 

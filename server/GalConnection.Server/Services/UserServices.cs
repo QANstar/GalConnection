@@ -40,7 +40,8 @@ namespace GalConnection.Server.Services
             Group group = new()
             {
                 createTime = TimeUtils.GetNowTime(),
-                type = GroupType.PRIVATE
+                type = GroupType.SELF,
+                name = "我的素材"
             };
 
             Context.Group.Add(group);
@@ -98,9 +99,10 @@ namespace GalConnection.Server.Services
         public UserShowModel GetSelfInfo(int userID)
         {
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
-            if (user != null)
+            View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userID && x.type == GroupType.SELF);
+            if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId);
             }
             else
             {
@@ -114,9 +116,10 @@ namespace GalConnection.Server.Services
         public UserShowModel GetUserInfo(int userId)
         {
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
-            if (user != null)
+            View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userId && x.type == GroupType.SELF);
+            if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId);
             }
             else
             {

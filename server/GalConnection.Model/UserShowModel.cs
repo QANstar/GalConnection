@@ -21,5 +21,6 @@ namespace GalConnection.Model
         public string banner { get; set; }
         public string introduce { get; set; }
         public long createdAt { get; set; }
+        public int groupId { get; set; }
     }
 }

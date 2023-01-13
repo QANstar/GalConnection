@@ -61,9 +61,14 @@
       {
          "Name": "[dbo].[UserPlayedGame]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[View_Group]",
+         "ObjectType": 3
       }
    ],
    "UiHint": "10_0_4_7\\SQLEXPRESS.GalConnection",
+   "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
    "UseDbContextSplitting": false,
@@ -73,9 +78,7 @@
    "UseInflector": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
-   "UseNoConstructor": false,
    "UseNoDefaultConstructor": false,
-   "UseNoNavigations": false,
    "UseNoObjectFilter": false,
    "UseNodaTime": false,
    "UseNullableReferences": false,

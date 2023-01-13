@@ -7,6 +7,7 @@ export interface IUser {
   banner: string
   introduce: string
   createdAt: number
+  groupId: number
 }
 
 export interface IRegister {
@@ -32,4 +33,36 @@ export enum OssFileType {
   Cover,
   Avatar,
   Banner
+}
+
+// 文件
+export interface IFile {
+  id: number
+  name: string
+  userId: number
+  type: string
+  pid: number
+  creactTime: number
+  editTime: number
+  groupId: number
+  state: number
+}
+
+// 组
+export interface IGroup {
+  groupId: number
+  userId: number
+  role: number
+  joinTime: number
+  type: number
+  createTime: number
+  name: string
+}
+
+// 文件夹树
+export interface IFolderTree {
+  title: string
+  key: string
+  data?: IFile
+  children?: IFolderTree[]
 }
