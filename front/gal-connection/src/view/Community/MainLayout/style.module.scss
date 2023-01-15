@@ -1,4 +1,4 @@
-$navHight: 64px;
+@import '../../../assets/styles/size.scss';
 
 .header {
   height: $navHight;
@@ -11,4 +11,6 @@ $navHight: 64px;
 
 .main {
   padding-top: $navHight;
+  height: 100vh;
+  overflow: auto;
 }

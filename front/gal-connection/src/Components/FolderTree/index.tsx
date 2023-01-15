@@ -1,19 +1,43 @@
-import React, { useEffect } from 'react'
-import useFile from '../../Hooks/useFile'
-import style from './style.module.scss'
+import { Tree } from 'antd'
+import { EventDataNode } from 'antd/es/tree'
+import React, { Key, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import useFolderTree from '../../Hooks/useFolderTree'
+import { IFolderTree } from '../../types/type'
 
-interface IFolderTreeProps {
-  groupId: number
-  pid: number
-}
+function FolderTree () {
+  const { folders, initFolderTree, getChildrenNode } = useFolderTree()
+  const navigate = useNavigate()
 
-const FolderTree = (props: IFolderTreeProps) => {
-  const { getFoldersByPid } = useFile()
+  const onFolderClick = (
+    selectedKeys: Key[],
+    info: {
+      event: 'select'
+      selected: boolean
+      node: EventDataNode<IFolderTree>
+      selectedNodes: IFolderTree[]
+      nativeEvent: MouseEvent
+    }
+  ) => {
+    console.log(selectedKeys)
+    if (info.node.data) {
+      navigate(`/myMaterial/${info.node.data.groupId}/${info.node.data.id}`)
+    }
+  }
 
   useEffect(() => {
-    getFoldersByPid(props.groupId, props.pid)
+    initFolderTree()
   }, [])
-  return <div className={style.main}></div>
+
+  return (
+    <div>
+      <Tree
+        onSelect={onFolderClick}
+        loadData={getChildrenNode}
+        treeData={folders}
+      />
+    </div>
+  )
 }
 
 export default FolderTree

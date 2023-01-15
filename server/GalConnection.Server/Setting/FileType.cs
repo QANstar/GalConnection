@@ -5,5 +5,6 @@
         public const string FOLDER = "folder";
         public const string PICTURE = "picture";
         public const string VIDEO = "video";
+        public const string SOUND = "sound";
     }
 }

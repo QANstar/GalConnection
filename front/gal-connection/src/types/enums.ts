@@ -17,5 +17,6 @@ export enum EGroupType {
 export const FileType = {
   FOLDER: 'folder',
   PICTURE: 'picture',
-  VIDEO: 'video'
+  VIDEO: 'video',
+  SOUND: 'sound'
 }

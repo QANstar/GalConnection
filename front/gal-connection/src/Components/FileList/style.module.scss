@@ -1,0 +1,27 @@
+.list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 15px;
+  overflow: auto;
+}
+
+.item {
+  margin: 30px;
+  padding: 10px 15px;
+  cursor: pointer;
+  &:hover {
+    background-color: #e6f4ff;
+    border-radius: 8px;
+  }
+}
+
+.fileIcon {
+  font-size: 100px;
+  color: #fadb14;
+}
+
+.itemText {
+  text-align: center;
+  font-size: 14px;
+}

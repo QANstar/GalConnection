@@ -66,3 +66,11 @@ export interface IFolderTree {
   data?: IFile
   children?: IFolderTree[]
 }
+
+// 创建文件夹
+export interface ICreateFolder {
+  name: string
+  type: string
+  pid: number
+  groupId: number
+}

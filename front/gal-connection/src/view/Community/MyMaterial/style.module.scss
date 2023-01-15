@@ -1,0 +1,31 @@
+@import '../../../assets/styles/size.scss';
+
+.header {
+  position: fixed;
+  box-sizing: border-box;
+  width: 200px;
+  padding: 20px;
+  top: $navHight + 15px;
+  bottom: 15px;
+  background-color: #fff;
+  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  border-radius: 12px;
+}
+
+.myMaterial {
+  padding: 15px;
+}
+
+.actionBtn {
+  width: 100%;
+}
+
+.topAction {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.main {
+  padding-left: 200px;
+}
