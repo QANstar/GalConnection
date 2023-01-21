@@ -13,9 +13,19 @@ interface IFileListItemProps {
 
 function FileListItem (props: IFileListItemProps) {
   const [fileUrl, setFileUrl] = useState('')
+  const [imageVisable, setImgVisable] = useState(false)
   const items: MenuProps['items'] = [
     {
-      label: <div onClick={() => props.onClick(props.file)}>打开</div>,
+      label: (
+        <div
+          onClick={() => {
+            setImgVisable(true)
+            props.onClick(props.file)
+          }}
+        >
+          打开
+        </div>
+      ),
       key: '1'
     },
     {
@@ -51,14 +61,18 @@ function FileListItem (props: IFileListItemProps) {
           className={style.imgStyle}
           src={`${fileUrl}?x-oss-process=style/low`}
           preview={{
-            src: fileUrl
+            visible: imageVisable,
+            src: fileUrl,
+            onVisibleChange: (value) => {
+              setImgVisable(value)
+            }
           }}
         />
       )
     } else {
       return <FileFilled className={style.fileIcon} />
     }
-  }, [props.file, fileUrl])
+  }, [props.file, fileUrl, imageVisable])
 
   useEffect(() => {
     getUrl()
@@ -66,7 +80,13 @@ function FileListItem (props: IFileListItemProps) {
 
   return (
     <Dropdown menu={{ items }} trigger={['contextMenu']}>
-      <div onClick={() => props.onClick(props.file)} className={style.item}>
+      <div
+        onClick={() => {
+          setImgVisable(true)
+          props.onClick(props.file)
+        }}
+        className={style.item}
+      >
         <div className={style.cover}>{fileElement}</div>
         <div className={style.itemText}>{props.file.name}</div>
       </div>
