@@ -32,7 +32,7 @@ const useFile = (groupId: number, pid: number) => {
     async (name: string) => {
       try {
         setError('')
-        const { status } = await fileService.createFolder({
+        const { status, data } = await fileService.createFolder({
           groupId,
           pid,
           type: FileType.FOLDER,
@@ -40,6 +40,8 @@ const useFile = (groupId: number, pid: number) => {
         })
         if (status === 200) {
           getFiles()
+        } else {
+          setError(data.toString())
         }
       } catch (e: any) {
         setError(e)

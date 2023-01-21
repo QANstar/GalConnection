@@ -20,3 +20,7 @@ export const getFiles = (params: { groupId: number; pid: number }) =>
 // 创建文件夹
 export const createFolder = (params: ICreateFolder) =>
   request.post<number>('/api/Material/CreateFolder', params)
+
+// 创建文件
+export const createFile = (params: ICreateFolder) =>
+  request.post<number>('/api/Material/CreateFolder', params)

@@ -32,7 +32,10 @@ export enum OssFileType {
   Character,
   Cover,
   Avatar,
-  Banner
+  Banner,
+  Picture,
+  Voice,
+  Sound
 }
 
 // 文件

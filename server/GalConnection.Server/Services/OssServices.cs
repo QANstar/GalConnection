@@ -73,6 +73,15 @@ namespace GalConnection.Server.Services
                     case OssFileType.Cover:
                         ossFolder = "game/cover/";
                         break;
+                    case OssFileType.Picture:
+                        ossFolder = "game/picture/";
+                        break;
+                    case OssFileType.Voice:
+                        ossFolder = "game/voice/";
+                        break;
+                    case OssFileType.Sound:
+                        ossFolder = "game/sound/";
+                        break;
                 }
                 string guid = Guid.NewGuid().ToString();
                 string fileName = guid + Path.GetExtension(file.FileName);

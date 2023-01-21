@@ -3,7 +3,7 @@ import { message } from 'antd'
 import store from '../store/index'
 
 const request = axios.create({
-  baseURL: 'https://localhost:44311',
+  baseURL: process.env.REACT_APP_SERVER_URL,
   validateStatus: (status) => status < 500
 })
 

@@ -22,6 +22,11 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int CreateFolder(CreateFloderModel createFileModel, int userId)
         {
+            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name);
+            if (isHaveName)
+            {
+                throw new Exception("文件名称重复");
+            }
             MaterialFile materialFile = new()
             {
                 name = createFileModel.name,
@@ -45,6 +50,11 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int CreateFile(CreateFileModel createFileModel, int userId)
         {
+            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name);
+            if (isHaveName)
+            {
+                throw new Exception("文件名称重复");
+            }
             MaterialFile materialFile = new()
             {
                 name = createFileModel.name,

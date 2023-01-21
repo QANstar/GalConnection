@@ -4,19 +4,23 @@ import {
   PictureOutlined,
   PlaySquareOutlined
 } from '@ant-design/icons'
-import { Button, Dropdown, Input, MenuProps, Modal } from 'antd'
-import React, { useState } from 'react'
+import { Button, Dropdown, Input, MenuProps, message, Modal } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import FileList from '../../../Components/FileList'
 import FolderTree from '../../../Components/FolderTree'
+import OssUpload from '../../../Components/OssUpload'
 import useFile from '../../../Hooks/useFile'
 import { FileType } from '../../../types/enums'
-import { IFile } from '../../../types/type'
+import { IFile, OssFileType } from '../../../types/type'
 import style from './style.module.scss'
 
 function MyMaterial () {
   const { groupId, pid } = useParams()
-  const { files, createFolder } = useFile(parseInt(groupId!), parseInt(pid!))
+  const { files, error, createFolder } = useFile(
+    parseInt(groupId!),
+    parseInt(pid!)
+  )
   const navigate = useNavigate()
   const [isOpenNewFolderModal, setIsOpenNewFolderModal] = useState(false)
   const [folderName, setFolderName] = useState('')
@@ -40,8 +44,17 @@ function MyMaterial () {
     {
       label: (
         <div>
-          <PictureOutlined style={{ marginRight: 10 }} />
-          图片
+          <OssUpload
+            type={OssFileType.Picture}
+            onFinish={(data) => {
+              console.log(data)
+            }}
+          >
+            <div>
+              <PictureOutlined style={{ marginRight: 10 }} />
+              图片
+            </div>
+          </OssUpload>
         </div>
       ),
       key: '1'
@@ -65,6 +78,12 @@ function MyMaterial () {
       key: '4'
     }
   ]
+
+  useEffect(() => {
+    if (error !== '') {
+      message.error(error)
+    }
+  }, [error])
 
   return (
     <div className={style.myMaterial}>

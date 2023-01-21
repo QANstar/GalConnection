@@ -13,6 +13,9 @@ namespace GalConnection.Model
         Character,
         Cover,
         Avatar,
-        Banner
+        Banner,
+        Picture,
+        Voice,
+        Sound
     }
 }
