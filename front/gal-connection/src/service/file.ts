@@ -1,4 +1,4 @@
-import { ICreateFolder, IFile, IGroup } from '../types/type'
+import { ICreateFile, ICreateFolder, IFile, IGroup } from '../types/type'
 import request from './request'
 
 // 用户加入的组
@@ -22,5 +22,11 @@ export const createFolder = (params: ICreateFolder) =>
   request.post<number>('/api/Material/CreateFolder', params)
 
 // 创建文件
-export const createFile = (params: ICreateFolder) =>
-  request.post<number>('/api/Material/CreateFolder', params)
+export const createFile = (params: ICreateFile) =>
+  request.post<number>('/api/Material/CreateFile', params)
+
+// 获取文件url
+export const getFileUrl = (params: { groupId: number; fileId: number }) =>
+  request.get<string>(
+    `/api/Material/GetUrl?groupId=${params.groupId}&fileId=${params.fileId}`
+  )

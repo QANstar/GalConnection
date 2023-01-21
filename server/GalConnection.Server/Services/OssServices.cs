@@ -76,8 +76,8 @@ namespace GalConnection.Server.Services
                     case OssFileType.Picture:
                         ossFolder = "game/picture/";
                         break;
-                    case OssFileType.Voice:
-                        ossFolder = "game/voice/";
+                    case OssFileType.Video:
+                        ossFolder = "game/video/";
                         break;
                     case OssFileType.Sound:
                         ossFolder = "game/sound/";

@@ -34,7 +34,7 @@ export enum OssFileType {
   Avatar,
   Banner,
   Picture,
-  Voice,
+  Video,
   Sound
 }
 
@@ -76,4 +76,13 @@ export interface ICreateFolder {
   type: string
   pid: number
   groupId: number
+}
+
+// 创建文件
+export interface ICreateFile {
+  name: string
+  type: string
+  pid: number
+  groupId: number
+  link: string
 }

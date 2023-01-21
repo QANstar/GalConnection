@@ -17,7 +17,7 @@ import style from './style.module.scss'
 
 function MyMaterial () {
   const { groupId, pid } = useParams()
-  const { files, error, createFolder } = useFile(
+  const { files, error, createFolder, createFile } = useFile(
     parseInt(groupId!),
     parseInt(pid!)
   )
@@ -47,7 +47,19 @@ function MyMaterial () {
           <OssUpload
             type={OssFileType.Picture}
             onFinish={(data) => {
-              console.log(data)
+              let type: string = ''
+              if (data.type === OssFileType.Picture) {
+                type = FileType.PICTURE
+              } else if (data.type === OssFileType.Sound) {
+                type = FileType.SOUND
+              } else if (data.type === OssFileType.Video) {
+                type = FileType.VIDEO
+              }
+              createFile(
+                data.url.split('/')[data.url.split('/').length - 1],
+                type,
+                data.url
+              )
             }}
           >
             <div>

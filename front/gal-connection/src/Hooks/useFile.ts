@@ -50,6 +50,30 @@ const useFile = (groupId: number, pid: number) => {
     [groupId, pid]
   )
 
+  // 创建文件
+  const createFile = useCallback(
+    async (name: string, type: string, link: string) => {
+      try {
+        setError('')
+        const { status, data } = await fileService.createFile({
+          groupId,
+          pid,
+          type,
+          name,
+          link
+        })
+        if (status === 200) {
+          getFiles()
+        } else {
+          setError(data.toString())
+        }
+      } catch (e: any) {
+        setError(e)
+      }
+    },
+    [groupId, pid]
+  )
+
   useEffect(() => {
     getFiles()
   }, [groupId, pid])
@@ -59,6 +83,7 @@ const useFile = (groupId: number, pid: number) => {
     loading,
     getFiles,
     createFolder,
+    createFile,
     error
   }
 }
