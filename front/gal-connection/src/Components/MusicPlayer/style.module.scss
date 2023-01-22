@@ -1,0 +1,17 @@
+.player {
+  transition: 0.2s ease;
+  position: absolute;
+  right: 20px;
+  top: 150px;
+  z-index: 20;
+  width: 300px;
+}
+
+.playerHidden {
+  transition: 0.2s ease;
+  position: absolute;
+  right: -300px;
+  top: 150px;
+  z-index: 20;
+  width: 300px;
+}

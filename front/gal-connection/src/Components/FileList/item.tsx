@@ -1,5 +1,9 @@
-import { FileFilled, FolderFilled } from '@ant-design/icons'
-import { Dropdown, Image, MenuProps } from 'antd'
+import {
+  CustomerServiceOutlined,
+  FileFilled,
+  FolderFilled
+} from '@ant-design/icons'
+import { Dropdown, Image, MenuProps, Tag } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
 import { getFileUrl } from '../../service/file'
 import { FileType } from '../../types/enums'
@@ -8,7 +12,7 @@ import style from './style.module.scss'
 
 interface IFileListItemProps {
   file: IFile
-  onClick: (data: IFile) => void
+  onClick: (data: IFile, url?: string) => void
 }
 
 function FileListItem (props: IFileListItemProps) {
@@ -20,7 +24,7 @@ function FileListItem (props: IFileListItemProps) {
         <div
           onClick={() => {
             setImgVisable(true)
-            props.onClick(props.file)
+            props.onClick(props.file, fileUrl)
           }}
         >
           打开
@@ -52,6 +56,18 @@ function FileListItem (props: IFileListItemProps) {
     }
   }
 
+  const tagText = useMemo(() => {
+    if (props.file.type === FileType.PICTURE) {
+      return <Tag color="lime">图片</Tag>
+    } else if (props.file.type === FileType.VIDEO) {
+      return <Tag color="orange">视频</Tag>
+    } else if (props.file.type === FileType.SOUND) {
+      return <Tag color="geekblue">音频</Tag>
+    } else {
+      return ''
+    }
+  }, [props.file])
+
   const fileElement = useMemo(() => {
     if (props.file.type === FileType.FOLDER) {
       return <FolderFilled className={style.fileIcon} />
@@ -69,6 +85,16 @@ function FileListItem (props: IFileListItemProps) {
           }}
         />
       )
+    } else if (props.file.type === FileType.VIDEO) {
+      return (
+        <img
+          className={style.imgStyle}
+          src={`${fileUrl}?x-oss-process=video/snapshot,t_1000,m_fast`}
+          alt="视频预览图"
+        />
+      )
+    } else if (props.file.type === FileType.SOUND) {
+      return <CustomerServiceOutlined className={style.musicIcon} />
     } else {
       return <FileFilled className={style.fileIcon} />
     }
@@ -83,10 +109,11 @@ function FileListItem (props: IFileListItemProps) {
       <div
         onClick={() => {
           setImgVisable(true)
-          props.onClick(props.file)
+          props.onClick(props.file, fileUrl)
         }}
         className={style.item}
       >
+        <div className={style.tag}>{tagText}</div>
         <div className={style.cover}>{fileElement}</div>
         <div className={style.itemText}>{props.file.name}</div>
       </div>

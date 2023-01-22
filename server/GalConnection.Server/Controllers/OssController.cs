@@ -31,6 +31,7 @@ namespace GalConnection.Server.Controllers
         [EnableCors("any")]
         [Authorize]
         [HttpPost]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> Upload(IFormFile file, OssFileType ossFileType)
         {
             try

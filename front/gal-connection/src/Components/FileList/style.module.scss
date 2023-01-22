@@ -7,6 +7,7 @@
 }
 
 .item {
+  position: relative;
   margin: 30px;
   width: 130px;
   height: 130px;
@@ -24,6 +25,11 @@
 .fileIcon {
   font-size: 100px;
   color: #fadb14;
+}
+
+.musicIcon {
+  @extend .fileIcon;
+  color: #4096ff;
 }
 
 .cover {
@@ -48,4 +54,11 @@
 .imgStyle {
   max-width: 100px;
   max-height: 100px;
+}
+
+.tag {
+  position: absolute;
+  z-index: 10;
+  left: 5px;
+  top: 5px;
 }
