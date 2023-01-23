@@ -3,21 +3,26 @@ import {
   FileFilled,
   FolderFilled
 } from '@ant-design/icons'
-import { Dropdown, Image, MenuProps, Tag } from 'antd'
-import React, { useEffect, useMemo, useState } from 'react'
+import { Dropdown, Image, Input, InputRef, MenuProps, Tag } from 'antd'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { getFileUrl } from '../../service/file'
 import { FileType } from '../../types/enums'
-import { IFile } from '../../types/type'
+import { IFile, IRename } from '../../types/type'
 import style from './style.module.scss'
 
 interface IFileListItemProps {
   file: IFile
   onClick: (data: IFile, url?: string) => void
+  onDelete: () => void
+  onRename: (value: IRename) => void
 }
 
 function FileListItem (props: IFileListItemProps) {
   const [fileUrl, setFileUrl] = useState('')
   const [imageVisable, setImgVisable] = useState(false)
+  const [isRenameMode, setIsRenameMode] = useState(false)
+  const [renameValue, setRenameValue] = useState(props.file.name)
+  const inputRef = useRef<InputRef>(null)
   const items: MenuProps['items'] = [
     {
       label: (
@@ -30,15 +35,32 @@ function FileListItem (props: IFileListItemProps) {
           打开
         </div>
       ),
-      key: '1'
+      key: 'open'
     },
     {
       label: '移动',
-      key: '2'
+      key: 'move'
     },
     {
-      label: '删除',
-      key: '3'
+      label: (
+        <div
+          onClick={() => {
+            setIsRenameMode(true)
+            setTimeout(() => {
+              inputRef.current!.focus({
+                cursor: 'all'
+              })
+            })
+          }}
+        >
+          重命名
+        </div>
+      ),
+      key: 'rename'
+    },
+    {
+      label: <div onClick={props.onDelete}>删除</div>,
+      key: 'delete'
     }
   ]
 
@@ -54,6 +76,12 @@ function FileListItem (props: IFileListItemProps) {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  // 确定重命名
+  const sureRename = () => {
+    setIsRenameMode(false)
+    props.onRename({ fileId: props.file.id, newName: renameValue })
   }
 
   const tagText = useMemo(() => {
@@ -112,10 +140,33 @@ function FileListItem (props: IFileListItemProps) {
           props.onClick(props.file, fileUrl)
         }}
         className={style.item}
+        title={props.file.name}
       >
         <div className={style.tag}>{tagText}</div>
         <div className={style.cover}>{fileElement}</div>
-        <div className={style.itemText}>{props.file.name}</div>
+
+        {!isRenameMode
+          ? (
+          <div className={style.itemText}>{props.file.name}</div>
+            )
+          : (
+          <div className={style.renameInput}>
+            <Input
+              value={renameValue}
+              onChange={(val) => {
+                setRenameValue(val.target.value)
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              ref={inputRef}
+              size="small"
+              placeholder="重命名"
+              onPressEnter={sureRename}
+              onBlur={sureRename}
+            />
+          </div>
+            )}
       </div>
     </Dropdown>
   )

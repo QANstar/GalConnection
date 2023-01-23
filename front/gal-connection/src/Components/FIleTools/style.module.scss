@@ -1,0 +1,38 @@
+@import '../../assets/styles/color.scss';
+
+.main {
+  margin: 0px 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  height: 58px;
+  background-color: #fff;
+  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  border-radius: 12px;
+  display: flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  transition: 0.2s ease;
+  cursor: pointer;
+  &:hover {
+    color: $theme_hover;
+  }
+}
+
+.iconDefault {
+  cursor: pointer;
+  transition: 0.2s ease;
+  padding: 10px;
+  border-radius: 8px;
+  margin-left: 20px;
+}
+
+.iconActive {
+  @extend .iconDefault;
+  background-color: #e6eef9;
+  color: #185ee0;
+}

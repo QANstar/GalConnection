@@ -1,5 +1,6 @@
 import {
   CustomerServiceOutlined,
+  ExclamationCircleFilled,
   FolderOutlined,
   PictureOutlined,
   PlaySquareOutlined
@@ -13,16 +14,24 @@ import OssUpload from '../../../Components/OssUpload'
 import useFile from '../../../Hooks/useFile'
 import { FileType } from '../../../types/enums'
 import JoLPlayer from 'jol-player'
-import { IFile, OssFileType } from '../../../types/type'
+import { FilterFileTye, IFile, OssFileType } from '../../../types/type'
 import style from './style.module.scss'
 import MusicPlayer from '../../../Components/MusicPlayer'
+import FileTools from '../../../Components/FIleTools'
 
 function MyMaterial () {
+  const [typeFilterValue, setTypeFilterValue] = useState<FilterFileTye>('all')
   const { groupId, pid } = useParams()
-  const { files, error, loading, createFolder, createFile } = useFile(
-    parseInt(groupId!),
-    parseInt(pid!)
-  )
+  const {
+    files,
+    error,
+    loading,
+    folderInfo,
+    createFolder,
+    createFile,
+    delFile,
+    rename
+  } = useFile(parseInt(groupId!), parseInt(pid!), typeFilterValue)
   const navigate = useNavigate()
   const [isOpenNewFolderModal, setIsOpenNewFolderModal] = useState(false)
   const [folderName, setFolderName] = useState('')
@@ -30,6 +39,8 @@ function MyMaterial () {
   const [soundVisable, setSoundVisable] = useState(false)
   const [videoUrl, setVideoUrl] = useState('')
   const [soundUrl, setSoundUrl] = useState('')
+  const { confirm } = Modal
+
   const videoRef = useRef(null)
 
   // 文件被点击时
@@ -58,7 +69,11 @@ function MyMaterial () {
   }
 
   // 上传完成时
-  const onUploadFinish = (data: { url: string; type: OssFileType }) => {
+  const onUploadFinish = (data: {
+    url: string
+    type: OssFileType
+    name: string
+  }) => {
     let type: string = ''
     if (data.type === OssFileType.Picture) {
       type = FileType.PICTURE
@@ -67,11 +82,7 @@ function MyMaterial () {
     } else if (data.type === OssFileType.Video) {
       type = FileType.VIDEO
     }
-    createFile(
-      data.url.split('/')[data.url.split('/').length - 1],
-      type,
-      data.url
-    )
+    createFile(data.name, type, data.url)
   }
 
   const items: MenuProps['items'] = [
@@ -192,6 +203,21 @@ function MyMaterial () {
         </div>
       </header>
       <main className={style.main}>
+        {folderInfo && (
+          <FileTools
+            title={folderInfo.name}
+            isShowBack={folderInfo.pid !== null}
+            typeFilterSelect={typeFilterValue}
+            onTypeFilterSelect={(value) => {
+              setTypeFilterValue(value)
+            }}
+            onBackClick={() => {
+              if (folderInfo.pid !== null) {
+                navigate(`/myMaterial/${folderInfo.groupId}/${folderInfo.pid}`)
+              }
+            }}
+          />
+        )}
         {loading
           ? (
           <div className={style.spin}>
@@ -199,7 +225,25 @@ function MyMaterial () {
           </div>
             )
           : (
-          <FileList onFileClick={onFileClick} files={files} />
+          <FileList
+            onDeleteClick={(fileId) => {
+              confirm({
+                title: '你确定需要删除当前文件吗？',
+                icon: <ExclamationCircleFilled />,
+                content: '你后期可以在回收站找到它并做处理',
+                okText: '确认',
+                cancelText: '取消',
+                okType: 'danger',
+                onOk () {
+                  delFile(fileId)
+                },
+                onCancel () {}
+              })
+            }}
+            onFileClick={onFileClick}
+            onRenameFinsih={rename}
+            files={files}
+          />
             )}
       </main>
     </div>

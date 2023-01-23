@@ -1,3 +1,6 @@
+// 筛选文件类型
+export type FilterFileTye = 'all' | 'folder' | 'video' | 'picture' | 'sound'
+
 export interface IUser {
   id: number
   email: string
@@ -85,4 +88,19 @@ export interface ICreateFile {
   pid: number
   groupId: number
   link: string
+}
+
+// 当前文件夹信息
+export interface IFolderInfo {
+  createTime: number
+  name: string
+  pid?: number
+  groupId: number
+  id: number
+}
+
+// 重命名
+export interface IRename {
+  newName: string
+  fileId: number
 }

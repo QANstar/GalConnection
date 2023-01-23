@@ -6,7 +6,7 @@ import { OssFileType } from '../../types/type'
 interface IOssUploadProps {
   children: React.ReactNode
   type: OssFileType
-  onFinish: (data: { url: string; type: OssFileType }) => void
+  onFinish: (data: { url: string; type: OssFileType; name: string }) => void
 }
 
 function OssUpload (props: IOssUploadProps) {
@@ -21,9 +21,10 @@ function OssUpload (props: IOssUploadProps) {
         console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
-        const uploadRes: { url: string; type: OssFileType } = {
+        const uploadRes: { url: string; type: OssFileType; name: string } = {
           url: info.file.response,
-          type: props.type
+          type: props.type,
+          name: info.file.name
         }
         props.onFinish(uploadRes)
       } else if (info.file.status === 'error') {

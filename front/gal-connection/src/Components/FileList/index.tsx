@@ -1,11 +1,13 @@
 import React from 'react'
-import { IFile } from '../../types/type'
+import { IFile, IRename } from '../../types/type'
 import FileListItem from './item'
 import style from './style.module.scss'
 
 interface IFileListProps {
   files: IFile[]
   onFileClick: (data: IFile, url?: string) => void
+  onDeleteClick: (fileId: number) => void
+  onRenameFinsih: (value: IRename) => void
 }
 
 function FileList (props: IFileListProps) {
@@ -13,6 +15,8 @@ function FileList (props: IFileListProps) {
     <div className={style.list}>
       {props.files.map((file) => (
         <FileListItem
+          onDelete={() => props.onDeleteClick(file.id)}
+          onRename={props.onRenameFinsih}
           onClick={(data, url) => props.onFileClick(data, url)}
           key={file.id}
           file={file}

@@ -143,6 +143,25 @@ namespace GalConnection.Server.Services
             List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).ToList();
             return materialFiles;
         }
+        // 根据类型获取当前文件夹文件
+        public List<MaterialFile> GetFilesByType(int groupId, int pid, int userId, string type)
+        {
+            if (!CheckRole(groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("权限不足");
+            }
+            if (type == "all")
+            {
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).ToList();
+                return materialFiles;
+            }
+            else
+            {
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && x.type == type).ToList();
+                return materialFiles;
+            }
+
+        }
         /// <summary>
         /// 获取当前组所有文件夹
         /// </summary>
@@ -208,6 +227,50 @@ namespace GalConnection.Server.Services
             }
             return materials.link;
         }
+        /// <summary>
+        /// 获取文件夹信息
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="fileId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public FolderInfoModel GetFolderInfo(int groupId, int fileId, int userId)
+        {
+            if (!CheckRole(groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("权限不足");
+            }
+            FolderInfoModel folderInfoModel = new FolderInfoModel();
+            if (fileId == 0)
+            {
+                Entity.Group group = Context.Group.FirstOrDefault(x => x.id == groupId);
+                if (group == null)
+                {
+                    throw new Exception("组不存在");
+                }
+                folderInfoModel.id = group.id;
+                folderInfoModel.pid = null;
+                folderInfoModel.name = group.name;
+                folderInfoModel.groupId = group.id;
+                folderInfoModel.createTime = group.createTime;
+            }
+            else
+            {
+                MaterialFile materialFile = Context.MaterialFile.FirstOrDefault(x => x.id == fileId);
+                if (materialFile == null)
+                {
+                    throw new Exception("文件夹不存在");
+                }
+                folderInfoModel.id = materialFile.id;
+                folderInfoModel.pid = materialFile.pid;
+                folderInfoModel.name = materialFile.name;
+                folderInfoModel.groupId = materialFile.groupId;
+                folderInfoModel.createTime = materialFile.creactTime;
+            }
+            return folderInfoModel;
+        }
+
         /// <summary>
         /// 检查权限
         /// </summary>
