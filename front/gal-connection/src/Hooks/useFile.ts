@@ -117,6 +117,24 @@ const useFile = (groupId: number, pid: number, type: FilterFileTye) => {
     [groupId, pid, files]
   )
 
+  // 移动文件
+  const moveFolder = useCallback(
+    async (value: { fileId: number; folderId: number }) => {
+      try {
+        setError('')
+        const { status, data } = await fileService.moveFolder(value)
+        if (status === 200) {
+          getFiles()
+        } else {
+          setError(data.toString())
+        }
+      } catch (e: any) {
+        setError(e)
+      }
+    },
+    [groupId, pid]
+  )
+
   // 删除文件
   const delFile = useCallback(
     async (fileId: number) => {
@@ -169,6 +187,7 @@ const useFile = (groupId: number, pid: number, type: FilterFileTye) => {
     createFile,
     getFilesByType,
     rename,
+    moveFolder,
     error
   }
 }

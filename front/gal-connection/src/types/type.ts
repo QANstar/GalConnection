@@ -70,6 +70,7 @@ export interface IFolderTree {
   title: string
   key: string
   data?: IFile
+  disabled?: boolean
   children?: IFolderTree[]
 }
 

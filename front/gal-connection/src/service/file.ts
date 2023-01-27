@@ -61,3 +61,7 @@ export const delFile = (fileId: number) =>
 // 重命名
 export const rename = (params: IRename) =>
   request.post<number>('/api/Material/ReName', params)
+
+// 移动文件夹
+export const moveFolder = (params: { fileId: number; folderId: number }) =>
+  request.post<number>('/api/Material/MoveFolder', params)

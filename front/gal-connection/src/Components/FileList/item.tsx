@@ -15,6 +15,7 @@ interface IFileListItemProps {
   onClick: (data: IFile, url?: string) => void
   onDelete: () => void
   onRename: (value: IRename) => void
+  onRemove: () => void
 }
 
 function FileListItem (props: IFileListItemProps) {
@@ -38,7 +39,7 @@ function FileListItem (props: IFileListItemProps) {
       key: 'open'
     },
     {
-      label: '移动',
+      label: <div onClick={props.onRemove}>移动</div>,
       key: 'move'
     },
     {

@@ -119,7 +119,8 @@ const useFolderTree = () => {
         tree.push({
           title: '团队素材',
           key: 'group',
-          children: otherGroupTree
+          children: otherGroupTree,
+          disabled: true
         })
         setFolders(tree)
       }

@@ -8,6 +8,7 @@ interface IFileListProps {
   onFileClick: (data: IFile, url?: string) => void
   onDeleteClick: (fileId: number) => void
   onRenameFinsih: (value: IRename) => void
+  onRemoveClick: (fileId: number) => void
 }
 
 function FileList (props: IFileListProps) {
@@ -15,6 +16,7 @@ function FileList (props: IFileListProps) {
     <div className={style.list}>
       {props.files.map((file) => (
         <FileListItem
+          onRemove={() => props.onRemoveClick(file.id)}
           onDelete={() => props.onDeleteClick(file.id)}
           onRename={props.onRenameFinsih}
           onClick={(data, url) => props.onFileClick(data, url)}

@@ -43,6 +43,29 @@ namespace GalConnection.Server.Services
             return materialFile.id;
         }
         /// <summary>
+        /// 更换文件夹
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <param name="folderId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public int MoveFolder(int fileId, int folderId, int userId)
+        {
+            MaterialFile materialFile = Context.MaterialFile.FirstOrDefault(x => x.id == fileId);
+            if (materialFile == null)
+            {
+                throw new Exception("文件不存在");
+            }
+            if (!CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("权限不足");
+            }
+            materialFile.pid = folderId;
+            Context.SaveChanges();
+            return materialFile.id;
+        }
+        /// <summary>
         /// 创建文件
         /// </summary>
         /// <param name="createFileModel"></param>

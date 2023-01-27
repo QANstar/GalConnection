@@ -30,15 +30,19 @@ function MyMaterial () {
     createFolder,
     createFile,
     delFile,
-    rename
+    rename,
+    moveFolder
   } = useFile(parseInt(groupId!), parseInt(pid!), typeFilterValue)
   const navigate = useNavigate()
   const [isOpenNewFolderModal, setIsOpenNewFolderModal] = useState(false)
   const [folderName, setFolderName] = useState('')
   const [videoVisable, setVideoVisable] = useState(false)
   const [soundVisable, setSoundVisable] = useState(false)
+  const [removeFolderVisable, setRemoveFolderVisable] = useState(false)
   const [videoUrl, setVideoUrl] = useState('')
   const [soundUrl, setSoundUrl] = useState('')
+  const [removeId, setRemoveId] = useState(0)
+  const [removeClickFolderId, setRemoveClickFolderId] = useState(0)
   const { confirm } = Modal
 
   const videoRef = useRef(null)
@@ -184,6 +188,30 @@ function MyMaterial () {
           placeholder="文件夹名称"
         />
       </Modal>
+      <Modal
+        title="选择文件夹"
+        open={removeFolderVisable}
+        onOk={() => {
+          moveFolder({ fileId: removeId, folderId: removeClickFolderId })
+          setRemoveFolderVisable(false)
+          setRemoveId(0)
+          setRemoveClickFolderId(0)
+        }}
+        onCancel={() => {
+          setRemoveId(0)
+          setRemoveClickFolderId(0)
+          setRemoveFolderVisable(false)
+        }}
+        okText="确认"
+        cancelText="取消"
+      >
+        <FolderTree
+          onItemClick={(data) => {
+            console.log(data, removeId, removeClickFolderId)
+            setRemoveClickFolderId(data.id)
+          }}
+        />
+      </Modal>
       <MusicPlayer
         visable={soundVisable}
         onShow={() => setSoundVisable(true)}
@@ -199,7 +227,11 @@ function MyMaterial () {
           </Dropdown>
         </div>
         <div>
-          <FolderTree />
+          <FolderTree
+            onItemClick={(data) => {
+              navigate(`/myMaterial/${data.groupId}/${data.id}`)
+            }}
+          />
         </div>
       </header>
       <main className={style.main}>
@@ -226,6 +258,10 @@ function MyMaterial () {
             )
           : (
           <FileList
+            onRemoveClick={(fileId) => {
+              setRemoveId(fileId)
+              setRemoveFolderVisable(true)
+            }}
             onDeleteClick={(fileId) => {
               confirm({
                 title: '你确定需要删除当前文件吗？',

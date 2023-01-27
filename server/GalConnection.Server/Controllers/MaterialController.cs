@@ -258,5 +258,26 @@ namespace GalConnection.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 更换文件夹
+        /// </summary>
+        /// <param name="moveFolderModel"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult MoveFolder(MoveFolderModel moveFolderModel)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(materialServices.MoveFolder(moveFolderModel.fileId, moveFolderModel.folderId, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

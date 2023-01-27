@@ -1,13 +1,15 @@
 import { Tree } from 'antd'
 import { EventDataNode } from 'antd/es/tree'
 import React, { Key, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import useFolderTree from '../../Hooks/useFolderTree'
-import { IFolderTree } from '../../types/type'
+import { IFile, IFolderTree } from '../../types/type'
 
-function FolderTree () {
+interface IFolderTreeProps {
+  onItemClick: (data: IFile) => void
+}
+
+function FolderTree (props: IFolderTreeProps) {
   const { folders, initFolderTree, getChildrenNode } = useFolderTree()
-  const navigate = useNavigate()
 
   const onFolderClick = (
     selectedKeys: Key[],
@@ -21,7 +23,7 @@ function FolderTree () {
   ) => {
     console.log(selectedKeys)
     if (info.node.data) {
-      navigate(`/myMaterial/${info.node.data.groupId}/${info.node.data.id}`)
+      props.onItemClick(info.node.data)
     }
   }
 
