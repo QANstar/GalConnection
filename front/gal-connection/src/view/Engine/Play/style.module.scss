@@ -1,6 +1,11 @@
-.main {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background: 50% / cover no-repeat fixed;
+$view_width: 100vw;
+$view_height: 100vh;
+
+.gameView {
+  background-color: #000;
+  width: $view_width;
+  height: $view_height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import React from 'react'
-import { IOptions } from '../../types/gameTypes'
+import { IOptions } from '../../../types/gameTypes'
 import style from './style.module.scss'
 
 interface IOptionListProps {

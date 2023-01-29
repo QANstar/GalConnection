@@ -1,5 +1,5 @@
 import React from 'react'
-import { ILines } from '../../types/gameTypes'
+import { ILines } from '../../../types/gameTypes'
 import { Link } from 'react-router-dom'
 import style from './style.module.scss'
 

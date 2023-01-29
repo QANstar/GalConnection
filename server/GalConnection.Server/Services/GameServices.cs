@@ -1,5 +1,6 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
+using GalConnection.Server.Setting;
 
 namespace GalConnection.Server.Services
 {
@@ -75,6 +76,29 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             Context.Entry(gameEvent);
             return gameEvent.id;
+        }
+        /// <summary>
+        /// 创建游戏
+        /// </summary>
+        /// <param name="createGame"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int CreateGame(GameCreateModel createGame, int userId)
+        {
+            Game game = new()
+            {
+                userId = userId,
+                tag = string.Join(",", createGame.tag),
+                cover = createGame.cover,
+                homeBg = createGame.homeBg,
+                preCG = string.Join(',', createGame.preCG),
+                langeuage = string.Join(",", createGame.langeuage),
+                introduce = createGame.introduce,
+                state = GameState.DEVELOPMENT
+            };
+            Context.Game.Add(game);
+            Context.SaveChanges();
+            return game.id;
         }
     }
 }
