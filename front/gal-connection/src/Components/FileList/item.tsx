@@ -12,6 +12,8 @@ import style from './style.module.scss'
 
 interface IFileListItemProps {
   file: IFile
+  isActive: boolean
+  selectMode?: boolean
   onClick: (data: IFile, url?: string) => void
   onDelete: () => void
   onRename: (value: IRename) => void
@@ -134,13 +136,17 @@ function FileListItem (props: IFileListItemProps) {
   }, [])
 
   return (
-    <Dropdown menu={{ items }} trigger={['contextMenu']}>
+    <Dropdown
+      disabled={props.selectMode}
+      menu={{ items }}
+      trigger={['contextMenu']}
+    >
       <div
         onClick={() => {
-          setImgVisable(true)
+          if (!props.selectMode) setImgVisable(true)
           props.onClick(props.file, fileUrl)
         }}
-        className={style.item}
+        className={props.isActive ? style.itemActive : style.item}
         title={props.file.name}
       >
         <div className={style.tag}>{tagText}</div>

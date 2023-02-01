@@ -32,7 +32,11 @@ function MyMaterial () {
     delFile,
     rename,
     moveFolder
-  } = useFile(parseInt(groupId!), parseInt(pid!), typeFilterValue)
+  } = useFile({
+    groupId: parseInt(groupId!),
+    pid: parseInt(pid!),
+    type: typeFilterValue
+  })
   const navigate = useNavigate()
   const [isOpenNewFolderModal, setIsOpenNewFolderModal] = useState(false)
   const [folderName, setFolderName] = useState('')

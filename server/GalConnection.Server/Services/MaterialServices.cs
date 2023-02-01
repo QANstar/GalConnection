@@ -180,7 +180,7 @@ namespace GalConnection.Server.Services
             }
             else
             {
-                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && x.type == type).ToList();
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && (x.type == type || x.type == FileType.FOLDER)).ToList();
                 return materialFiles;
             }
 

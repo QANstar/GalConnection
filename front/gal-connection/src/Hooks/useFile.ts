@@ -3,7 +3,14 @@ import { FilterFileTye, IFile, IFolderInfo, IRename } from '../types/type'
 import * as fileService from '../service/file'
 import { FileType } from '../types/enums'
 
-const useFile = (groupId: number, pid: number, type: FilterFileTye) => {
+interface IUseFile {
+  groupId: number
+  pid: number
+  type: FilterFileTye
+}
+
+const useFile = (params: IUseFile) => {
+  const { groupId, pid, type } = params
   const [files, setFiles] = useState<IFile[]>([])
   const [folderInfo, setFolderInfo] = useState<IFolderInfo | undefined>()
   const [loading, setLoading] = useState(false)

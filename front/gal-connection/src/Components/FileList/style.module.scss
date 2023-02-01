@@ -16,10 +16,15 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 8px;
   &:hover {
     background-color: #e6f4ff;
-    border-radius: 8px;
   }
+}
+
+.itemActive {
+  @extend .item;
+  background-color: #bae0ff;
 }
 
 .fileIcon {

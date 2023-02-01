@@ -1,0 +1,15 @@
+.fileSelect {
+  margin: 40px 0;
+  display: flex;
+}
+
+.tree {
+  width: 150px;
+  height: 100%;
+  border-right: 1px solid #ccc;
+  overflow: auto;
+}
+
+.clickBtn {
+  display: inline;
+}
