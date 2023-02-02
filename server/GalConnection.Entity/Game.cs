@@ -26,5 +26,8 @@ namespace GalConnection.Entity
         [StringLength(1000)]
         public string introduce { get; set; }
         public int state { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string gameName { get; set; }
     }
 }

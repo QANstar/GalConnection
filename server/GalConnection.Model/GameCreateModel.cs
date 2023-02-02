@@ -9,6 +9,7 @@ namespace GalConnection.Model
 {
     public class GameCreateModel
     {
+        public string gameName { get; set; }
         public string[] tag { get; set; }
         public string cover { get; set; }
         public string homeBg { get; set; }

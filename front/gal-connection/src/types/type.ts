@@ -105,3 +105,28 @@ export interface IRename {
   newName: string
   fileId: number
 }
+
+// 创建游戏
+export interface ICreateGame {
+  tag: string[]
+  cover: string
+  homeBg: string
+  preCg: string[]
+  langeuage: string[]
+  introduce: string
+  gameName: string
+}
+
+// 游戏
+export interface IGame {
+  id: number
+  userId: number
+  tag: string
+  cover: string
+  homeBg: string
+  preCG: string
+  langeuage: string
+  introduce: string
+  state: number
+  gameName: string
+}

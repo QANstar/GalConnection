@@ -28,13 +28,33 @@ namespace GalConnection.Server.Controllers
         [EnableCors("any")]
         [HttpPost]
         [Authorize]
-        public IActionResult CreateFolder(GameCreateModel gameCreateModel)
+        public IActionResult CreateGame(GameCreateModel gameCreateModel)
         {
             try
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(gameServices.CreateGame(gameCreateModel, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取用户创建的游戏
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetGamesOfUser()
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(gameServices.GetGameOfUser(userID));
             }
             catch (Exception ex)
             {

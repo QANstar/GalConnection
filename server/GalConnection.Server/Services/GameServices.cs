@@ -30,13 +30,23 @@ namespace GalConnection.Server.Services
             }
         }
         /// <summary>
-        /// 根据用户获取游戏
+        /// 根据用户获取发布的游戏
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
         public List<Game> GetGameByUser(int userId)
         {
-            List<Game> game = Context.Game.Where(x => x.userId == userId).ToList();
+            List<Game> game = Context.Game.Where(x => x.userId == userId && x.state == GameState.PUBLISH).ToList();
+            return game;
+        }
+        /// <summary>
+        /// 获取用户创建的游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<Game> GetGameOfUser(int userId)
+        {
+            List<Game> game = Context.Game.Where(x => x.userId == userId && x.state != GameState.DELETE).ToList();
             return game;
         }
         /// <summary>
@@ -94,7 +104,8 @@ namespace GalConnection.Server.Services
                 preCG = string.Join(',', createGame.preCG),
                 langeuage = string.Join(",", createGame.langeuage),
                 introduce = createGame.introduce,
-                state = GameState.DEVELOPMENT
+                state = GameState.DEVELOPMENT,
+                gameName = createGame.gameName,
             };
             Context.Game.Add(game);
             Context.SaveChanges();

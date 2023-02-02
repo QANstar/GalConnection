@@ -1,23 +1,55 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useState } from 'react'
 import CloudeFileSelect from '../../../Components/CloudeFileSelect'
 import ImgSelectShow from '../../../Components/ImgSelectShow'
+import { createGame } from '../../../service/game'
+import { ICreateGame } from '../../../types/type'
 import style from './style.module.scss'
 
 function StartCreate () {
   const [cover, setCover] = useState('')
   const [homeBg, setHomeBg] = useState('')
   const [preCG, setPreCG] = useState<string[]>([])
+
+  const onCreateFinish = async (data: {
+    gameName: string
+    introduce: string
+  }) => {
+    const createGameData: ICreateGame = {
+      tag: [],
+      cover,
+      homeBg,
+      preCg: preCG,
+      langeuage: [],
+      introduce: data.introduce,
+      gameName: data.gameName
+    }
+    try {
+      const { status } = await createGame(createGameData)
+      if (status === 200) {
+        message.success('成功')
+      }
+    } catch (error) {}
+  }
+
   return (
     <div>
       <div className={style.gameFrom}>
-        <Form layout="vertical">
-          <Form.Item label="游戏名称">
+        <Form layout="vertical" onFinish={onCreateFinish}>
+          <Form.Item
+            label="游戏名称"
+            name="gameName"
+            rules={[{ required: true, message: '请输入游戏名称' }]}
+          >
             <Input placeholder="游戏名称" />
           </Form.Item>
-          <Form.Item label="介绍">
+          <Form.Item
+            label="介绍"
+            name="introduce"
+            rules={[{ required: true, message: '请输入游戏介绍' }]}
+          >
             <TextArea placeholder="游戏介绍" rows={4} />
           </Form.Item>
           <Form.Item label="封面">
@@ -106,7 +138,16 @@ function StartCreate () {
             </div>
           </Form.Item>
           <Form.Item>
-            <Button type="primary">Submit</Button>
+            <Button
+              style={{ margin: 20 }}
+              size="large"
+              type="primary"
+              shape="round"
+              block
+              htmlType="submit"
+            >
+              创建新游戏
+            </Button>
           </Form.Item>
         </Form>
       </div>
