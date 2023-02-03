@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import PlayHomeLayout from '../Engine/PlayHomeLayout'
 import Play from '../Engine/Play'
 import MainLayout from '../Community/MainLayout'
@@ -12,6 +12,8 @@ import MyCreation from '../Community/MyCreation'
 import MyMaterial from '../Community/MyMaterial'
 import UserNotFound from '../Community/UserNotFound'
 import StartCreate from '../Community/StartCreate'
+import CreatePage from '../Community/CreatePage'
+import GameInfo from '../Community/CreatePage/GameInfo'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -31,6 +33,10 @@ function App () {
         </Route>
         <Route path="/myMaterial/:groupId/:pid" element={<MyMaterial />} />
         <Route path="/startCreate" element={<StartCreate />} />
+        <Route path="/createPage/:gameId" element={<CreatePage />}>
+          <Route path="" element={<Navigate to={'info'} />} />
+          <Route path="info" element={<GameInfo />} />
+        </Route>
       </Route>
       <Route path="/engine">
         <Route path="" element={<PlayHomeLayout />} />

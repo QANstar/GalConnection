@@ -1,18 +1,24 @@
 import { Button } from 'antd'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import GameShowList from '../../../Components/GameShowList'
 import useGetGameList from '../../../Hooks/useGetGameList'
 import style from './style.module.scss'
 
 function MyCreation () {
   const { gameList } = useGetGameList('selfCreate')
+  const navigate = useNavigate()
 
   return (
     <div className={style.main}>
       {gameList.length > 0
         ? (
-        <GameShowList games={gameList} />
+        <GameShowList
+          onItemClick={(game) => {
+            navigate(`/createPage/${game.id}`)
+          }}
+          games={gameList}
+        />
           )
         : (
         <div className={style.startCreate}>

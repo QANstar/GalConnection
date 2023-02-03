@@ -4,11 +4,12 @@ import style from './style.module.scss'
 
 interface IGameShowItemProps {
   game: IGame
+  onClick: () => void
 }
 
 function GameShowItem (props: IGameShowItemProps) {
   return (
-    <div className={style.main}>
+    <div onClick={() => props.onClick()} className={style.main}>
       <img
         className={style.gameCover}
         src={props.game.cover}

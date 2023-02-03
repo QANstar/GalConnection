@@ -1,0 +1,31 @@
+@import '../../../assets/styles/size.scss';
+.main {
+  margin: 20px;
+  position: relative;
+}
+
+.navMenu {
+  transition: 0.2s ease-in;
+  width: 165px;
+  border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+  position: fixed;
+  left: 0;
+  top: $navHight;
+  bottom: 0;
+}
+
+.navMenuCollapsed {
+  @extend .navMenu;
+  width: 80px;
+}
+
+.contain {
+  transition: 0.2s ease-in;
+}
+
+.collapsedBtn {
+  display: flex;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+}

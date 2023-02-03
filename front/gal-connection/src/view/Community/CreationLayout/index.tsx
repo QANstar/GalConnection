@@ -13,8 +13,8 @@ function CreationLayout () {
       key: 'mygame'
     },
     {
-      link: '/creation/myMaterial',
-      text: '素材',
+      link: '/creation/statistics',
+      text: '统计',
       key: 'myMaterial'
     }
   ]
