@@ -42,6 +42,27 @@ namespace GalConnection.Server.Controllers
             }
         }
         /// <summary>
+        /// 编辑游戏
+        /// </summary>
+        /// <param name="gameCreateModel"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult EditGame(GameCreateModel gameCreateModel)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(gameServices.EditGame(gameCreateModel, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// 获取用户创建的游戏
         /// </summary>
         /// <returns></returns>
@@ -55,6 +76,27 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(gameServices.GetGameOfUser(userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 通过游戏id获取创建游戏信息
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetCreateGamesInfoById(int gameId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(gameServices.GetCreateGameInfoById(userID, gameId));
             }
             catch (Exception ex)
             {

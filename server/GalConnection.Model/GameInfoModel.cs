@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GalConnection.Model
 {
-    public class GameCreateModel
+    public class GameInfoModel
     {
-        public int? id { get; set; }
+        public int id { get; set; }
+        public int userId { get; set; }
         public string gameName { get; set; }
         public string[] tag { get; set; }
         public string cover { get; set; }

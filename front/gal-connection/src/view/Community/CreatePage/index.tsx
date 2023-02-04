@@ -32,7 +32,7 @@ function CreatePage () {
   const navigate = useNavigate()
   const location = useLocation()
   const items: MenuItem[] = [
-    getItem('游戏介绍', 'info', <FormOutlined />),
+    getItem('游戏信息', 'info', <FormOutlined />),
     getItem('素材绑定', 'material', <FileOutlined />),
     getItem('游戏事件', 'event', <ClusterOutlined />)
   ]

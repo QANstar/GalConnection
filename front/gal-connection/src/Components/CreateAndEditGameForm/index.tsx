@@ -2,13 +2,13 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button, Form, Input } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useState } from 'react'
-import { ICreateGame } from '../../types/type'
+import { ICreateGame, IGameCreateInfo } from '../../types/type'
 import CloudeFileSelect from '../CloudeFileSelect'
 import ImgSelectShow from '../ImgSelectShow'
 import style from './style.module.scss'
 
 interface ICreateAndEditGameFormProps {
-  initData?: ICreateGame
+  initData?: IGameCreateInfo
   onFinish: (data: ICreateGame) => void
 }
 
@@ -38,7 +38,7 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
     if (props.initData) {
       setCover(props.initData.cover)
       setHomeBg(props.initData.homeBg)
-      setPreCG(props.initData.preCg)
+      setPreCG(props.initData.preCG)
       form.setFieldsValue({
         gameName: props.initData.gameName,
         introduce: props.initData.introduce

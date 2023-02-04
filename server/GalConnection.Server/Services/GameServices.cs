@@ -50,6 +50,33 @@ namespace GalConnection.Server.Services
             return game;
         }
         /// <summary>
+        /// 根据id获取游戏创建信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        public GameInfoModel GetCreateGameInfoById(int userId, int gameId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.userId == userId && x.state != GameState.DELETE && x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在或你没有对应权限");
+            }
+            GameInfoModel gameInfo = new()
+            {
+                id = game.id,
+                userId = game.userId,
+                gameName = game.gameName,
+                tag = game.tag.Split(","),
+                cover = game.cover,
+                homeBg = game.homeBg,
+                preCG = game.preCG.Split(","),
+                langeuage = game.langeuage.Split(","),
+                introduce = game.introduce
+            };
+            return gameInfo;
+        }
+        /// <summary>
         /// 获取游戏游玩数据内容
         /// </summary>
         /// <param name="gameId"></param>
@@ -110,6 +137,29 @@ namespace GalConnection.Server.Services
             Context.Game.Add(game);
             Context.SaveChanges();
             return game.id;
+        }
+        /// <summary>
+        /// 编辑游戏创建信息
+        /// </summary>
+        /// <param name="createGame"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int EditGame(GameCreateModel newGameInfo, int userId)
+        {
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newGameInfo.id && x.userId == userId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在或你没有对应权限");
+            }
+            gameInfo.tag = string.Join(",", newGameInfo.tag);
+            gameInfo.cover = newGameInfo.cover;
+            gameInfo.homeBg = newGameInfo.homeBg;
+            gameInfo.preCG = string.Join(',', newGameInfo.preCG);
+            gameInfo.langeuage = string.Join(",", newGameInfo.langeuage);
+            gameInfo.introduce = newGameInfo.introduce;
+            gameInfo.gameName = newGameInfo.gameName;
+            Context.SaveChanges();
+            return gameInfo.id;
         }
     }
 }

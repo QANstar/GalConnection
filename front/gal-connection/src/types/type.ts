@@ -108,6 +108,7 @@ export interface IRename {
 
 // 创建游戏
 export interface ICreateGame {
+  id?: number
   tag: string[]
   cover: string
   homeBg: string
@@ -128,5 +129,18 @@ export interface IGame {
   langeuage: string
   introduce: string
   state: number
+  gameName: string
+}
+
+// 游戏创建信息
+export interface IGameCreateInfo {
+  id: number
+  userId: number
+  tag: string[]
+  cover: string
+  homeBg: string
+  preCG: string[]
+  langeuage: string[]
+  introduce: string
   gameName: string
 }
