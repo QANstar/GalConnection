@@ -1,6 +1,7 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
 using GalConnection.Server.Services;
+using GalConnection.Server.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -97,6 +98,69 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(gameServices.GetCreateGameInfoById(userID, gameId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 添加事件
+        /// </summary>
+        /// <param name="addEventData"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddEvent(EventAddModel addEventData)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.AddEvent(addEventData, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取事件列表
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetEventList(int gameId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GetEventList(gameId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 编辑事件在树视图中位置
+        /// </summary>
+        /// <param name="editEventPositionModel"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult EditEventPosition(EditEventPositionModel editEventPositionModel)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.EditEventPosition(editEventPositionModel, userID)));
             }
             catch (Exception ex)
             {

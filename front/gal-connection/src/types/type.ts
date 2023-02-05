@@ -1,3 +1,5 @@
+import { EventEndType } from './enums'
+
 // 筛选文件类型
 export type FilterFileTye = 'all' | 'folder' | 'video' | 'picture' | 'sound'
 
@@ -143,4 +145,35 @@ export interface IGameCreateInfo {
   langeuage: string[]
   introduce: string
   gameName: string
+}
+
+// 事件树数据
+export interface IEventTreeViewData {
+  eventid?: number
+  position: string
+}
+
+// 事件
+export interface IEvent {
+  id: number
+  gameId: number
+  eventName: string
+  pid: number
+  endType: EventEndType
+  enterCondition: string
+  EventTreeViewData: IEventTreeViewData
+}
+
+// 创建事件
+export interface IAddEvent {
+  gameId: number
+  eventName: string
+  pid: number
+  EventTreeViewData: IEventTreeViewData
+}
+
+// 改变事件树节点在视图的位置
+export interface IEditEventPosition {
+  eventid: number
+  position: string
 }

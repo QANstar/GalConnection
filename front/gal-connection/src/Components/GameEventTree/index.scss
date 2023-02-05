@@ -1,0 +1,54 @@
+.react-flow .react-flow__handle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #5f95ff;
+}
+
+.react-flow .react-flow__handle-top {
+  top: -5px;
+}
+
+.react-flow .react-flow__handle-bottom {
+  bottom: -5px;
+}
+
+.react-flow .react-flow__node {
+  height: 36px;
+  width: 180px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-weight: 700;
+  border: 1px solid #c2c8d5;
+  border-left: 4px solid #5f95ff;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px 1px rgb(0 0 0 / 6%);
+}
+
+.react-flow__node-default.selectable.selected,
+.react-flow__node-default.selectable:focus,
+.react-flow__node-default.selectable:focus-visible,
+.react-flow__node-input.selectable.selected,
+.react-flow__node-input.selectable:focus,
+.react-flow__node-input.selectable:focus-visible,
+.react-flow__node-output.selectable.selected,
+.react-flow__node-output.selectable:focus,
+.react-flow__node-output.selectable:focus-visible,
+.react-flow__node-group.selectable.selected,
+.react-flow__node-group.selectable:focus,
+.react-flow__node-group.selectable:focus-visible {
+  border-color: #1890ff;
+  border-radius: 2px;
+  box-shadow: 0 0 0 4px #d4e8fe;
+}
+
+.react-flow .react-flow__edge path,
+.react-flow__connectionline path {
+  stroke-width: 2;
+}
+
+.wrapper {
+  flex-grow: 1;
+  height: 100%;
+}

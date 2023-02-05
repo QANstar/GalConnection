@@ -20,3 +20,11 @@ export const FileType = {
   VIDEO: 'video',
   SOUND: 'sound'
 }
+
+// 事件结束类型
+export enum EventEndType {
+  NEXT,
+  OPTION,
+  END,
+  VIDEO
+}

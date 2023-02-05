@@ -20,5 +20,8 @@ namespace GalConnection.Entity
         public int endType { get; set; }
         [StringLength(250)]
         public string enterCondition { get; set; }
+
+        [InverseProperty("_event")]
+        public virtual EventTreeViewData EventTreeViewData { get; set; }
     }
 }

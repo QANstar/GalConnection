@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ICreateGame, IGameCreateInfo } from '../types/type'
-import * as fileService from '../service/game'
+import * as gameService from '../service/game'
 import { message } from 'antd'
 
 const useGameInfo = (gameId: number) => {
@@ -13,7 +13,7 @@ const useGameInfo = (gameId: number) => {
     try {
       setLoading(true)
       setError('')
-      const { data, status } = await fileService.getCreateGamesInfoById(gameId)
+      const { data, status } = await gameService.getCreateGamesInfoById(gameId)
       if (status === 200) {
         setGameInfo(data)
       }
@@ -31,7 +31,7 @@ const useGameInfo = (gameId: number) => {
         setLoading(true)
         setError('')
         newGameInfo.id = gameId
-        const { status } = await fileService.editGame(newGameInfo)
+        const { status } = await gameService.editGame(newGameInfo)
         if (status === 200) {
           getCreateGamesInfoById()
           message.success('编辑成功')

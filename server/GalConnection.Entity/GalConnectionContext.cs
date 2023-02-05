@@ -19,6 +19,7 @@ namespace GalConnection.Entity
         }
 
         public virtual DbSet<Event> Event { get; set; }
+        public virtual DbSet<EventTreeViewData> EventTreeViewData { get; set; }
         public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Lines> Lines { get; set; }
@@ -32,15 +33,19 @@ namespace GalConnection.Entity
         public virtual DbSet<UserPlayedGame> UserPlayedGame { get; set; }
         public virtual DbSet<View_Group> View_Group { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<EventTreeViewData>(entity =>
+            {
+                entity.Property(e => e.eventid).ValueGeneratedNever();
+
+                entity.HasOne(d => d._event)
+                    .WithOne(p => p.EventTreeViewData)
+                    .HasForeignKey<EventTreeViewData>(d => d.eventid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventTreeViewData_Event");
+            });
+
             modelBuilder.Entity<View_Group>(entity =>
             {
                 entity.ToView("View_Group");
