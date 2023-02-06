@@ -19,6 +19,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[EventsMap]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[EventTreeViewData]",
          "ObjectType": 0
       },

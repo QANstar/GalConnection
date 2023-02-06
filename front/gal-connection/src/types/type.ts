@@ -153,27 +153,49 @@ export interface IEventTreeViewData {
   position: string
 }
 
+// 边
+export interface IEdge {
+  edgeId?: number
+  source: number
+  target: number
+  gameId: number
+}
+
 // 事件
 export interface IEvent {
   id: number
   gameId: number
   eventName: string
-  pid: number
   endType: EventEndType
   enterCondition: string
+  isStartEvent: boolean
   EventTreeViewData: IEventTreeViewData
+}
+
+// 后端获取事件图
+export interface IEventMap {
+  events: IEvent[]
+  edges: IEdge[]
 }
 
 // 创建事件
 export interface IAddEvent {
   gameId: number
   eventName: string
-  pid: number
   EventTreeViewData: IEventTreeViewData
+  edge?: {
+    source: number
+  }
 }
 
 // 改变事件树节点在视图的位置
 export interface IEditEventPosition {
   eventid: number
   position: string
+}
+
+// 创建事件响应
+export interface IAddEventResponse {
+  eventShow: IEvent
+  edge: IEdge
 }

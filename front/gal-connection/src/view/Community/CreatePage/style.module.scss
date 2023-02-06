@@ -1,6 +1,7 @@
 @import '../../../assets/styles/size.scss';
 .main {
-  margin: 20px;
+  height: 100%;
+  padding: 20px;
   position: relative;
 }
 
@@ -21,6 +22,7 @@
 
 .contain {
   transition: 0.2s ease-in;
+  height: 100%;
 }
 
 .collapsedBtn {

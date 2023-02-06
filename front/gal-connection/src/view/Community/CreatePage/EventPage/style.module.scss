@@ -1,5 +1,26 @@
+@import '../../../../assets/styles/size.scss';
+.main {
+  display: flex;
+  height: 100%;
+}
+
 .tree {
-  width: 80%;
-  height: 80vh;
-  border: 1px solid #ccc;
+  flex: 1;
+  height: 100%;
+  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  border-radius: 8px;
+}
+
+.setting {
+  width: 300px;
+  height: 100%;
+  padding: 15px;
+  margin-left: 20px;
+  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  border-radius: 8px;
+}
+
+.settingHeader {
+  display: flex;
+  justify-content: space-between;
 }

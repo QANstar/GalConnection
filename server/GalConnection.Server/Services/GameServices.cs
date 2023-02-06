@@ -98,26 +98,6 @@ namespace GalConnection.Server.Services
             return gamePlayModel;
         }
         /// <summary>
-        /// 创建事件
-        /// </summary>
-        /// <param name="createEvent"></param>
-        /// <returns></returns>
-        public int createEvent(CreateEventModel createEvent)
-        {
-            Event gameEvent = new()
-            {
-                gameId = createEvent.gameId,
-                eventName = createEvent.eventName,
-                pid = createEvent.pid,
-                endType = createEvent.endType,
-                enterCondition = createEvent.enterCondition
-            };
-            Context.Event.Add(gameEvent);
-            Context.SaveChanges();
-            Context.Entry(gameEvent);
-            return gameEvent.id;
-        }
-        /// <summary>
         /// 创建游戏
         /// </summary>
         /// <param name="createGame"></param>
@@ -143,8 +123,8 @@ namespace GalConnection.Server.Services
             {
                 gameId = game.id,
                 eventName = "初始事件",
-                pid = 0,
-                eventTreeViewData = new EventTreeViewDataAddModel() { position = "{\"x\":0,\"y\":50}" }
+                eventTreeViewData = new EventTreeViewDataAddModel() { position = "{\"x\":0,\"y\":50}" },
+                isStartEvent = true,
             };
             AddEvent(eventAdd, userId);
             return game.id;
@@ -179,7 +159,7 @@ namespace GalConnection.Server.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public Event AddEvent(EventAddModel addEvent, int userId)
+        public AddEventResponseModel AddEvent(EventAddModel addEvent, int userId)
         {
             Game game = Context.Game.FirstOrDefault(x => x.id == addEvent.gameId);
             if (game == null)
@@ -194,14 +174,32 @@ namespace GalConnection.Server.Services
             {
                 gameId = game.id,
                 eventName = addEvent.eventName,
-                pid = addEvent.pid,
                 endType = (int)EventEndType.NEXT,
                 enterCondition = "",
+                isStartEvent = (bool)(addEvent.isStartEvent != null ? addEvent.isStartEvent : false),
                 EventTreeViewData = new() { position = addEvent.eventTreeViewData.position }
             };
             Context.Event.Add(newEvent);
             Context.SaveChanges();
-            return newEvent;
+            EventsMap eventsMap = null;
+            if (addEvent.edge != null)
+            {
+                eventsMap = new()
+                {
+                    source = addEvent.edge.source,
+                    target = newEvent.id,
+                    gameId = game.id,
+                };
+                Context.EventsMap.Add(eventsMap);
+                Context.SaveChanges();
+            }
+            AddEventResponseModel addEventResponseModel = new()
+            {
+                eventShow = newEvent,
+                edge = eventsMap
+            };
+
+            return addEventResponseModel;
         }
         /// <summary>
         /// 获取事件列表
@@ -209,7 +207,7 @@ namespace GalConnection.Server.Services
         /// <param name="gameId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public List<Event> GetEventList(int gameId, int userId)
+        public EventShowModel GetEventList(int gameId, int userId)
         {
             Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
             if (game == null)
@@ -221,7 +219,13 @@ namespace GalConnection.Server.Services
                 throw new Exception("无权限");
             }
             List<Event> events = Context.Event.Include(x => x.EventTreeViewData).Where(x => x.gameId == gameId).ToList();
-            return events;
+            List<EventsMap> edges = Context.EventsMap.Where(x => x.gameId == gameId).ToList();
+            EventShowModel eventShow = new()
+            {
+                events = events,
+                edges = edges,
+            };
+            return eventShow;
         }
         /// <summary>
         /// 编辑事件在树视图中位置
@@ -247,6 +251,30 @@ namespace GalConnection.Server.Services
             eventIn.EventTreeViewData.position = editEventPositionModel.position;
             Context.SaveChanges();
             return editEventPositionModel.position;
+        }
+        /// <summary>
+        /// 添加边
+        /// </summary>
+        /// <param name="newEdge"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public EventsMap AddEdge(AddEdgeModel newEdge, int userId)
+        {
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newEdge.gameId && x.userId == userId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在或你没有对应权限");
+            }
+            EventsMap eventsMap = new()
+            {
+                source = newEdge.source,
+                target = newEdge.target,
+                gameId = newEdge.gameId,
+            };
+            Context.Add(eventsMap);
+            Context.SaveChanges();
+            return eventsMap;
         }
     }
 }

@@ -118,6 +118,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                addEventData.isStartEvent = false;
                 return Ok(JsonUtils.ToJson(gameServices.AddEvent(addEventData, userID)));
             }
             catch (Exception ex)
@@ -161,6 +162,24 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(JsonUtils.ToJson(gameServices.EditEventPosition(editEventPositionModel, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 添加边
+        /// </summary>
+        /// <param name="newEdge"></param>
+        /// <returns></returns>
+        public IActionResult AddEdge(AddEdgeModel newEdge)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.AddEdge(newEdge, userID)));
             }
             catch (Exception ex)
             {

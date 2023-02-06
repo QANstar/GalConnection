@@ -1,8 +1,10 @@
 import {
   IAddEvent,
+  IAddEventResponse,
   ICreateGame,
+  IEdge,
   IEditEventPosition,
-  IEvent,
+  IEventMap,
   IGame,
   IGameCreateInfo
 } from '../types/type'
@@ -28,12 +30,16 @@ export const getGamesOfUser = () =>
 
 // 创建事件
 export const addEvent = (params: IAddEvent) =>
-  request.post<IEvent>('/api/Game/AddEvent', params)
+  request.post<IAddEventResponse>('/api/Game/AddEvent', params)
 
 // 获取事件列表
 export const getEventList = (gameId: number) =>
-  request.get<IEvent[]>(`/api/Game/GetEventList?gameId=${gameId}`)
+  request.get<IEventMap>(`/api/Game/GetEventList?gameId=${gameId}`)
 
 // 编辑事件在树视图中位置
 export const editEventPosition = (params: IEditEventPosition) =>
   request.post<string>('/api/Game/EditEventPosition', params)
+
+// 创建事件
+export const addEdge = (params: IEdge) =>
+  request.post<IEdge>('/api/Game/AddEdge', params)

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IAddEvent, IEditEventPosition, IEvent } from '../types/type'
+import { IAddEvent, IEdge, IEditEventPosition, IEvent } from '../types/type'
 import * as gameService from '../service/game'
 
 const useEvent = (gameId: number) => {
   const [evnets, setEvents] = useState<IEvent[]>([])
+  const [edges, setEdges] = useState<IEdge[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -14,7 +15,8 @@ const useEvent = (gameId: number) => {
       setError('')
       const { data, status } = await gameService.getEventList(gameId)
       if (status === 200) {
-        setEvents(data)
+        setEvents(data.events)
+        setEdges(data.edges)
       }
     } catch (e: any) {
       setError(e)
@@ -31,8 +33,10 @@ const useEvent = (gameId: number) => {
         setError('')
         const { data, status } = await gameService.addEvent(params)
         if (status === 200) {
-          evnets.push(data)
+          evnets.push(data.eventShow)
+          edges.push(data.edge)
           setEvents([...evnets])
+          setEdges([...edges])
         }
       } catch (e: any) {
         setError(e)
@@ -40,7 +44,27 @@ const useEvent = (gameId: number) => {
         setLoading(false)
       }
     },
-    [gameId, evnets]
+    [gameId, evnets, edges]
+  )
+
+  // 添加边
+  const addEdge = useCallback(
+    async (params: IEdge) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await gameService.addEdge(params)
+        if (status === 200) {
+          edges.push(data)
+          setEdges([...edges])
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, evnets, edges]
   )
 
   // 编辑事件在树视图中位置
@@ -63,7 +87,7 @@ const useEvent = (gameId: number) => {
         }
       }
     },
-    [gameId, evnets]
+    [gameId, evnets, edges]
   )
 
   useEffect(() => {
@@ -72,10 +96,12 @@ const useEvent = (gameId: number) => {
 
   return {
     evnets,
+    edges,
     loading,
     error,
     addEvent,
-    editEventPosition
+    editEventPosition,
+    addEdge
   }
 }
 

@@ -16,10 +16,10 @@ namespace GalConnection.Entity
         [Required]
         [StringLength(150)]
         public string eventName { get; set; }
-        public int pid { get; set; }
         public int endType { get; set; }
         [StringLength(250)]
         public string enterCondition { get; set; }
+        public bool isStartEvent { get; set; }
 
         [InverseProperty("_event")]
         public virtual EventTreeViewData EventTreeViewData { get; set; }

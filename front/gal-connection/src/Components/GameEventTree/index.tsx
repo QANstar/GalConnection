@@ -8,6 +8,7 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import {
+  IEdge,
   IEditEventPosition,
   IEvent,
   IEventTreeViewData
@@ -23,7 +24,7 @@ interface INode {
   position: { x: number; y: number }
 }
 
-interface IEdge {
+interface IFlowEdge {
   id: string
   source: string
   target: string
@@ -32,12 +33,17 @@ interface IEdge {
 interface INewNode {
   pid: number
   EventTreeViewData: IEventTreeViewData
+  edge: {
+    source: number
+  }
 }
 
 interface IGameEventTree {
   eventList: IEvent[]
+  edgeList: IEdge[]
   onAddNote: (data: INewNode) => void
   onNoteMoved: (data: IEditEventPosition) => void
+  onConnect: (data: { source: string; target: string }) => void
 }
 
 const fitViewOptions = {
@@ -55,7 +61,7 @@ const GameEventTree = (props: IGameEventTree) => {
     const initNodes = props.eventList.map((event) => {
       const nodeData: INode = {
         id: event.id.toString(),
-        type: event.pid === 0 ? 'input' : undefined,
+        type: event.isStartEvent ? 'input' : undefined,
         data: {
           label: <div>{event.eventName}</div>
         },
@@ -64,24 +70,27 @@ const GameEventTree = (props: IGameEventTree) => {
       return nodeData
     })
     setNodes(initNodes as any)
-    const initEdges: IEdge[] = []
-    for (const event of props.eventList) {
-      if (event.pid !== 0) {
-        const edge: IEdge = {
-          id: event.id.toString(),
-          source: event.pid.toString(),
-          target: event.id.toString()
+    setEdges(
+      props.edgeList.map((edge) => {
+        const flowEdge: IFlowEdge = {
+          id: edge.edgeId!.toString(),
+          source: edge.source.toString(),
+          target: edge.target.toString()
         }
-        initEdges.push(edge)
-      }
-    }
-    setEdges(initEdges)
+        return flowEdge
+      })
+    )
   }
 
-  const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    []
-  )
+  const onConnect = useCallback((params: any) => {
+    props.onConnect({
+      source: params.source,
+      target: params.target
+    })
+    setEdges((eds) => {
+      return addEdge(params, eds)
+    })
+  }, [])
 
   const onConnectStart = useCallback((_: any, { nodeId }: any) => {
     connectingNodeId.current = nodeId
@@ -103,12 +112,15 @@ const GameEventTree = (props: IGameEventTree) => {
                 y: event.clientY - top
               })
             )
+          },
+          edge: {
+            source: parseInt(connectingNodeId.current!)
           }
         }
         props.onAddNote(newNode)
       }
     },
-    [project]
+    [project, nodes, edges]
   )
 
   useEffect(() => {
@@ -121,8 +133,6 @@ const GameEventTree = (props: IGameEventTree) => {
         nodes={nodes}
         edges={edges}
         onNodeDragStop={(_, data) => {
-          console.log(data)
-
           props.onNoteMoved({
             eventid: parseInt(data.id),
             position: JSON.stringify(data.position)

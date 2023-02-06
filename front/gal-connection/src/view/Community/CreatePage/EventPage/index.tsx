@@ -2,13 +2,12 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import GameEventTree from '../../../../Components/GameEventTree'
 import useEvent from '../../../../Hooks/useEvent'
+import EventSetting from './EventSetting'
 import style from './style.module.scss'
-
-// interface IEventPageProps {}
 
 function EventPage () {
   const { gameId } = useParams()
-  const { evnets, addEvent, editEventPosition } = useEvent(
+  const { evnets, edges, addEdge, addEvent, editEventPosition } = useEvent(
     parseInt(gameId || '0')
   )
 
@@ -17,6 +16,7 @@ function EventPage () {
       <div className={style.tree}>
         <GameEventTree
           eventList={evnets}
+          edgeList={edges}
           onNoteMoved={editEventPosition}
           onAddNote={(data) => {
             addEvent({
@@ -25,7 +25,17 @@ function EventPage () {
               ...data
             })
           }}
+          onConnect={(data) => {
+            addEdge({
+              source: parseInt(data.source),
+              target: parseInt(data.target),
+              gameId: parseInt(gameId || '0')
+            })
+          }}
         />
+      </div>
+      <div className={style.setting}>
+        <EventSetting />
       </div>
     </div>
   )

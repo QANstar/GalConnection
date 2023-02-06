@@ -93,9 +93,17 @@
 | id             | 事件id       | string   |
 | gameId         | 所属游戏id   | string   |
 | eventName      | 事件名称     | string   |
-| pid            | 父亲事件id   | string   |
 | endType        | 事件结束类型 | EndType  |
 | enterCondition | 进入条件     | string[] |
+
+### 事件有向图(EventsMap)
+
+| 属性   | 解释       | 类型 |
+| ------ | ---------- | ---- |
+| edgeId | 边id       | int  |
+| gameId | 游戏id     | int  |
+| source | 来源事件id | int  |
+| target | 目标事件id | int  |
 
 ### 选项(Options)
 
@@ -205,7 +213,7 @@ AI合成音：VITS
 - 完善用户中心（头像、头图和信息的编辑） ✅ 2022/10/8-2022/10/9
 - 素材中心 ✅ 2022/12/31-2023/01/27
 - 引擎后端结构：创建、保存、发布、响应游戏资源，响应我的创作数据，响应游戏信息 ✅ 2023/01/27 -
-- 可视化前端制作基础（台词、立绘、样式、动画（framer-motion）、语音，bgm，视频，模块化的树状图（reactflow））
+- 可视化前端制作基础（台词、立绘、样式、动画（framer-motion）、语音，bgm，视频，模块化的~~树状图~~有向图（reactflow））
 - 前端我的创作，首页简单显示
 - 筛选与搜索
 - 完善用户系统（关注、私信）
@@ -222,3 +230,5 @@ AI合成音：VITS
 - 多语言
 - 团队制作
 - 素材分享
+- 模块化事件制作
+- 删除事件图的边
