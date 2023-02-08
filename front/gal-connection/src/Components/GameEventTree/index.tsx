@@ -44,6 +44,7 @@ interface IGameEventTree {
   onAddNote: (data: INewNode) => void
   onNoteMoved: (data: IEditEventPosition) => void
   onConnect: (data: { source: string; target: string }) => void
+  onNoteClick: (id: string) => void
 }
 
 const fitViewOptions = {
@@ -82,15 +83,18 @@ const GameEventTree = (props: IGameEventTree) => {
     )
   }
 
-  const onConnect = useCallback((params: any) => {
-    props.onConnect({
-      source: params.source,
-      target: params.target
-    })
-    setEdges((eds) => {
-      return addEdge(params, eds)
-    })
-  }, [])
+  const onConnect = useCallback(
+    (params: any) => {
+      props.onConnect({
+        source: params.source,
+        target: params.target
+      })
+      setEdges((eds) => {
+        return addEdge(params, eds)
+      })
+    },
+    [edges]
+  )
 
   const onConnectStart = useCallback((_: any, { nodeId }: any) => {
     connectingNodeId.current = nodeId
@@ -146,7 +150,7 @@ const GameEventTree = (props: IGameEventTree) => {
         fitView
         fitViewOptions={fitViewOptions}
         onNodeClick={(_, data) => {
-          console.log(data)
+          props.onNoteClick(data.id)
         }}
       />
     </div>

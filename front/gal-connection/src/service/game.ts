@@ -43,3 +43,7 @@ export const editEventPosition = (params: IEditEventPosition) =>
 // 创建事件
 export const addEdge = (params: IEdge) =>
   request.post<IEdge>('/api/Game/AddEdge', params)
+
+// 删除事件
+export const delEvent = (eventId: number) =>
+  request.delete<boolean>(`/api/Game/DelEevent?eventId=${eventId}`)

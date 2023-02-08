@@ -177,7 +177,8 @@ namespace GalConnection.Server.Services
                 endType = (int)EventEndType.NEXT,
                 enterCondition = "",
                 isStartEvent = (bool)(addEvent.isStartEvent != null ? addEvent.isStartEvent : false),
-                EventTreeViewData = new() { position = addEvent.eventTreeViewData.position }
+                EventTreeViewData = new() { position = addEvent.eventTreeViewData.position },
+                state = EventState.EXIST
             };
             Context.Event.Add(newEvent);
             Context.SaveChanges();
@@ -218,7 +219,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("无权限");
             }
-            List<Event> events = Context.Event.Include(x => x.EventTreeViewData).Where(x => x.gameId == gameId).ToList();
+            List<Event> events = Context.Event.Include(x => x.EventTreeViewData).Where(x => x.gameId == gameId && x.state != EventState.DELETE).ToList();
             List<EventsMap> edges = Context.EventsMap.Where(x => x.gameId == gameId).ToList();
             EventShowModel eventShow = new()
             {
@@ -275,6 +276,38 @@ namespace GalConnection.Server.Services
             Context.Add(eventsMap);
             Context.SaveChanges();
             return eventsMap;
+        }
+        /// <summary>
+        /// 删除事件
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelEvent(int eventId, int userId)
+        {
+            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId && x.userId == userId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在或你没有对应权限");
+            }
+            if (@event.isStartEvent)
+            {
+                throw new Exception("初始事件无法删除");
+            }
+            @event.state = GameState.DELETE;
+            List<EventsMap> eventsMap = Context.EventsMap.Where(x => x.target == eventId || x.source == eventId).ToList();
+            eventsMap.ForEach(x =>
+            {
+                Context.EventsMap.Remove(x);
+            });
+            Context.SaveChanges();
+            return true;
         }
     }
 }

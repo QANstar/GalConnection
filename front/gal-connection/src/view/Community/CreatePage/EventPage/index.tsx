@@ -1,4 +1,5 @@
-import React from 'react'
+import { message } from 'antd'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import GameEventTree from '../../../../Components/GameEventTree'
 import useEvent from '../../../../Hooks/useEvent'
@@ -7,9 +8,23 @@ import style from './style.module.scss'
 
 function EventPage () {
   const { gameId } = useParams()
-  const { evnets, edges, addEdge, addEvent, editEventPosition } = useEvent(
-    parseInt(gameId || '0')
-  )
+  const {
+    evnets,
+    edges,
+    choEvent,
+    error,
+    eventCho,
+    addEdge,
+    addEvent,
+    editEventPosition,
+    delEvnet
+  } = useEvent(parseInt(gameId || '0'))
+
+  useEffect(() => {
+    if (error) {
+      message.error(error)
+    }
+  }, [error])
 
   return (
     <div className={style.main}>
@@ -18,6 +33,7 @@ function EventPage () {
           eventList={evnets}
           edgeList={edges}
           onNoteMoved={editEventPosition}
+          onNoteClick={eventCho}
           onAddNote={(data) => {
             addEvent({
               gameId: parseInt(gameId || '0'),
@@ -35,7 +51,7 @@ function EventPage () {
         />
       </div>
       <div className={style.setting}>
-        <EventSetting />
+        <EventSetting onDelClick={delEvnet} event={choEvent} />
       </div>
     </div>
   )

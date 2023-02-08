@@ -4,6 +4,7 @@ import * as gameService from '../service/game'
 
 const useEvent = (gameId: number) => {
   const [evnets, setEvents] = useState<IEvent[]>([])
+  const [choEvent, setChoEvent] = useState<IEvent>()
   const [edges, setEdges] = useState<IEdge[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -17,6 +18,8 @@ const useEvent = (gameId: number) => {
       if (status === 200) {
         setEvents(data.events)
         setEdges(data.edges)
+        const rootEvent = data.events.find((x) => x.isStartEvent)
+        setChoEvent(rootEvent)
       }
     } catch (e: any) {
       setError(e)
@@ -67,6 +70,25 @@ const useEvent = (gameId: number) => {
     [gameId, evnets, edges]
   )
 
+  // 删除事件
+  const delEvnet = useCallback(
+    async (evnetId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.delEvent(evnetId)
+        if (status === 200) {
+          getEventList()
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, evnets, edges]
+  )
+
   // 编辑事件在树视图中位置
   const editEventPosition = useCallback(
     async (params: IEditEventPosition) => {
@@ -90,6 +112,17 @@ const useEvent = (gameId: number) => {
     [gameId, evnets, edges]
   )
 
+  // 设置选中的事件
+  const eventCho = useCallback(
+    async (id: string) => {
+      const event = evnets.find((x) => x.id === parseInt(id))
+      if (event) {
+        setChoEvent(event)
+      }
+    },
+    [gameId, evnets, edges]
+  )
+
   useEffect(() => {
     getEventList()
   }, [gameId])
@@ -99,9 +132,12 @@ const useEvent = (gameId: number) => {
     edges,
     loading,
     error,
+    choEvent,
     addEvent,
     editEventPosition,
-    addEdge
+    addEdge,
+    eventCho,
+    delEvnet
   }
 }
 

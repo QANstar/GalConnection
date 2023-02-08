@@ -173,6 +173,9 @@ namespace GalConnection.Server.Controllers
         /// </summary>
         /// <param name="newEdge"></param>
         /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
         public IActionResult AddEdge(AddEdgeModel newEdge)
         {
             try
@@ -180,6 +183,27 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(JsonUtils.ToJson(gameServices.AddEdge(newEdge, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 删除事件
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DelEevent(int eventId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.DelEvent(eventId, userID)));
             }
             catch (Exception ex)
             {
