@@ -2,12 +2,13 @@ import { DeleteOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Popconfirm, Select } from 'antd'
 import React, { useEffect } from 'react'
 import { EventEndType } from '../../../../types/enums'
-import { IEvent } from '../../../../types/type'
+import { IEditEvent, IEvent } from '../../../../types/type'
 import style from './style.module.scss'
 
 interface IEventSettingProps {
   event?: IEvent
   onDelClick: (eventId: number) => void
+  onSaveClick: (event: IEditEvent) => void
 }
 
 const endTypeOptions = [
@@ -24,6 +25,9 @@ function EventSetting (props: IEventSettingProps) {
       form.setFieldsValue({
         eventName: props.event.eventName
       })
+      form.setFieldsValue({
+        endType: props.event.endType
+      })
     }
   }, [props.event])
 
@@ -33,6 +37,17 @@ function EventSetting (props: IEventSettingProps) {
         <Button
           className="blueBtn"
           size="large"
+          onClick={() => {
+            if (props.event) {
+              const editEventData: IEditEvent = {
+                id: props.event?.id,
+                eventName: form.getFieldValue('eventName'),
+                endType: form.getFieldValue('endType'),
+                enterCondition: []
+              }
+              props.onSaveClick(editEventData)
+            }
+          }}
           icon={<SaveOutlined />}
         ></Button>
         {!props.event?.isStartEvent && (
@@ -52,17 +67,16 @@ function EventSetting (props: IEventSettingProps) {
         )}
       </header>
       <main className={style.formMain}>
-        <Form form={form} layout="vertical">
-          <Form.Item name="eventName" label="事件名称">
-            <Input placeholder="事件名称" />
-          </Form.Item>
-          <Form.Item name="endType" label="事件结束类型">
-            <Select
-              defaultValue={props.event ? props.event.endType : 0}
-              options={endTypeOptions}
-            />
-          </Form.Item>
-        </Form>
+        {props.event && (
+          <Form form={form} layout="vertical">
+            <Form.Item name="eventName" label="事件名称">
+              <Input placeholder="事件名称" />
+            </Form.Item>
+            <Form.Item name="endType" label="事件结束类型">
+              <Select options={endTypeOptions} />
+            </Form.Item>
+          </Form>
+        )}
       </main>
     </div>
   )

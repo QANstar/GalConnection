@@ -309,5 +309,34 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return true;
         }
+        /// <summary>
+        /// 编辑事件
+        /// </summary>
+        /// <param name="eventEditData"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Event EditEvent(EventEditModel eventEditData, int userId)
+        {
+            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == eventEditData.id);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId && x.userId == userId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在或你没有对应权限");
+            }
+            if (@event.isStartEvent)
+            {
+                throw new Exception("初始事件无法删除");
+            }
+            @event.eventName = eventEditData.eventName;
+            @event.endType = eventEditData.endType;
+            @event.enterCondition = string.Join(',', eventEditData.enterCondition);
+            Context.SaveChanges();
+            return @event;
+        }
     }
 }

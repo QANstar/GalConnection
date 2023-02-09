@@ -199,3 +199,11 @@ export interface IAddEventResponse {
   eventShow: IEvent
   edge: IEdge
 }
+
+// 编辑事件
+export interface IEditEvent {
+  id: number
+  eventName: string
+  endType: EventEndType
+  enterCondition: number[]
+}

@@ -210,5 +210,26 @@ namespace GalConnection.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 编辑事件
+        /// </summary>
+        /// <param name="eventEditData"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult EditEvent(EventEditModel eventEditData)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.EditEvent(eventEditData, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

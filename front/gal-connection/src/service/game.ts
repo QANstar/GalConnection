@@ -3,7 +3,9 @@ import {
   IAddEventResponse,
   ICreateGame,
   IEdge,
+  IEditEvent,
   IEditEventPosition,
+  IEvent,
   IEventMap,
   IGame,
   IGameCreateInfo
@@ -47,3 +49,7 @@ export const addEdge = (params: IEdge) =>
 // 删除事件
 export const delEvent = (eventId: number) =>
   request.delete<boolean>(`/api/Game/DelEevent?eventId=${eventId}`)
+
+// 编辑事件
+export const editEvent = (params: IEditEvent) =>
+  request.post<IEvent>('/api/Game/EditEvent', params)

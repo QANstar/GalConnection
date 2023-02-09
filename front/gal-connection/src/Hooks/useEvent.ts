@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IAddEvent, IEdge, IEditEventPosition, IEvent } from '../types/type'
+import {
+  IAddEvent,
+  IEdge,
+  IEditEvent,
+  IEditEventPosition,
+  IEvent
+} from '../types/type'
 import * as gameService from '../service/game'
+import { message } from 'antd'
 
 const useEvent = (gameId: number) => {
   const [evnets, setEvents] = useState<IEvent[]>([])
@@ -112,6 +119,33 @@ const useEvent = (gameId: number) => {
     [gameId, evnets, edges]
   )
 
+  // 编辑事件
+  const editEvent = useCallback(
+    async (params: IEditEvent) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await gameService.editEvent(params)
+        if (status === 200) {
+          const newEvents = evnets.find((x) => x.id === data.id)
+          if (newEvents) {
+            newEvents.endType = data.endType
+            newEvents.EventTreeViewData = data.EventTreeViewData
+            newEvents.enterCondition = data.enterCondition
+            newEvents.eventName = data.eventName
+          }
+          setEvents([...evnets])
+          message.success('保存编辑成功')
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, evnets, edges]
+  )
+
   // 设置选中的事件
   const eventCho = useCallback(
     async (id: string) => {
@@ -137,7 +171,8 @@ const useEvent = (gameId: number) => {
     editEventPosition,
     addEdge,
     eventCho,
-    delEvnet
+    delEvnet,
+    editEvent
   }
 }
 
