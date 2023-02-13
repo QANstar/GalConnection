@@ -45,7 +45,7 @@
 | 属性      | 解释       | 类型     |
 | --------- | ---------- | -------- |
 | id        | 游戏id     | string   |
-| userId    | 所有者id   | string   |
+| userId    | 创建者id   | string   |
 | gameName  | 游戏名称   | string   |
 | homeBg    | 首页背景   | string   |
 | cover     | 封面       | string   |
@@ -57,15 +57,18 @@
 
 ### 台词(Lines)
 
-| 属性            | 解释     | 类型     |
-| --------------- | -------- | -------- |
-| id              | 台词id   | string   |
-| eventId         | 事件id   | string   |
-| charaPics       | 角色立绘 | string[] |
-| charaStyle      | 立绘样式 | string[] |
-| background      | 背景     | string   |
-| backgroundStyle | 背景样式 | string   |
-| bgm             | 背景音乐 | string   |
+| 属性            | 解释         | 类型     |
+| --------------- | ------------ | -------- |
+| id              | 台词id       | string   |
+| groupId         | 组id         | string   |
+| next            | 下一个台词id | number   |
+| pre             | 上一个台词id | number   |
+| eventId         | 事件id       | string   |
+| charaPics       | 角色立绘     | string[] |
+| charaStyle      | 立绘样式     | string[] |
+| background      | 背景         | string   |
+| backgroundStyle | 背景样式     | string   |
+| bgm             | 背景音乐     | string   |
 
 ### 台词内容(LinesContent)
 
@@ -91,6 +94,7 @@
 | 属性           | 解释         | 类型     |
 | -------------- | ------------ | -------- |
 | id             | 事件id       | string   |
+| groupId        | 组id         | string   |
 | gameId         | 所属游戏id   | string   |
 | eventName      | 事件名称     | string   |
 | endType        | 事件结束类型 | EndType  |
@@ -98,12 +102,13 @@
 
 ### 事件有向图(EventsMap)
 
-| 属性   | 解释       | 类型 |
-| ------ | ---------- | ---- |
-| edgeId | 边id       | int  |
-| gameId | 游戏id     | int  |
-| source | 来源事件id | int  |
-| target | 目标事件id | int  |
+| 属性    | 解释       | 类型   |
+| ------- | ---------- | ------ |
+| edgeId  | 边id       | int    |
+| gameId  | 游戏id     | int    |
+| source  | 来源事件id | int    |
+| target  | 目标事件id | int    |
+| groupId | 组id       | string |
 
 ### 选项(Options)
 

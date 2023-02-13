@@ -64,7 +64,11 @@ const GameEventTree = (props: IGameEventTree) => {
         id: event.id.toString(),
         type: event.isStartEvent ? 'input' : undefined,
         data: {
-          label: <div>{event.eventName}</div>
+          label: (
+            <div style={{ color: event.isStartEvent ? '#7cb305' : '#000' }}>
+              {event.eventName}
+            </div>
+          )
         },
         position: JSON.parse(event.EventTreeViewData.position)
       }

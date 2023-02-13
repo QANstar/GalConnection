@@ -15,5 +15,6 @@ namespace GalConnection.Entity
         public int source { get; set; }
         public int target { get; set; }
         public int gameId { get; set; }
+        public int groupId { get; set; }
     }
 }

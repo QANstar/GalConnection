@@ -10,9 +10,11 @@ namespace GalConnection.Server.Services
     public class MaterialServices
     {
         readonly GalConnectionContext Context;
+        readonly GroupServices groupServices;
         public MaterialServices(GalConnectionContext context)
         {
             Context = context;
+            groupServices = new GroupServices(context);
         }
         /// <summary>
         /// 创建文件夹
@@ -57,7 +59,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("文件不存在");
             }
-            if (!CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
+            if (!groupServices.CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("权限不足");
             }
@@ -118,7 +120,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("文件不存在");
             }
-            if (!CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
+            if (!groupServices.CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("权限不足");
             }
@@ -141,7 +143,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("文件不存在");
             }
-            if (!CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
+            if (!groupServices.CheckRole(materialFile.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("权限不足");
             }
@@ -159,7 +161,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public List<MaterialFile> GetFiles(int groupId, int pid, int userId)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -169,7 +171,7 @@ namespace GalConnection.Server.Services
         // 根据类型获取当前文件夹文件
         public List<MaterialFile> GetFilesByType(int groupId, int pid, int userId, string type)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -194,7 +196,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public List<MaterialFile> GetFolders(int groupId, int userId)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -211,7 +213,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public List<MaterialFile> GetFoldersByPid(int groupId, int pid, int userId)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -239,7 +241,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public string GetFileUrl(int groupId, int fileId, int userId)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -260,7 +262,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public FolderInfoModel GetFolderInfo(int groupId, int fileId, int userId)
         {
-            if (!CheckRole(groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(groupId, userId, GroupRole.READER))
             {
                 throw new Exception("权限不足");
             }
@@ -292,33 +294,6 @@ namespace GalConnection.Server.Services
                 folderInfoModel.createTime = materialFile.creactTime;
             }
             return folderInfoModel;
-        }
-
-        /// <summary>
-        /// 检查权限
-        /// </summary>
-        /// <param name="groupId"></param>
-        /// <param name="userId"></param>
-        /// <param name="needRole"></param>
-        /// <returns></returns>
-        private bool CheckRole(int groupId, int userId, int needRole)
-        {
-            UserGroup userGroup = Context.UserGroup.FirstOrDefault(x => x.groupId == groupId && x.userId == userId);
-            if (userGroup == null)
-            {
-                return false;
-            }
-            else
-            {
-                if (userGroup.role <= needRole)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
         }
     }
 }

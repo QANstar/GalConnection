@@ -10,6 +10,7 @@ namespace GalConnection.Model
     public class GameCreateModel
     {
         public int? id { get; set; }
+        public int groupId { get; set; }
         public string gameName { get; set; }
         public string[] tag { get; set; }
         public string cover { get; set; }

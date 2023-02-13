@@ -3,7 +3,8 @@ import {
   FileOutlined,
   FormOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 import { Button, Menu, MenuProps } from 'antd'
 import React, { useState } from 'react'
@@ -32,9 +33,10 @@ function CreatePage () {
   const navigate = useNavigate()
   const location = useLocation()
   const items: MenuItem[] = [
-    getItem('游戏信息', 'info', <FormOutlined />),
+    getItem('游戏信息', 'info', <SettingOutlined />),
     getItem('素材绑定', 'material', <FileOutlined />),
-    getItem('游戏事件', 'event', <ClusterOutlined />)
+    getItem('游戏事件', 'event', <ClusterOutlined />),
+    getItem('游戏内容', 'line', <FormOutlined />)
   ]
 
   return (

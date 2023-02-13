@@ -47,6 +47,24 @@ namespace GalConnection.Entity
                     .HasConstraintName("FK_EventTreeViewData_Event");
             });
 
+            modelBuilder.Entity<LinesContent>(entity =>
+            {
+                entity.HasOne(d => d.lines)
+                    .WithMany(p => p.LinesContent)
+                    .HasForeignKey(d => d.linesId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LinesContent_Lines");
+            });
+
+            modelBuilder.Entity<LinesVoice>(entity =>
+            {
+                entity.HasOne(d => d.lines)
+                    .WithMany(p => p.LinesVoice)
+                    .HasForeignKey(d => d.linesId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LinesVoice_Lines");
+            });
+
             modelBuilder.Entity<View_Group>(entity =>
             {
                 entity.ToView("View_Group");

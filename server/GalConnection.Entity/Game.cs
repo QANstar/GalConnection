@@ -29,5 +29,6 @@ namespace GalConnection.Entity
         [Required]
         [StringLength(50)]
         public string gameName { get; set; }
+        public int groupId { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace GalConnection.Entity
         public string enterCondition { get; set; }
         public bool isStartEvent { get; set; }
         public int state { get; set; }
+        public int? groupId { get; set; }
 
         [InverseProperty("_event")]
         public virtual EventTreeViewData EventTreeViewData { get; set; }

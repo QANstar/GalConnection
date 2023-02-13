@@ -3,16 +3,21 @@ using GalConnection.Model;
 using GalConnection.Server.Setting;
 using GalConnection.Server.Utils;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Text.RegularExpressions;
+using static GalConnection.Model.CreateLinesModel;
 using static GalConnection.Model.EventAddModel;
 
 namespace GalConnection.Server.Services
 {
     public class GameServices
     {
+        readonly GroupServices groupServices;
         readonly GalConnectionContext Context;
         public GameServices(GalConnectionContext context)
         {
             Context = context;
+            groupServices = new GroupServices(context);
         }
         /// <summary>
         /// 通过id获取游戏信息
@@ -60,10 +65,14 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public GameInfoModel GetCreateGameInfoById(int userId, int gameId)
         {
-            Game game = Context.Game.FirstOrDefault(x => x.userId == userId && x.state != GameState.DELETE && x.id == gameId);
+            Game game = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
             if (game == null)
             {
-                throw new Exception("游戏不存在或你没有对应权限");
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
             }
             GameInfoModel gameInfo = new()
             {
@@ -105,6 +114,10 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int CreateGame(GameCreateModel createGame, int userId)
         {
+            if (!groupServices.CheckRole(createGame.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
             Game game = new()
             {
                 userId = userId,
@@ -116,6 +129,7 @@ namespace GalConnection.Server.Services
                 introduce = createGame.introduce,
                 state = GameState.DEVELOPMENT,
                 gameName = createGame.gameName,
+                groupId = createGame.groupId,
             };
             Context.Game.Add(game);
             Context.SaveChanges();
@@ -137,10 +151,14 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int EditGame(GameCreateModel newGameInfo, int userId)
         {
-            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newGameInfo.id && x.userId == userId);
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newGameInfo.id);
             if (gameInfo == null)
             {
-                throw new Exception("游戏不存在或你没有对应权限");
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
             }
             gameInfo.tag = string.Join(",", newGameInfo.tag);
             gameInfo.cover = newGameInfo.cover;
@@ -166,7 +184,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            if (game.userId != userId)
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("无权限");
             }
@@ -178,7 +196,8 @@ namespace GalConnection.Server.Services
                 enterCondition = "",
                 isStartEvent = (bool)(addEvent.isStartEvent != null ? addEvent.isStartEvent : false),
                 EventTreeViewData = new() { position = addEvent.eventTreeViewData.position },
-                state = EventState.EXIST
+                state = EventState.EXIST,
+                groupId = game.groupId,
             };
             Context.Event.Add(newEvent);
             Context.SaveChanges();
@@ -190,6 +209,7 @@ namespace GalConnection.Server.Services
                     source = addEvent.edge.source,
                     target = newEvent.id,
                     gameId = game.id,
+                    groupId = game.groupId,
                 };
                 Context.EventsMap.Add(eventsMap);
                 Context.SaveChanges();
@@ -215,7 +235,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            if (game.userId != userId)
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
             {
                 throw new Exception("无权限");
             }
@@ -245,7 +265,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            if (game.userId != userId)
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("无权限");
             }
@@ -262,10 +282,14 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public EventsMap AddEdge(AddEdgeModel newEdge, int userId)
         {
-            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newEdge.gameId && x.userId == userId);
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newEdge.gameId);
             if (gameInfo == null)
             {
-                throw new Exception("游戏不存在或你没有对应权限");
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
             }
             EventsMap eventsMap = new()
             {
@@ -291,10 +315,14 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("事件不存在");
             }
-            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId && x.userId == userId);
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId);
             if (gameInfo == null)
             {
-                throw new Exception("游戏不存在或你没有对应权限");
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
             }
             if (@event.isStartEvent)
             {
@@ -323,10 +351,14 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("事件不存在");
             }
-            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId && x.userId == userId);
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == @event.gameId);
             if (gameInfo == null)
             {
-                throw new Exception("游戏不存在或你没有对应权限");
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
             }
             if (@event.isStartEvent)
             {
@@ -337,6 +369,211 @@ namespace GalConnection.Server.Services
             @event.enterCondition = string.Join(',', eventEditData.enterCondition);
             Context.SaveChanges();
             return @event;
+        }
+        /// <summary>
+        /// 获取台词
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="eventId"></param>
+        /// <param name="lineId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Lines GetLines(int gameId, int eventId, int lineId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            Event @event = null;
+            if (eventId == 0)
+            {
+                @event = Context.Event.FirstOrDefault(x => x.isStartEvent && x.gameId == gameId);
+            }
+            else
+            {
+                @event = Context.Event.FirstOrDefault(x => x.id == eventId);
+
+            }
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            Lines lines = null;
+            if (lineId == 0)
+            {
+                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0);
+            }
+            else
+            {
+                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId);
+            }
+            if (lines == null)
+            {
+                throw new Exception("台词不存在");
+            }
+            if (!groupServices.CheckRole((int)lines.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+
+            return lines;
+        }
+        /// <summary>
+        /// 创建第一个台词
+        /// </summary>
+        /// <param name="newLines"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Lines CreateFirstLines(CreateLinesModel newLines, int userId)
+        {
+            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == newLines.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Lines lines = new()
+            {
+                eventId = newLines.eventId,
+                charaPics = newLines.charaPics,
+                charaStyle = newLines.charaStyle,
+                background = newLines.background,
+                backgroundStyle = newLines.backgroundStyle,
+                bgm = newLines.bgm,
+                next = 0,
+                pre = 0,
+                groupId = (int)@event.groupId,
+                LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
+                {
+                    linesContent1 = x.linesContent1,
+                    characters = x.characters,
+                    language = x.language
+                }),
+                LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
+                {
+                    voice = x.voice,
+                    language = x.language
+                })
+            };
+            Context.Add(lines);
+            Context.SaveChanges();
+            return lines;
+        }
+        /// <summary>
+        /// 插入台词
+        /// </summary>
+        /// <param name="newLines"></param>
+        /// <param name="type"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Lines InsertLines(CreateLinesModel newLines, int userId)
+        {
+            if (newLines.pre == null || newLines.next == null)
+            {
+                throw new Exception("请输入完整参数");
+            }
+            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == newLines.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Lines nextLines = Context.Lines.FirstOrDefault(x => x.id == newLines.next);
+            Lines preLines = Context.Lines.FirstOrDefault(x => x.id == newLines.pre);
+            if (nextLines == null || preLines == null)
+            {
+                throw new Exception("台词不存在");
+            }
+            Lines lines = new()
+            {
+                eventId = newLines.eventId,
+                charaPics = newLines.charaPics,
+                charaStyle = newLines.charaStyle,
+                background = newLines.background,
+                backgroundStyle = newLines.backgroundStyle,
+                bgm = newLines.bgm,
+                next = (int)newLines.next,
+                pre = (int)newLines.pre,
+                groupId = (int)@event.groupId,
+                LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
+                {
+                    linesContent1 = x.linesContent1,
+                    characters = x.characters,
+                    language = x.language
+                }),
+                LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
+                {
+                    voice = x.voice,
+                    language = x.language
+                })
+            };
+            Context.Add(lines);
+            newLines.pre = lines.id;
+            preLines.next = lines.id;
+            Context.SaveChanges();
+            return lines;
+        }
+
+        /// <summary>
+        /// 编辑台词
+        /// </summary>
+        /// <param name="newLines"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Lines EditLines(CreateLinesModel newLines, int userId)
+        {
+            if (newLines.id == null)
+            {
+                throw new Exception("请输入完整参数");
+            }
+            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == newLines.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Lines lines = Context.Lines.FirstOrDefault(x => x.id == newLines.id);
+            lines.eventId = newLines.eventId;
+            lines.charaPics = newLines.charaPics;
+            lines.charaStyle = newLines.charaStyle;
+            lines.background = newLines.background;
+            lines.backgroundStyle = newLines.backgroundStyle;
+            lines.bgm = newLines.bgm;
+            lines.LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
+            {
+                linesContent1 = x.linesContent1,
+                characters = x.characters,
+                language = x.language
+            });
+            lines.LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
+            {
+                voice = x.voice,
+                language = x.language
+            });
+            Context.SaveChanges();
+            return lines;
         }
     }
 }

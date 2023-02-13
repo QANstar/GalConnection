@@ -17,5 +17,9 @@ namespace GalConnection.Entity
         [StringLength(1000)]
         public string language { get; set; }
         public int linesId { get; set; }
+
+        [ForeignKey("linesId")]
+        [InverseProperty("LinesVoice")]
+        public virtual Lines lines { get; set; }
     }
 }

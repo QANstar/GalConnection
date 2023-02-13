@@ -15,6 +15,7 @@ import StartCreate from '../Community/StartCreate'
 import CreatePage from '../Community/CreatePage'
 import GameInfo from '../Community/CreatePage/GameInfo'
 import EventPage from '../Community/CreatePage/EventPage'
+import GameLine from '../Community/CreatePage/GameLine'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -38,6 +39,7 @@ function App () {
           <Route path="" element={<Navigate to={'info'} />} />
           <Route path="info" element={<GameInfo />} />
           <Route path="event" element={<EventPage />} />
+          <Route path="line" element={<GameLine />} />
         </Route>
       </Route>
       <Route path="/engine">

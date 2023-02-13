@@ -111,6 +111,7 @@ export interface IRename {
 // 创建游戏
 export interface ICreateGame {
   id?: number
+  groupId: number
   tag: string[]
   cover: string
   homeBg: string
@@ -124,6 +125,7 @@ export interface ICreateGame {
 export interface IGame {
   id: number
   userId: number
+  groupId: number
   tag: string
   cover: string
   homeBg: string
@@ -138,6 +140,7 @@ export interface IGame {
 export interface IGameCreateInfo {
   id: number
   userId: number
+  groupId: number
   tag: string[]
   cover: string
   homeBg: string
@@ -159,12 +162,14 @@ export interface IEdge {
   source: number
   target: number
   gameId: number
+  groupId?: number
 }
 
 // 事件
 export interface IEvent {
   id: number
   gameId: number
+  groupId: number
   eventName: string
   endType: EventEndType
   enterCondition: string
