@@ -36,7 +36,7 @@ function CreatePage () {
     getItem('游戏信息', 'info', <SettingOutlined />),
     getItem('素材绑定', 'material', <FileOutlined />),
     getItem('游戏事件', 'event', <ClusterOutlined />),
-    getItem('游戏内容', 'line', <FormOutlined />)
+    getItem('游戏内容', 'lines/0/0', <FormOutlined />)
   ]
 
   return (

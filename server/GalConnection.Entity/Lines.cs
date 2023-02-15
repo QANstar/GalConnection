@@ -12,6 +12,7 @@ namespace GalConnection.Entity
     {
         public Lines()
         {
+            LinesChara = new HashSet<LinesChara>();
             LinesContent = new HashSet<LinesContent>();
             LinesVoice = new HashSet<LinesVoice>();
         }
@@ -19,10 +20,6 @@ namespace GalConnection.Entity
         [Key]
         public int id { get; set; }
         public int eventId { get; set; }
-        [StringLength(1000)]
-        public string charaPics { get; set; }
-        [StringLength(1000)]
-        public string charaStyle { get; set; }
         [StringLength(1000)]
         public string background { get; set; }
         [StringLength(1000)]
@@ -33,6 +30,8 @@ namespace GalConnection.Entity
         public int pre { get; set; }
         public int groupId { get; set; }
 
+        [InverseProperty("lines")]
+        public virtual ICollection<LinesChara> LinesChara { get; set; }
         [InverseProperty("lines")]
         public virtual ICollection<LinesContent> LinesContent { get; set; }
         [InverseProperty("lines")]

@@ -8,7 +8,8 @@ import {
   IEvent,
   IEventMap,
   IGame,
-  IGameCreateInfo
+  IGameCreateInfo,
+  ILines
 } from '../types/type'
 import request from './request'
 
@@ -53,3 +54,17 @@ export const delEvent = (eventId: number) =>
 // 编辑事件
 export const editEvent = (params: IEditEvent) =>
   request.post<IEvent>('/api/Game/EditEvent', params)
+
+// 获取台词
+export const getLines = (params: {
+  gameId: number
+  linesId: number
+  eventId: number
+}) =>
+  request.get<ILines>(
+    `/api/Game/GetLines?gameId=${params.gameId}&lineId=${params.linesId}&eventId=${params.eventId}`
+  )
+
+// 创建第一个台词
+export const createFirstLines = (params: ILines) =>
+  request.post<ILines>('/api/Game/CreateFirstLines', params)

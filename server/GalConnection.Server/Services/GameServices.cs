@@ -411,11 +411,11 @@ namespace GalConnection.Server.Services
             Lines lines = null;
             if (lineId == 0)
             {
-                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0);
+                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
             }
             else
             {
-                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId);
+                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
             }
             if (lines == null)
             {
@@ -449,25 +449,28 @@ namespace GalConnection.Server.Services
             Lines lines = new()
             {
                 eventId = newLines.eventId,
-                charaPics = newLines.charaPics,
-                charaStyle = newLines.charaStyle,
                 background = newLines.background,
                 backgroundStyle = newLines.backgroundStyle,
                 bgm = newLines.bgm,
                 next = 0,
                 pre = 0,
                 groupId = (int)@event.groupId,
-                LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
+                LinesContent = newLines.LinesContent.Select(x => new LinesContent()
                 {
                     linesContent1 = x.linesContent1,
                     characters = x.characters,
                     language = x.language
-                }),
-                LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
+                }).ToList(),
+                LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice()
                 {
                     voice = x.voice,
                     language = x.language
-                })
+                }).ToList(),
+                LinesChara = newLines.LinesChara.Select(x => new LinesChara()
+                {
+                    charaPics = x.charaPics,
+                    charaStyle = x.charaStyle
+                }).ToList(),
             };
             Context.Add(lines);
             Context.SaveChanges();
@@ -505,25 +508,15 @@ namespace GalConnection.Server.Services
             Lines lines = new()
             {
                 eventId = newLines.eventId,
-                charaPics = newLines.charaPics,
-                charaStyle = newLines.charaStyle,
                 background = newLines.background,
                 backgroundStyle = newLines.backgroundStyle,
                 bgm = newLines.bgm,
                 next = (int)newLines.next,
                 pre = (int)newLines.pre,
                 groupId = (int)@event.groupId,
-                LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
-                {
-                    linesContent1 = x.linesContent1,
-                    characters = x.characters,
-                    language = x.language
-                }),
-                LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
-                {
-                    voice = x.voice,
-                    language = x.language
-                })
+                LinesContent = newLines.LinesContent.Select(x => new LinesContent() { linesContent1 = x.linesContent1, characters = x.characters, language = x.language }).ToList(),
+                LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice() { voice = x.voice, language = x.language }).ToList(),
+                LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList(),
             };
             Context.Add(lines);
             newLines.pre = lines.id;
@@ -556,22 +549,12 @@ namespace GalConnection.Server.Services
             }
             Lines lines = Context.Lines.FirstOrDefault(x => x.id == newLines.id);
             lines.eventId = newLines.eventId;
-            lines.charaPics = newLines.charaPics;
-            lines.charaStyle = newLines.charaStyle;
             lines.background = newLines.background;
             lines.backgroundStyle = newLines.backgroundStyle;
             lines.bgm = newLines.bgm;
-            lines.LinesContent = (ICollection<LinesContent>)newLines.LinesContent.Select(x => new LinesContent()
-            {
-                linesContent1 = x.linesContent1,
-                characters = x.characters,
-                language = x.language
-            });
-            lines.LinesVoice = (ICollection<LinesVoice>)newLines.LinesVoice.Select(x => new LinesVoice()
-            {
-                voice = x.voice,
-                language = x.language
-            });
+            lines.LinesContent = newLines.LinesContent.Select(x => new LinesContent() { linesContent1 = x.linesContent1, characters = x.characters, language = x.language }).ToList();
+            lines.LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice() { voice = x.voice, language = x.language }).ToList();
+            lines.LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList();
             Context.SaveChanges();
             return lines;
         }

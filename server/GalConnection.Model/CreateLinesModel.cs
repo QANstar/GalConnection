@@ -25,12 +25,13 @@ namespace GalConnection.Model
             [StringLength(1000)]
             public string language { get; set; }
         }
+        public class LinesCharaCreateModel
+        {
+            public string charaPics { get; set; }
+            public string charaStyle { get; set; }
+        }
         public int? id { get; set; }
         public int eventId { get; set; }
-        [StringLength(1000)]
-        public string charaPics { get; set; }
-        [StringLength(1000)]
-        public string charaStyle { get; set; }
         [StringLength(1000)]
         public string background { get; set; }
         [StringLength(1000)]
@@ -42,5 +43,6 @@ namespace GalConnection.Model
 
         public virtual ICollection<LinesContentCreateModel> LinesContent { get; set; }
         public virtual ICollection<LinesVoiceCreateModel> LinesVoice { get; set; }
+        public virtual ICollection<LinesCharaCreateModel> LinesChara { get; set; }
     }
 }

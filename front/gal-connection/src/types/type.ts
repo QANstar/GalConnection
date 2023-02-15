@@ -212,3 +212,43 @@ export interface IEditEvent {
   endType: EventEndType
   enterCondition: number[]
 }
+
+// 台词内容
+export interface ILinesContent {
+  id?: number
+  linesId?: number
+  linesContent1: string
+  characters: string
+  language: string
+}
+
+// 语音
+export interface ILinesVoice {
+  id?: number
+  linesId?: number
+  voice?: string
+  language?: string
+}
+
+// 角色立绘
+export interface ILinesChara {
+  id: number
+  linesId: number
+  charaPics: string
+  charaStyle: string
+}
+
+// 台词
+export interface ILines {
+  id?: number
+  eventId: number
+  background: string
+  backgroundStyle: string
+  bgm: string
+  next?: number
+  pre?: number
+  groupId?: number
+  LinesContent: ILinesContent[]
+  LinesVoice: ILinesVoice[]
+  LinesChara: ILinesChara[]
+}
