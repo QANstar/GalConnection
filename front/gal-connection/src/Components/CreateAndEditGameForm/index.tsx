@@ -28,7 +28,8 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
       cover,
       homeBg,
       preCg: preCG,
-      langeuage: [],
+      langeuage: ['中文'],
+      voiceLangeuage: ['日文'],
       introduce: data.introduce,
       gameName: data.gameName,
       groupId: stores.user.groupId

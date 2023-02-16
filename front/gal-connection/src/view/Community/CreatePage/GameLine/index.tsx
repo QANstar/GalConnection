@@ -3,28 +3,34 @@ import React, { useEffect } from 'react'
 import Game from '../../../../Components/Game'
 import useLines from '../../../../Hooks/useLines'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Empty, message } from 'antd'
+import { Button, Empty, Input, message } from 'antd'
 import TopTools from './TopTools'
 import useEvent from '../../../../Hooks/useEvent'
+import TextArea from 'antd/es/input/TextArea'
 
 function GameLine () {
   const navigate = useNavigate()
 
   const { gameId, eventId, linesId } = useParams()
   const { evnets, choEvent, eventCho } = useEvent(parseInt(gameId || '0'))
-  const { lines, error, createFirstLines } = useLines({
+  const {
+    lines,
+    error,
+    createFirstLines,
+    setSpeakChara,
+    setSpeakLines,
+    editLines
+  } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
     linesId: parseInt(linesId || '0')
   })
 
   useEffect(() => {
-    console.log(lines, 1)
     if (error !== '') {
       message.error(error)
     }
   }, [error])
-
   useEffect(() => {
     if (eventId === '0') {
       const event = evnets.find((x) => x.isStartEvent)
@@ -48,11 +54,31 @@ function GameLine () {
         <div className={style.lines_main}>
           <div className={style.left}>
             <div className={style.gameView}>
-              <Game />
+              <Game isDevMode lines={lines} />
             </div>
-            <div className={style.lineSetting}>menu</div>
+            <div className={style.lineSetting}>
+              <div className={style.inputTile}>人物</div>
+              <Input
+                onChange={(val) => {
+                  setSpeakChara(val.target.value)
+                }}
+                style={{ width: '50%' }}
+                placeholder="人物"
+              />
+              <div className={style.inputTile}>台词</div>
+              <TextArea
+                onChange={(val) => {
+                  setSpeakLines(val.target.value)
+                }}
+                placeholder="台词"
+              />
+            </div>
           </div>
-          <div className={style.right}></div>
+          <div className={style.right}>
+            <Button onClick={editLines} block>
+              保存编辑
+            </Button>
+          </div>
         </div>
           )
         : (

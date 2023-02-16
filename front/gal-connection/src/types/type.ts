@@ -117,6 +117,7 @@ export interface ICreateGame {
   homeBg: string
   preCg: string[]
   langeuage: string[]
+  voiceLangeuage: string[]
   introduce: string
   gameName: string
 }
@@ -131,6 +132,7 @@ export interface IGame {
   homeBg: string
   preCG: string
   langeuage: string
+  voiceLangeuage: string
   introduce: string
   state: number
   gameName: string
@@ -146,6 +148,7 @@ export interface IGameCreateInfo {
   homeBg: string
   preCG: string[]
   langeuage: string[]
+  voiceLangeuage: string[]
   introduce: string
   gameName: string
 }
@@ -242,6 +245,7 @@ export interface ILinesChara {
 export interface ILines {
   id?: number
   eventId: number
+  gameId?: number
   background: string
   backgroundStyle: string
   bgm: string

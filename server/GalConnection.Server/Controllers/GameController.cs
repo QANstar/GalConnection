@@ -247,7 +247,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(gameServices.GetLines(gameId, eventId, lineId, userID));
+                return Ok(JsonUtils.ToJson(gameServices.GetLines(gameId, eventId, lineId, userID)));
             }
             catch (Exception ex)
             {

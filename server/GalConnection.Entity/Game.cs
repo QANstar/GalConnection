@@ -30,5 +30,7 @@ namespace GalConnection.Entity
         [StringLength(50)]
         public string gameName { get; set; }
         public int groupId { get; set; }
+        [StringLength(500)]
+        public string voiceLangeuage { get; set; }
     }
 }

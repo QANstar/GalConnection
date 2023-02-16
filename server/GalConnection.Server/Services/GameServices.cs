@@ -84,6 +84,7 @@ namespace GalConnection.Server.Services
                 homeBg = game.homeBg,
                 preCG = game.preCG.Split(","),
                 langeuage = game.langeuage.Split(","),
+                voiceLangeuage = game.voiceLangeuage.Split(","),
                 introduce = game.introduce
             };
             return gameInfo;
@@ -125,7 +126,8 @@ namespace GalConnection.Server.Services
                 cover = createGame.cover,
                 homeBg = createGame.homeBg,
                 preCG = string.Join(',', createGame.preCG),
-                langeuage = string.Join(",", createGame.langeuage),
+                langeuage = createGame.langeuage.Length > 0 ? string.Join(",", createGame.langeuage) : "中文",
+                voiceLangeuage = createGame.voiceLangeuage.Length > 0 ? string.Join(",", createGame.voiceLangeuage) : "日文",
                 introduce = createGame.introduce,
                 state = GameState.DEVELOPMENT,
                 gameName = createGame.gameName,
@@ -164,7 +166,8 @@ namespace GalConnection.Server.Services
             gameInfo.cover = newGameInfo.cover;
             gameInfo.homeBg = newGameInfo.homeBg;
             gameInfo.preCG = string.Join(',', newGameInfo.preCG);
-            gameInfo.langeuage = string.Join(",", newGameInfo.langeuage);
+            gameInfo.langeuage = newGameInfo.langeuage.Length > 0 ? string.Join(",", newGameInfo.langeuage) : "中文";
+            gameInfo.voiceLangeuage = newGameInfo.langeuage.Length > 0 ? string.Join(",", newGameInfo.voiceLangeuage) : "日文";
             gameInfo.introduce = newGameInfo.introduce;
             gameInfo.gameName = newGameInfo.gameName;
             Context.SaveChanges();
@@ -437,7 +440,19 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public Lines CreateFirstLines(CreateLinesModel newLines, int userId)
         {
-            Event @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == newLines.eventId);
+            Event @event = null;
+            if (newLines.eventId == 0)
+            {
+                if (newLines.gameId == null)
+                {
+                    throw new Exception("缺少游戏id");
+                }
+                @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.isStartEvent && x.gameId == newLines.gameId);
+            }
+            else
+            {
+                @event = Context.Event.Include(x => x.EventTreeViewData).FirstOrDefault(x => x.id == newLines.eventId);
+            }
             if (@event == null)
             {
                 throw new Exception("事件不存在");
@@ -446,25 +461,52 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("无权限");
             }
+            Game game = Context.Game.FirstOrDefault(x => x.id == @event.gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
             Lines lines = new()
             {
-                eventId = newLines.eventId,
+                eventId = @event.id,
                 background = newLines.background,
                 backgroundStyle = newLines.backgroundStyle,
                 bgm = newLines.bgm,
                 next = 0,
                 pre = 0,
                 groupId = (int)@event.groupId,
-                LinesContent = newLines.LinesContent.Select(x => new LinesContent()
+                LinesContent = game.langeuage.Split(",").Select(x =>
                 {
-                    linesContent1 = x.linesContent1,
-                    characters = x.characters,
-                    language = x.language
+                    LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);
+                    if (linesContentCreateModel != null)
+                    {
+                        return new LinesContent()
+                        {
+                            linesContent1 = linesContentCreateModel.linesContent1,
+                            characters = linesContentCreateModel.characters,
+                            language = linesContentCreateModel.language
+                        };
+                    }
+                    else
+                    {
+                        return new LinesContent() { linesContent1 = "", characters = "", language = x };
+                    }
                 }).ToList(),
-                LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice()
+                LinesVoice = game.voiceLangeuage.Split(",").Select(x =>
                 {
-                    voice = x.voice,
-                    language = x.language
+                    LinesVoiceCreateModel linesVoiceCreate = newLines.LinesVoice.FirstOrDefault(y => y.language == x);
+                    if (linesVoiceCreate != null)
+                    {
+                        return new LinesVoice()
+                        {
+                            voice = linesVoiceCreate.voice,
+                            language = linesVoiceCreate.language
+                        };
+                    }
+                    else
+                    {
+                        return new LinesVoice() { voice = "", language = x };
+                    }
                 }).ToList(),
                 LinesChara = newLines.LinesChara.Select(x => new LinesChara()
                 {
@@ -499,9 +541,14 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("无权限");
             }
+            Game game = Context.Game.FirstOrDefault(x => x.id == @event.id);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
             Lines nextLines = Context.Lines.FirstOrDefault(x => x.id == newLines.next);
             Lines preLines = Context.Lines.FirstOrDefault(x => x.id == newLines.pre);
-            if (nextLines == null || preLines == null)
+            if ((nextLines == null && newLines.next != 0) || (preLines == null && newLines.pre != 0))
             {
                 throw new Exception("台词不存在");
             }
@@ -514,13 +561,50 @@ namespace GalConnection.Server.Services
                 next = (int)newLines.next,
                 pre = (int)newLines.pre,
                 groupId = (int)@event.groupId,
-                LinesContent = newLines.LinesContent.Select(x => new LinesContent() { linesContent1 = x.linesContent1, characters = x.characters, language = x.language }).ToList(),
-                LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice() { voice = x.voice, language = x.language }).ToList(),
+                LinesContent = game.langeuage.Split(",").Select(x =>
+                {
+                    LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);
+                    if (linesContentCreateModel != null)
+                    {
+                        return new LinesContent()
+                        {
+                            linesContent1 = linesContentCreateModel.linesContent1,
+                            characters = linesContentCreateModel.characters,
+                            language = linesContentCreateModel.language
+                        };
+                    }
+                    else
+                    {
+                        return new LinesContent() { linesContent1 = "", characters = "", language = x };
+                    }
+                }).ToList(),
+                LinesVoice = game.voiceLangeuage.Split(",").Select(x =>
+                {
+                    LinesVoiceCreateModel linesVoiceCreate = newLines.LinesVoice.FirstOrDefault(y => y.language == x);
+                    if (linesVoiceCreate != null)
+                    {
+                        return new LinesVoice()
+                        {
+                            voice = linesVoiceCreate.voice,
+                            language = linesVoiceCreate.language
+                        };
+                    }
+                    else
+                    {
+                        return new LinesVoice() { voice = "", language = x };
+                    }
+                }).ToList(),
                 LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList(),
             };
             Context.Add(lines);
-            newLines.pre = lines.id;
-            preLines.next = lines.id;
+            if (newLines != null)
+            {
+                newLines.pre = lines.id;
+            }
+            if (preLines != null)
+            {
+                preLines.next = lines.id;
+            }
             Context.SaveChanges();
             return lines;
         }
@@ -547,13 +631,49 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("无权限");
             }
+            Game game = Context.Game.FirstOrDefault(x => x.id == @event.gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
             Lines lines = Context.Lines.FirstOrDefault(x => x.id == newLines.id);
             lines.eventId = newLines.eventId;
             lines.background = newLines.background;
             lines.backgroundStyle = newLines.backgroundStyle;
             lines.bgm = newLines.bgm;
-            lines.LinesContent = newLines.LinesContent.Select(x => new LinesContent() { linesContent1 = x.linesContent1, characters = x.characters, language = x.language }).ToList();
-            lines.LinesVoice = newLines.LinesVoice.Select(x => new LinesVoice() { voice = x.voice, language = x.language }).ToList();
+            lines.LinesContent = game.langeuage.Split(",").Select(x =>
+            {
+                LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);
+                if (linesContentCreateModel != null)
+                {
+                    return new LinesContent()
+                    {
+                        linesContent1 = linesContentCreateModel.linesContent1,
+                        characters = linesContentCreateModel.characters,
+                        language = linesContentCreateModel.language
+                    };
+                }
+                else
+                {
+                    return new LinesContent() { linesContent1 = "", characters = "", language = x };
+                }
+            }).ToList();
+            lines.LinesVoice = game.voiceLangeuage.Split(",").Select(x =>
+            {
+                LinesVoiceCreateModel linesVoiceCreate = newLines.LinesVoice.FirstOrDefault(y => y.language == x);
+                if (linesVoiceCreate != null)
+                {
+                    return new LinesVoice()
+                    {
+                        voice = linesVoiceCreate.voice,
+                        language = linesVoiceCreate.language
+                    };
+                }
+                else
+                {
+                    return new LinesVoice() { voice = "", language = x };
+                }
+            }).ToList();
             lines.LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList();
             Context.SaveChanges();
             return lines;

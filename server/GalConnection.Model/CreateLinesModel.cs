@@ -31,6 +31,7 @@ namespace GalConnection.Model
             public string charaStyle { get; set; }
         }
         public int? id { get; set; }
+        public int? gameId { get; set; }
         public int eventId { get; set; }
         [StringLength(1000)]
         public string background { get; set; }

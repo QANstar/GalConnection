@@ -68,3 +68,7 @@ export const getLines = (params: {
 // 创建第一个台词
 export const createFirstLines = (params: ILines) =>
   request.post<ILines>('/api/Game/CreateFirstLines', params)
+
+// 编辑台词
+export const editLines = (params: ILines) =>
+  request.post<ILines>('/api/Game/EditLines', params)

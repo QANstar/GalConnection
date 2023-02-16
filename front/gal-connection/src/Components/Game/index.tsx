@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
-import useGame from '../../Hooks/useGame'
+import { ILines } from '../../types/type'
+import Background from './Background'
 import CharaPicList from './CharaPicList'
-import OptionList from './OptionList'
+// import OptionList from './OptionList'
 import PlayLines from './PlayLines'
 import style from './style.module.scss'
 
-function Game () {
-  const { currentLines, nextLines, options, choOption } = useGame()
-  const [optionVisable, setOptionVisable] = useState(false)
+interface IGameProps {
+  lines: ILines
+  isDevMode?: boolean
+}
+
+function Game (props: IGameProps) {
+  // const [optionVisable, setOptionVisable] = useState(false)
   const gameRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
   const [width, setWidth] = useState(0)
@@ -51,33 +56,40 @@ function Game () {
     }
   }, [gameRef.current])
 
-  useEffect(() => {
-    if (options.length > 0) {
-      setOptionVisable(true)
-    }
-  }, [options])
+  // useEffect(() => {
+  //   if (options.length > 0) {
+  //     setOptionVisable(true)
+  //   }
+  // }, [options])
 
   return (
     <div
       ref={gameRef}
       style={{
-        backgroundImage: `url(${currentLines.background.background})`,
         height: `${height}px`,
         width: `${width}px`
       }}
-      onClick={nextLines}
+      // onClick={nextLines}
       className={style.main}
     >
-      <OptionList
+      {/* <OptionList
         choOption={(choId: string) => {
           setOptionVisable(false)
           choOption(choId)
         }}
         data={options}
         visable={optionVisable}
+      /> */}
+      <CharaPicList charaPics={props.lines.LinesChara} />
+      <PlayLines
+        isDevMode={props.isDevMode}
+        openSave={() => {}}
+        data={props.lines.LinesContent[0]}
       />
-      <CharaPicList charaPics={currentLines.charaPics} />
-      <PlayLines openSave={() => {}} data={currentLines} />
+      <Background
+        img={props.lines.background}
+        style={props.lines.backgroundStyle}
+      />
     </div>
   )
 }

@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react'
+import { ILinesChara } from '../../../types/type'
 import style from './style.module.scss'
 
 interface ICharaPicListProps {
-  charaPics: {
-    pics: string
-    style: string
-  }[]
+  charaPics: ILinesChara[]
 }
 
 const CharaPicList = (props: ICharaPicListProps) => {
@@ -14,16 +12,16 @@ const CharaPicList = (props: ICharaPicListProps) => {
     if (charaImgList.current) {
       let index = 0
       for (const charaImg of charaImgList.current.children) {
-        charaImg.setAttribute('style', props.charaPics[index].style)
+        charaImg.setAttribute('style', props.charaPics[index].charaStyle)
         index++
       }
     }
-  }, props.charaPics)
+  }, [props.charaPics])
 
   return (
     <div ref={charaImgList} className={style.cover}>
       {props.charaPics.map((charaPic, index) => (
-        <img key={index} src={charaPic.pics} />
+        <img key={index} src={charaPic.charaPics} />
       ))}
     </div>
   )

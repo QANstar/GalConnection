@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import * as gameService from '../service/game'
 import { ILines } from '../types/type'
@@ -43,6 +44,7 @@ const useLines = (params: IUseLines) => {
       setError('')
       const { status } = await gameService.createFirstLines({
         eventId,
+        gameId,
         background: '',
         backgroundStyle: '',
         bgm: '',
@@ -60,6 +62,51 @@ const useLines = (params: IUseLines) => {
     }
   }, [gameId, eventId, linesId])
 
+  // 编辑台词
+  const editLines = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      if (lines) {
+        const { status } = await gameService.editLines(lines)
+        if (status === 200) {
+          getLines()
+          message.success('编辑成功')
+        }
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [gameId, eventId, linesId, lines])
+
+  // 修改说话的角色
+  const setSpeakChara = useCallback(
+    async (chara: string) => {
+      if (lines) {
+        if (lines.LinesContent.length > 0) {
+          lines.LinesContent[0].characters = chara
+          setLines({ ...lines })
+        }
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
+  // 修改说话的台词
+  const setSpeakLines = useCallback(
+    async (speakLines: string) => {
+      if (lines) {
+        if (lines.LinesContent.length > 0) {
+          lines.LinesContent[0].linesContent1 = speakLines
+          setLines({ ...lines })
+        }
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
   useEffect(() => {
     getLines()
   }, [gameId, eventId, linesId])
@@ -69,7 +116,10 @@ const useLines = (params: IUseLines) => {
     loading,
     error,
     getLines,
-    createFirstLines
+    createFirstLines,
+    setSpeakChara,
+    setSpeakLines,
+    editLines
   }
 }
 

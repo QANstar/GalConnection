@@ -16,6 +16,7 @@ namespace GalConnection.Model
         public string homeBg { get; set; }
         public string[] preCG { get; set; }
         public string[] langeuage { get; set; }
+        public string[] voiceLangeuage { get; set; }
         public string introduce { get; set; }
     }
 }
