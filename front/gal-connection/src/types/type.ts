@@ -1,4 +1,4 @@
-import { EventEndType } from './enums'
+import { BindingType, EventEndType } from './enums'
 
 // 筛选文件类型
 export type FilterFileTye = 'all' | 'folder' | 'video' | 'picture' | 'sound'
@@ -255,4 +255,14 @@ export interface ILines {
   LinesContent: ILinesContent[]
   LinesVoice: ILinesVoice[]
   LinesChara: ILinesChara[]
+}
+
+// 绑定
+export interface IBinding {
+  id?: number
+  gameId: number
+  name: string
+  type: BindingType
+  folderId: number
+  cover: string
 }

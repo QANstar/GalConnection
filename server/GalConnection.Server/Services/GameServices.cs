@@ -637,6 +637,18 @@ namespace GalConnection.Server.Services
                 throw new Exception("游戏不存在");
             }
             Lines lines = Context.Lines.FirstOrDefault(x => x.id == newLines.id);
+            Context.LinesContent.Where(x => x.linesId == lines.id).ToList().ForEach(x =>
+            {
+                Context.LinesContent.Remove(x);
+            });
+            Context.LinesVoice.Where(x => x.linesId == lines.id).ToList().ForEach(x =>
+            {
+                Context.LinesVoice.Remove(x);
+            });
+            Context.LinesChara.Where(x => x.linesId == lines.id).ToList().ForEach(x =>
+            {
+                Context.LinesChara.Remove(x);
+            });
             lines.eventId = newLines.eventId;
             lines.background = newLines.background;
             lines.backgroundStyle = newLines.backgroundStyle;
@@ -678,5 +690,86 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return lines;
         }
+        /// <summary>
+        /// 绑定素材
+        /// </summary>
+        /// <param name="bingdingData"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public GameBinding Binding(GameBindingModel bingdingData, int userId)
+        {
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == bingdingData.gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            GameBinding gameBinding = new()
+            {
+                gameId = bingdingData.gameId,
+                name = bingdingData.name,
+                type = bingdingData.type,
+                folderId = bingdingData.folderId,
+                cover = bingdingData.cover
+            };
+            Context.GameBinding.Add(gameBinding);
+            Context.SaveChanges();
+            return gameBinding;
+        }
+        /// <summary>
+        /// 获取绑定信息
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<GameBinding> GetBindingInfo(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            List<GameBinding> events = Context.GameBinding.Where(x => x.gameId == gameId).ToList();
+            return events;
+        }
+        /// <summary>
+        /// 编辑绑定
+        /// </summary>
+        /// <param name="bingdingData"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public GameBinding EditBinding(GameBinding bingdingData, int userId)
+        {
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == bingdingData.gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            GameBinding gameBinding = Context.GameBinding.FirstOrDefault(x => x.id == bingdingData.id);
+            if (gameBinding == null)
+            {
+                throw new Exception("绑定信息不存在");
+            }
+            gameBinding.name = bingdingData.name;
+            gameBinding.folderId = bingdingData.folderId;
+            gameBinding.cover = bingdingData.cover;
+            Context.SaveChanges();
+            return gameBinding;
+        }
+
     }
 }

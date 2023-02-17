@@ -65,3 +65,9 @@ export const rename = (params: IRename) =>
 // 移动文件夹
 export const moveFolder = (params: { fileId: number; folderId: number }) =>
   request.post<number>('/api/Material/MoveFolder', params)
+
+// 根据id获取文件
+export const getFileInfoById = (params: { fileId: number }) =>
+  request.get<IFolderInfo>(
+    `/api/Material/GetFileInfoById?fileId=${params.fileId}`
+  )

@@ -28,3 +28,12 @@ export enum EventEndType {
   END,
   VIDEO
 }
+
+// 绑定类型
+export enum BindingType {
+  CHARACTER,
+  BACKGROUND,
+  CG,
+  VOICE,
+  BGM
+}

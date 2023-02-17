@@ -1,6 +1,7 @@
 import {
   IAddEvent,
   IAddEventResponse,
+  IBinding,
   ICreateGame,
   IEdge,
   IEditEvent,
@@ -72,3 +73,15 @@ export const createFirstLines = (params: ILines) =>
 // 编辑台词
 export const editLines = (params: ILines) =>
   request.post<ILines>('/api/Game/EditLines', params)
+
+// 绑定
+export const binding = (params: IBinding) =>
+  request.post<IBinding>('/api/Game/Binding', params)
+
+// 编辑绑定
+export const editBinding = (params: IBinding) =>
+  request.post<IBinding>('/api/Game/EditBinding', params)
+
+// 获取绑定信息
+export const getBindingInfo = (params: { gameId: number }) =>
+  request.get<IBinding[]>(`/api/Game/GetBindingInfo?gameId=${params.gameId}`)

@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[GameBinding]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Group]",
          "ObjectType": 0
       },

@@ -1,6 +1,7 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
 using GalConnection.Server.Services;
+using GalConnection.Server.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -273,6 +274,27 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(materialServices.MoveFolder(moveFolderModel.fileId, moveFolderModel.folderId, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据id获取文件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFileInfoById(int fileId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(materialServices.GetFileInfoById(fileId, userID)));
             }
             catch (Exception ex)
             {

@@ -295,5 +295,26 @@ namespace GalConnection.Server.Services
             }
             return folderInfoModel;
         }
+        /// <summary>
+        /// 根据id获取文件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public MaterialFile GetFileInfoById(int fileId, int userId)
+        {
+            MaterialFile materialFile = Context.MaterialFile.FirstOrDefault(x => x.id == fileId);
+            if (materialFile == null)
+            {
+                throw new Exception("文件不存在");
+            }
+            if (!groupServices.CheckRole(materialFile.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("权限不足");
+            }
+
+            return materialFile;
+        }
     }
 }

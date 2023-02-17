@@ -59,6 +59,7 @@ function GameLine () {
             <div className={style.lineSetting}>
               <div className={style.inputTile}>人物</div>
               <Input
+                value={lines.LinesContent[0].characters}
                 onChange={(val) => {
                   setSpeakChara(val.target.value)
                 }}
@@ -67,6 +68,7 @@ function GameLine () {
               />
               <div className={style.inputTile}>台词</div>
               <TextArea
+                value={lines.LinesContent[0].linesContent1}
                 onChange={(val) => {
                   setSpeakLines(val.target.value)
                 }}
