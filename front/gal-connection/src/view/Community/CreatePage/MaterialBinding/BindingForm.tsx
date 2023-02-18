@@ -1,6 +1,6 @@
 import style from './style.module.scss'
 import React, { useEffect, useState } from 'react'
-import { IBinding } from '../../../../types/type'
+import { IBindingForm } from '../../../../types/type'
 import { Button, Form, Input, Modal } from 'antd'
 import CloudeFileSelect from '../../../../Components/CloudeFileSelect'
 import ImgSelectShow from '../../../../Components/ImgSelectShow'
@@ -9,18 +9,29 @@ import FolderTree from '../../../../Components/FolderTree'
 import { getFileInfoById } from '../../../../service/file'
 
 interface IBindingFormProps {
-  onFinish: (data: IBinding) => void
+  onFinish: (data: IBindingForm) => void
+  initData?: IBindingForm
 }
 
 function BindingForm (props: IBindingFormProps) {
-  const [folderId, setFolderId] = useState(0)
+  const [folderId, setFolderId] = useState(
+    props.initData ? props.initData.folderId : 0
+  )
+  const [folderSelectId, setFolderSelectId] = useState(0)
   const [folderTreeModalVisable, setFolderTreeModalVisable] = useState(false)
   const [folderName, setFolderName] = useState('')
-  const [cover, setCover] = useState('')
+  const [cover, setCover] = useState(props.initData ? props.initData.cover : '')
   const [form] = Form.useForm()
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
-    props.onFinish(values)
+  const onFinish = (values: { name: string }) => {
+    const result: IBindingForm = {
+      name: values.name,
+      cover,
+      folderId
+    }
+    props.onFinish(result)
+    form.resetFields()
+    setFolderId(0)
+    setCover('')
   }
 
   const getFileInfo = async () => {
@@ -32,8 +43,18 @@ function BindingForm (props: IBindingFormProps) {
           setFolderName(data.name)
         }
       } catch (error) {}
+    } else {
+      setFolderName('')
     }
   }
+
+  useEffect(() => {
+    if (props.initData) {
+      form.setFieldValue('name', props.initData.name)
+      setFolderId(props.initData.folderId)
+      setCover(props.initData.cover)
+    }
+  }, [props.initData])
 
   useEffect(() => {
     getFileInfo()
@@ -45,10 +66,10 @@ function BindingForm (props: IBindingFormProps) {
         title="选择文件夹"
         open={folderTreeModalVisable}
         onOk={() => {
+          setFolderId(folderSelectId)
           setFolderTreeModalVisable(false)
         }}
         onCancel={() => {
-          setFolderId(0)
           setFolderTreeModalVisable(false)
         }}
         okText="确认"
@@ -56,7 +77,7 @@ function BindingForm (props: IBindingFormProps) {
       >
         <FolderTree
           onItemClick={(data) => {
-            setFolderId(data.id)
+            setFolderSelectId(data.id)
           }}
         />
       </Modal>

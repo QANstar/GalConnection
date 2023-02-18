@@ -15,6 +15,7 @@ interface IBindingListProps {
   type: IBindingType
   data: IBinding[]
   onAddClick: (data: IBindingType) => void
+  onItemClick: (data: IBinding) => void
 }
 
 function BindingList (props: IBindingListProps) {
@@ -32,13 +33,23 @@ function BindingList (props: IBindingListProps) {
         />
       </div>
 
-      <div className={style.list}>
+      <div>
         {props.data.length <= 0
           ? (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )
           : (
-              props.data.map((x) => <BindingItem data={x} key={x.id} />)
+          <div className={style.list}>
+            {props.data.map((x) => (
+              <BindingItem
+                onClick={() => {
+                  props.onItemClick(x)
+                }}
+                data={x}
+                key={x.id}
+              />
+            ))}
+          </div>
             )}
       </div>
     </div>

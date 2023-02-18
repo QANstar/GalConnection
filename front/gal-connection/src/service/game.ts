@@ -85,3 +85,7 @@ export const editBinding = (params: IBinding) =>
 // 获取绑定信息
 export const getBindingInfo = (params: { gameId: number }) =>
   request.get<IBinding[]>(`/api/Game/GetBindingInfo?gameId=${params.gameId}`)
+
+// 删除绑定
+export const delBinding = (params: { bindingId: number }) =>
+  request.delete<boolean>(`/api/Game/DelBingding?bindingId=${params.bindingId}`)

@@ -64,6 +64,26 @@ const useBinding = (gameId: number) => {
     [gameId]
   )
 
+  // 删除绑定
+  const delBinding = useCallback(
+    async (bindingId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.delBinding({ bindingId })
+        if (status === 200) {
+          getBindingInfo()
+          message.success('删除成功')
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId]
+  )
+
   useEffect(() => {
     getBindingInfo()
   }, [gameId])
@@ -74,7 +94,8 @@ const useBinding = (gameId: number) => {
     error,
     editBinding,
     getBindingInfo,
-    binding
+    binding,
+    delBinding
   }
 }
 

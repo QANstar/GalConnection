@@ -266,3 +266,10 @@ export interface IBinding {
   folderId: number
   cover: string
 }
+
+// 绑定的表单
+export interface IBindingForm {
+  name: string
+  folderId: number
+  cover: string
+}

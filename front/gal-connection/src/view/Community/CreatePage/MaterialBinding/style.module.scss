@@ -1,4 +1,4 @@
-.main {
+.bindingMain {
   padding: 20px;
 }
 
@@ -21,4 +21,43 @@
 .choImgBtn {
   width: 200px !important;
   height: 200px !important;
+}
+
+.item {
+  margin: 30px;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  &:hover {
+    background-color: #e6f4ff;
+  }
+}
+
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.itemText {
+  text-align: center;
+  font-size: 14px;
+  max-width: 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 140px));
 }

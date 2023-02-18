@@ -4,13 +4,14 @@ import { IBinding } from '../../../../types/type'
 
 interface IBindingItemProps {
   data: IBinding
+  onClick: () => void
 }
 
 function BindingItem (props: IBindingItemProps) {
   return (
-    <div className={style.main}>
-      <img src={props.data.cover} alt="封面" />
-      <div>{props.data.name}</div>
+    <div onClick={props.onClick} className={style.item}>
+      <img className={style.cover} src={props.data.cover} alt="封面" />
+      <div className={style.itemText}>{props.data.name}</div>
     </div>
   )
 }

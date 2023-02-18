@@ -177,12 +177,12 @@ namespace GalConnection.Server.Services
             }
             if (type == "all")
             {
-                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).ToList();
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).OrderBy(x => x.type != FileType.FOLDER).ToList();
                 return materialFiles;
             }
             else
             {
-                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && (x.type == type || x.type == FileType.FOLDER)).ToList();
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && (x.type == type || x.type == FileType.FOLDER)).OrderBy(x => x.type != FileType.FOLDER).ToList();
                 return materialFiles;
             }
 

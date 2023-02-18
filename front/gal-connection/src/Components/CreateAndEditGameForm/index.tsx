@@ -152,7 +152,6 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
       </Form.Item>
       <Form.Item>
         <Button
-          style={{ margin: 20 }}
           size="large"
           type="primary"
           shape="round"

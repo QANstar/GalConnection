@@ -380,6 +380,26 @@ namespace GalConnection.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        /// 删除绑定
+        /// </summary>
+        /// <param name="bindingId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DelBingding(int bindingId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.DelBinding(bindingId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

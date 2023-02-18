@@ -85,7 +85,8 @@ namespace GalConnection.Server.Services
                 preCG = game.preCG.Split(","),
                 langeuage = game.langeuage.Split(","),
                 voiceLangeuage = game.voiceLangeuage.Split(","),
-                introduce = game.introduce
+                introduce = game.introduce,
+                groupId = game.groupId
             };
             return gameInfo;
         }
@@ -769,6 +770,33 @@ namespace GalConnection.Server.Services
             gameBinding.cover = bingdingData.cover;
             Context.SaveChanges();
             return gameBinding;
+        }
+        /// <summary>
+        /// 删除绑定
+        /// </summary>
+        /// <param name="bingdingId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelBinding(int bingdingId, int userId)
+        {
+            GameBinding gameBinding = Context.GameBinding.FirstOrDefault(x => x.id == bingdingId);
+            if (gameBinding == null)
+            {
+                throw new Exception("绑定不存在");
+            }
+            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameBinding.gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Context.GameBinding.Remove(gameBinding);
+            Context.SaveChanges();
+            return true;
         }
 
     }
