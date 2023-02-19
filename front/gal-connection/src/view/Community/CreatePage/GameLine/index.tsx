@@ -11,6 +11,7 @@ import BackgroundSetting from './BackgroundSetting'
 import useBinding from '../../../../Hooks/useBinding'
 import { BindingType } from '../../../../types/enums'
 import useGameInfo from '../../../../Hooks/useGameInfo'
+import CharacterSetting from './CharacterSetting'
 
 function GameLine () {
   const navigate = useNavigate()
@@ -25,7 +26,8 @@ function GameLine () {
     setSpeakChara,
     setSpeakLines,
     editLines,
-    setBackground
+    setBackground,
+    setChara
   } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
@@ -40,7 +42,16 @@ function GameLine () {
       {
         key: 'character',
         label: '角色',
-        children: 'Content of Tab Pane 1'
+        children: lines && (
+          <CharacterSetting
+            onChange={(value) => {
+              setChara(value)
+            }}
+            chara={lines.LinesChara}
+            groupId={gameInfo ? gameInfo.groupId : 0}
+            data={bindingInfo.filter((x) => x.type === BindingType.CHARACTER)}
+          />
+        )
       },
       {
         key: 'background/CG',

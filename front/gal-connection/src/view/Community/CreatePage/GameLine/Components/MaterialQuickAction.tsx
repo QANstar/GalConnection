@@ -40,6 +40,54 @@ function MaterialQuickAction (props: IMaterialQuickActionProps) {
     <div className={style.materialQuick}>
       <div>文件夹</div>
       <QuickSelect
+        onLeftClick={() => {
+          if (props.bindingList.length > 0) {
+            if (
+              !props.bindingId ||
+              props.bindingId <= 0 ||
+              !props.bindingList.find((x) => x.id === props.bindingId)
+            ) {
+              props.onBindingSelect(props.bindingList[0].id!)
+            } else {
+              const bindingItem = props.bindingList.find(
+                (x) => x.id === props.bindingId
+              )
+              if (bindingItem) {
+                const index = props.bindingList.indexOf(bindingItem)
+                if (index === 0) {
+                  props.onBindingSelect(
+                    props.bindingList[props.bindingList.length - 1].id!
+                  )
+                } else {
+                  props.onBindingSelect(props.bindingList[index - 1].id!)
+                }
+              }
+            }
+          }
+        }}
+        onRightClick={() => {
+          if (props.bindingList.length > 0) {
+            if (
+              !props.bindingId ||
+              props.bindingId <= 0 ||
+              !props.bindingList.find((x) => x.id === props.bindingId)
+            ) {
+              props.onBindingSelect(props.bindingList[0].id!)
+            } else {
+              const bindingItem = props.bindingList.find(
+                (x) => x.id === props.bindingId
+              )
+              if (bindingItem) {
+                const index = props.bindingList.indexOf(bindingItem)
+                if (index + 1 === props.bindingList.length) {
+                  props.onBindingSelect(props.bindingList[0].id!)
+                } else {
+                  props.onBindingSelect(props.bindingList[index + 1].id!)
+                }
+              }
+            }
+          }
+        }}
         onSelect={(value) => {
           props.onBindingSelect(parseInt(value))
         }}
@@ -54,6 +102,58 @@ function MaterialQuickAction (props: IMaterialQuickActionProps) {
       />
       <div>文件</div>
       <QuickSelect
+        onLeftClick={async () => {
+          if (files.length > 0) {
+            if (
+              !props.materialId ||
+              props.materialId <= 0 ||
+              !files.find((x) => x.id === props.materialId)
+            ) {
+              const url = (await getUrl(props.groupId, files[0].id!)) || ''
+              props.onMaterialSelect({ fileId: files[0].id!, url })
+            } else {
+              const materalItem = files.find((x) => x.id === props.materialId)
+              if (materalItem) {
+                const index = files.indexOf(materalItem)
+                if (index === 0) {
+                  const fileId = files[files.length - 1].id!
+                  const url = (await getUrl(props.groupId, fileId)) || ''
+                  props.onMaterialSelect({ fileId, url })
+                } else {
+                  const fileId = files[index - 1].id!
+                  const url = (await getUrl(props.groupId, fileId)) || ''
+                  props.onMaterialSelect({ fileId, url })
+                }
+              }
+            }
+          }
+        }}
+        onRightClick={async () => {
+          if (files.length > 0) {
+            if (
+              !props.materialId ||
+              props.materialId <= 0 ||
+              !files.find((x) => x.id === props.materialId)
+            ) {
+              const url = (await getUrl(props.groupId, files[0].id!)) || ''
+              props.onMaterialSelect({ fileId: files[0].id!, url })
+            } else {
+              const materalItem = files.find((x) => x.id === props.materialId)
+              if (materalItem) {
+                const index = files.indexOf(materalItem)
+                if (index + 1 === files.length) {
+                  const fileId = files[0].id
+                  const url = (await getUrl(props.groupId, fileId)) || ''
+                  props.onMaterialSelect({ fileId, url })
+                } else {
+                  const fileId = files[index + 1].id
+                  const url = (await getUrl(props.groupId, fileId)) || ''
+                  props.onMaterialSelect({ fileId, url })
+                }
+              }
+            }
+          }
+        }}
         onSelect={async (value) => {
           const fileId = parseInt(value)
           const url = (await getUrl(props.groupId, fileId)) || ''

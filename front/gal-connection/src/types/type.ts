@@ -241,14 +241,18 @@ export interface ILinesVoice {
   linesId?: number
   voice?: string
   language?: string
+  bindingId?: number
+  materialId?: number
 }
 
 // 角色立绘
 export interface ILinesChara {
-  id: number
-  linesId: number
+  id?: number
+  linesId?: number
   charaPics: string
   charaStyle: string
+  bindingId?: number
+  materialId?: number
 }
 
 // 台词

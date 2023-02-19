@@ -1,7 +1,7 @@
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import * as gameService from '../service/game'
-import { ILines, ILinesBackground } from '../types/type'
+import { ILines, ILinesBackground, ILinesChara } from '../types/type'
 
 interface IUseLines {
   gameId: number
@@ -123,6 +123,17 @@ const useLines = (params: IUseLines) => {
     [gameId, eventId, linesId, lines]
   )
 
+  // 修改角色
+  const setChara = useCallback(
+    async (chara: ILinesChara[]) => {
+      if (lines) {
+        lines.LinesChara = chara
+        setLines({ ...lines })
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
   useEffect(() => {
     getLines()
   }, [gameId, eventId, linesId])
@@ -136,7 +147,8 @@ const useLines = (params: IUseLines) => {
     setSpeakChara,
     setSpeakLines,
     editLines,
-    setBackground
+    setBackground,
+    setChara
   }
 }
 

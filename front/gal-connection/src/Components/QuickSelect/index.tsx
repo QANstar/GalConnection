@@ -7,19 +7,21 @@ interface IQuickSelectProps {
   list: { value: string; label: string }[]
   value: string
   onSelect: (data: string) => void
+  onLeftClick: () => void
+  onRightClick: () => void
 }
 
 function QuickSelect (props: IQuickSelectProps) {
   return (
     <div className={style.materialQuick}>
-      <Button icon={<LeftOutlined />} />
+      <Button onClick={props.onLeftClick} icon={<LeftOutlined />} />
       <Select
         onSelect={(data) => props.onSelect(data)}
         style={{ flex: 1, overflow: 'hidden' }}
         value={props.value}
         options={props.list}
       />
-      <Button icon={<RightOutlined />} />
+      <Button onClick={props.onRightClick} icon={<RightOutlined />} />
     </div>
   )
 }

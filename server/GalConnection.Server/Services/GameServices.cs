@@ -415,11 +415,11 @@ namespace GalConnection.Server.Services
             Lines lines = null;
             if (lineId == 0)
             {
-                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
             }
             else
             {
-                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
             }
             if (lines == null)
             {
@@ -507,7 +507,9 @@ namespace GalConnection.Server.Services
                         return new LinesVoice()
                         {
                             voice = linesVoiceCreate.voice,
-                            language = linesVoiceCreate.language
+                            language = linesVoiceCreate.language,
+                            bingdingId = linesVoiceCreate.bindingId,
+                            materialId = linesVoiceCreate.materialId,
                         };
                     }
                     else
@@ -518,7 +520,9 @@ namespace GalConnection.Server.Services
                 LinesChara = newLines.LinesChara.Select(x => new LinesChara()
                 {
                     charaPics = x.charaPics,
-                    charaStyle = x.charaStyle
+                    charaStyle = x.charaStyle,
+                    bindingId = x.bindingId,
+                    materialId = x.materialId,
                 }).ToList(),
             };
             Context.Add(lines);
@@ -583,7 +587,8 @@ namespace GalConnection.Server.Services
                         {
                             linesContent1 = linesContentCreateModel.linesContent1,
                             characters = linesContentCreateModel.characters,
-                            language = linesContentCreateModel.language
+                            language = linesContentCreateModel.language,
+
                         };
                     }
                     else
@@ -599,7 +604,9 @@ namespace GalConnection.Server.Services
                         return new LinesVoice()
                         {
                             voice = linesVoiceCreate.voice,
-                            language = linesVoiceCreate.language
+                            language = linesVoiceCreate.language,
+                            bingdingId = linesVoiceCreate.bindingId,
+                            materialId = linesVoiceCreate.materialId,
                         };
                     }
                     else
@@ -607,7 +614,13 @@ namespace GalConnection.Server.Services
                         return new LinesVoice() { voice = "", language = x };
                     }
                 }).ToList(),
-                LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList(),
+                LinesChara = newLines.LinesChara.Select(x => new LinesChara()
+                {
+                    charaPics = x.charaPics,
+                    charaStyle = x.charaStyle,
+                    bindingId = x.bindingId,
+                    materialId = x.materialId,
+                }).ToList(),
             };
             Context.Add(lines);
             if (newLines != null)
@@ -694,7 +707,9 @@ namespace GalConnection.Server.Services
                     return new LinesVoice()
                     {
                         voice = linesVoiceCreate.voice,
-                        language = linesVoiceCreate.language
+                        language = linesVoiceCreate.language,
+                        bingdingId = linesVoiceCreate.bindingId,
+                        materialId = linesVoiceCreate.materialId,
                     };
                 }
                 else
@@ -702,7 +717,13 @@ namespace GalConnection.Server.Services
                     return new LinesVoice() { voice = "", language = x };
                 }
             }).ToList();
-            lines.LinesChara = newLines.LinesChara.Select(x => new LinesChara() { charaPics = x.charaPics, charaStyle = x.charaStyle }).ToList();
+            lines.LinesChara = newLines.LinesChara.Select(x => new LinesChara()
+            {
+                charaPics = x.charaPics,
+                charaStyle = x.charaStyle,
+                bindingId = x.bindingId,
+                materialId = x.materialId,
+            }).ToList();
             Context.SaveChanges();
             return lines;
         }
