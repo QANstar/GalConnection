@@ -1,7 +1,7 @@
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import * as gameService from '../service/game'
-import { ILines } from '../types/type'
+import { ILines, ILinesBackground } from '../types/type'
 
 interface IUseLines {
   gameId: number
@@ -45,8 +45,13 @@ const useLines = (params: IUseLines) => {
       const { status } = await gameService.createFirstLines({
         eventId,
         gameId,
-        background: '',
-        backgroundStyle: '',
+        LinesBackground: {
+          isCG: false,
+          background: '',
+          style: '',
+          bindingId: 0,
+          materialId: 0
+        },
         bgm: '',
         LinesContent: [],
         LinesVoice: [],
@@ -107,6 +112,17 @@ const useLines = (params: IUseLines) => {
     [gameId, eventId, linesId, lines]
   )
 
+  // 修改背景
+  const setBackground = useCallback(
+    async (background: ILinesBackground) => {
+      if (lines) {
+        lines.LinesBackground = background
+        setLines({ ...lines })
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
   useEffect(() => {
     getLines()
   }, [gameId, eventId, linesId])
@@ -119,7 +135,8 @@ const useLines = (params: IUseLines) => {
     createFirstLines,
     setSpeakChara,
     setSpeakLines,
-    editLines
+    editLines,
+    setBackground
   }
 }
 

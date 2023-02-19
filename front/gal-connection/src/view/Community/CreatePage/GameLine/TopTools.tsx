@@ -1,4 +1,5 @@
-import { Dropdown, MenuProps, Space } from 'antd'
+import { SaveOutlined } from '@ant-design/icons'
+import { Button, Dropdown, MenuProps, Space } from 'antd'
 import React, { useMemo } from 'react'
 import { IEvent } from '../../../../types/type'
 import style from './style.module.scss'
@@ -7,6 +8,7 @@ interface ITopTools {
   events: IEvent[]
   choEvent?: IEvent
   onItemClick: (eventId: number) => void
+  onSave: () => void
 }
 
 function TopTools (props: ITopTools) {
@@ -37,7 +39,9 @@ function TopTools (props: ITopTools) {
           </Space>
         </Dropdown>
       </div>
-      <div></div>
+      <div>
+        <Button icon={<SaveOutlined />} onClick={props.onSave} type="primary" />
+      </div>
     </div>
   )
 }

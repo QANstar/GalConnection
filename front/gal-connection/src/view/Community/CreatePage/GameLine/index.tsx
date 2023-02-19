@@ -1,30 +1,75 @@
 import style from './style.module.scss'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Game from '../../../../Components/Game'
 import useLines from '../../../../Hooks/useLines'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Empty, Input, message } from 'antd'
+import { Button, Empty, Input, message, Tabs, TabsProps } from 'antd'
 import TopTools from './TopTools'
 import useEvent from '../../../../Hooks/useEvent'
 import TextArea from 'antd/es/input/TextArea'
+import BackgroundSetting from './BackgroundSetting'
+import useBinding from '../../../../Hooks/useBinding'
+import { BindingType } from '../../../../types/enums'
+import useGameInfo from '../../../../Hooks/useGameInfo'
 
 function GameLine () {
   const navigate = useNavigate()
-
   const { gameId, eventId, linesId } = useParams()
   const { evnets, choEvent, eventCho } = useEvent(parseInt(gameId || '0'))
+  const { bindingInfo } = useBinding(parseInt(gameId || '0'))
+  const { gameInfo } = useGameInfo(parseInt(gameId || '0'))
   const {
     lines,
     error,
     createFirstLines,
     setSpeakChara,
     setSpeakLines,
-    editLines
+    editLines,
+    setBackground
   } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
     linesId: parseInt(linesId || '0')
   })
+
+  const onChange = (key: string) => {
+    console.log(key)
+  }
+  const items = useMemo(() => {
+    const tabItems: TabsProps['items'] = [
+      {
+        key: 'character',
+        label: '角色',
+        children: 'Content of Tab Pane 1'
+      },
+      {
+        key: 'background/CG',
+        label: '背景/CG',
+        children: lines && (
+          <BackgroundSetting
+            onChange={(value) => {
+              setBackground(value)
+            }}
+            background={lines.LinesBackground}
+            groupId={gameInfo ? gameInfo.groupId : 0}
+            data={bindingInfo.filter(
+              (x) =>
+                x.type ===
+                (lines.LinesBackground.isCG
+                  ? BindingType.CG
+                  : BindingType.BACKGROUND)
+            )}
+          />
+        )
+      },
+      {
+        key: 'sound',
+        label: 'BGM/配音',
+        children: 'Content of Tab Pane 3'
+      }
+    ]
+    return tabItems
+  }, [lines, gameInfo, bindingInfo])
 
   useEffect(() => {
     if (error !== '') {
@@ -43,6 +88,7 @@ function GameLine () {
   return (
     <div className={style.main}>
       <TopTools
+        onSave={editLines}
         events={evnets}
         choEvent={choEvent}
         onItemClick={(eventId) => {
@@ -77,9 +123,12 @@ function GameLine () {
             </div>
           </div>
           <div className={style.right}>
-            <Button onClick={editLines} block>
-              保存编辑
-            </Button>
+            <Tabs
+              centered
+              defaultActiveKey="character"
+              items={items}
+              onChange={onChange}
+            />
           </div>
         </div>
           )

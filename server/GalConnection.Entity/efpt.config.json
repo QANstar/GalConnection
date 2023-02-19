@@ -43,6 +43,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[LinesBackground]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[LinesChara]",
          "ObjectType": 0
       },

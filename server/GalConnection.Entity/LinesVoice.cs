@@ -17,6 +17,8 @@ namespace GalConnection.Entity
         [StringLength(1000)]
         public string language { get; set; }
         public int linesId { get; set; }
+        public int? materialId { get; set; }
+        public int? bingdingId { get; set; }
 
         [ForeignKey("linesId")]
         [InverseProperty("LinesVoice")]

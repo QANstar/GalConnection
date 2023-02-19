@@ -8,22 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalConnection.Entity
 {
-    public partial class LinesChara
+    public partial class LinesBackground
     {
         [Key]
         public int id { get; set; }
         [Required]
-        [StringLength(1000)]
-        public string charaPics { get; set; }
+        [StringLength(500)]
+        public string background { get; set; }
         [Required]
         [StringLength(1000)]
-        public string charaStyle { get; set; }
-        public int linesId { get; set; }
-        public int? bindingId { get; set; }
+        public string style { get; set; }
         public int? materialId { get; set; }
+        public int? bindingId { get; set; }
+        public bool isCG { get; set; }
 
-        [ForeignKey("linesId")]
-        [InverseProperty("LinesChara")]
-        public virtual Lines lines { get; set; }
+        [ForeignKey("id")]
+        [InverseProperty("LinesBackground")]
+        public virtual Lines idNavigation { get; set; }
     }
 }

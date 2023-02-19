@@ -10,7 +10,9 @@ interface IBindingItemProps {
 function BindingItem (props: IBindingItemProps) {
   return (
     <div onClick={props.onClick} className={style.item}>
-      <img className={style.cover} src={props.data.cover} alt="封面" />
+      <div className={style.cover}>
+        <img src={props.data.cover} alt="封面" />
+      </div>
       <div className={style.itemText}>{props.data.name}</div>
     </div>
   )

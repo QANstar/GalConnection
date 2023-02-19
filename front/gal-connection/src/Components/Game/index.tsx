@@ -87,8 +87,8 @@ function Game (props: IGameProps) {
         data={props.lines.LinesContent[0]}
       />
       <Background
-        img={props.lines.background}
-        style={props.lines.backgroundStyle}
+        img={props.lines.LinesBackground.background}
+        style={props.lines.LinesBackground.style}
       />
     </div>
   )

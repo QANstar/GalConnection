@@ -21,15 +21,13 @@ namespace GalConnection.Entity
         public int id { get; set; }
         public int eventId { get; set; }
         [StringLength(1000)]
-        public string background { get; set; }
-        [StringLength(1000)]
-        public string backgroundStyle { get; set; }
-        [StringLength(1000)]
         public string bgm { get; set; }
         public int next { get; set; }
         public int pre { get; set; }
         public int groupId { get; set; }
 
+        [InverseProperty("idNavigation")]
+        public virtual LinesBackground LinesBackground { get; set; }
         [InverseProperty("lines")]
         public virtual ICollection<LinesChara> LinesChara { get; set; }
         [InverseProperty("lines")]

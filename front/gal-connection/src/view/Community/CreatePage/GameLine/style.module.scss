@@ -84,3 +84,12 @@
   font-size: 14px;
   margin: 5px 0;
 }
+
+.isCG {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  span {
+    margin-right: 20px;
+  }
+}

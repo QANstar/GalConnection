@@ -415,11 +415,11 @@ namespace GalConnection.Server.Services
             Lines lines = null;
             if (lineId == 0)
             {
-                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
             }
             else
             {
-                lines = Context.Lines.Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
             }
             if (lines == null)
             {
@@ -470,12 +470,18 @@ namespace GalConnection.Server.Services
             Lines lines = new()
             {
                 eventId = @event.id,
-                background = newLines.background,
-                backgroundStyle = newLines.backgroundStyle,
                 bgm = newLines.bgm,
                 next = 0,
                 pre = 0,
                 groupId = (int)@event.groupId,
+                LinesBackground = new LinesBackground()
+                {
+                    background = newLines.LinesBackground.background,
+                    style = newLines.LinesBackground.style,
+                    bindingId = newLines.LinesBackground.bindingId,
+                    materialId = newLines.LinesBackground.materialId,
+                    isCG = newLines.LinesBackground.isCG,
+                },
                 LinesContent = game.langeuage.Split(",").Select(x =>
                 {
                     LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);
@@ -556,8 +562,14 @@ namespace GalConnection.Server.Services
             Lines lines = new()
             {
                 eventId = newLines.eventId,
-                background = newLines.background,
-                backgroundStyle = newLines.backgroundStyle,
+                LinesBackground = new LinesBackground()
+                {
+                    background = newLines.LinesBackground.background,
+                    style = newLines.LinesBackground.style,
+                    bindingId = newLines.LinesBackground.bindingId,
+                    materialId = newLines.LinesBackground.materialId,
+                    isCG = newLines.LinesBackground.isCG,
+                },
                 bgm = newLines.bgm,
                 next = (int)newLines.next,
                 pre = (int)newLines.pre,
@@ -637,7 +649,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            Lines lines = Context.Lines.FirstOrDefault(x => x.id == newLines.id);
+            Lines lines = Context.Lines.Include(x => x.LinesBackground).FirstOrDefault(x => x.id == newLines.id);
             Context.LinesContent.Where(x => x.linesId == lines.id).ToList().ForEach(x =>
             {
                 Context.LinesContent.Remove(x);
@@ -651,8 +663,11 @@ namespace GalConnection.Server.Services
                 Context.LinesChara.Remove(x);
             });
             lines.eventId = newLines.eventId;
-            lines.background = newLines.background;
-            lines.backgroundStyle = newLines.backgroundStyle;
+            lines.LinesBackground.background = newLines.LinesBackground.background;
+            lines.LinesBackground.style = newLines.LinesBackground.style;
+            lines.LinesBackground.bindingId = newLines.LinesBackground.bindingId;
+            lines.LinesBackground.materialId = newLines.LinesBackground.materialId;
+            lines.LinesBackground.isCG = newLines.LinesBackground.isCG;
             lines.bgm = newLines.bgm;
             lines.LinesContent = game.langeuage.Split(",").Select(x =>
             {

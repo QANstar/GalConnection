@@ -25,6 +25,7 @@ namespace GalConnection.Entity
         public virtual DbSet<GameBinding> GameBinding { get; set; }
         public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Lines> Lines { get; set; }
+        public virtual DbSet<LinesBackground> LinesBackground { get; set; }
         public virtual DbSet<LinesChara> LinesChara { get; set; }
         public virtual DbSet<LinesContent> LinesContent { get; set; }
         public virtual DbSet<LinesVoice> LinesVoice { get; set; }
@@ -47,6 +48,17 @@ namespace GalConnection.Entity
                     .HasForeignKey<EventTreeViewData>(d => d.eventid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EventTreeViewData_Event");
+            });
+
+            modelBuilder.Entity<LinesBackground>(entity =>
+            {
+                entity.Property(e => e.id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.idNavigation)
+                    .WithOne(p => p.LinesBackground)
+                    .HasForeignKey<LinesBackground>(d => d.id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LinesBackground_Lines");
             });
 
             modelBuilder.Entity<LinesChara>(entity =>

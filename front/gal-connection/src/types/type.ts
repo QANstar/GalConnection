@@ -225,6 +225,16 @@ export interface ILinesContent {
   language: string
 }
 
+// 台词背景/CG
+export interface ILinesBackground {
+  id?: number
+  bindingId?: number
+  materialId?: number
+  style: string
+  background: string
+  isCG: boolean
+}
+
 // 语音
 export interface ILinesVoice {
   id?: number
@@ -246,8 +256,7 @@ export interface ILines {
   id?: number
   eventId: number
   gameId?: number
-  background: string
-  backgroundStyle: string
+  LinesBackground: ILinesBackground
   bgm: string
   next?: number
   pre?: number
