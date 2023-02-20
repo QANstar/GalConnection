@@ -1,4 +1,4 @@
-import { Button, Divider } from 'antd'
+import { Button, Divider, Popconfirm } from 'antd'
 import React from 'react'
 import { IBinding, ILinesChara } from '../../../../types/type'
 import MaterialQuickAction from './Components/MaterialQuickAction'
@@ -35,7 +35,8 @@ function CharacterSetting (props: ICharacterSettingProps) {
       <div>
         {props.chara.map((item, index) => (
           <div key={index}>
-            <Divider plain>角色{index + 1}</Divider>
+            <Divider>角色{index + 1}</Divider>
+
             <MaterialQuickAction
               onBindingSelect={(value) => {
                 const newChara = [...props.chara]
@@ -69,6 +70,21 @@ function CharacterSetting (props: ICharacterSettingProps) {
                 props.onChange(newChara)
               }}
             />
+            <Popconfirm
+              title="删除角色"
+              description="确定要删除当前角色吗?"
+              okText="是"
+              cancelText="否"
+              onConfirm={() => {
+                const newChara = [...props.chara]
+                newChara.splice(index, 1)
+                props.onChange(newChara)
+              }}
+            >
+              <Button style={{ margin: '30px 0' }} danger block>
+                删除
+              </Button>
+            </Popconfirm>
           </div>
         ))}
       </div>

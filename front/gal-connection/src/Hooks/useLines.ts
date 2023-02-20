@@ -12,10 +12,11 @@ interface IUseLines {
 const useLines = (params: IUseLines) => {
   const { gameId, eventId, linesId } = params
   const [lines, setLines] = useState<ILines>()
+  const [linesList, setLinesList] = useState<ILines[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // 获取指定文件夹下所有文件
+  // 获取台词
   const getLines = useCallback(async () => {
     try {
       setLoading(true)
@@ -36,6 +37,26 @@ const useLines = (params: IUseLines) => {
       setLoading(false)
     }
   }, [gameId, eventId, linesId])
+
+  // 获取事件所有的台词
+  const getLinesListOfEvent = useCallback(async () => {
+    try {
+      setError('')
+      const { data, status } = await gameService.getLinesListOfEvent({
+        gameId,
+        eventId
+      })
+      if (status === 200) {
+        setLinesList(data)
+      } else {
+        setLines(undefined)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [gameId, eventId])
 
   // 创建第一个台词
   const createFirstLines = useCallback(async () => {
@@ -85,6 +106,26 @@ const useLines = (params: IUseLines) => {
       setLoading(false)
     }
   }, [gameId, eventId, linesId, lines])
+
+  // 插入台词
+  const insertLines = useCallback(
+    async (newLines: ILines) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await gameService.insertLines(newLines)
+        if (status === 200) {
+          message.success('插入成功')
+          return data
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, eventId, linesId]
+  )
 
   // 修改说话的角色
   const setSpeakChara = useCallback(
@@ -138,17 +179,23 @@ const useLines = (params: IUseLines) => {
     getLines()
   }, [gameId, eventId, linesId])
 
+  useEffect(() => {
+    getLinesListOfEvent()
+  }, [gameId, eventId])
+
   return {
     lines,
     loading,
     error,
+    linesList,
     getLines,
     createFirstLines,
     setSpeakChara,
     setSpeakLines,
     editLines,
     setBackground,
-    setChara
+    setChara,
+    insertLines
   }
 }
 

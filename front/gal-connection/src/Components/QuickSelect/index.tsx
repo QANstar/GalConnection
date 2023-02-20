@@ -9,19 +9,29 @@ interface IQuickSelectProps {
   onSelect: (data: string) => void
   onLeftClick: () => void
   onRightClick: () => void
+  isRightDisable?: boolean
+  isLeftDisable?: boolean
 }
 
 function QuickSelect (props: IQuickSelectProps) {
   return (
     <div className={style.materialQuick}>
-      <Button onClick={props.onLeftClick} icon={<LeftOutlined />} />
+      <Button
+        disabled={props.isLeftDisable}
+        onClick={props.onLeftClick}
+        icon={<LeftOutlined />}
+      />
       <Select
         onSelect={(data) => props.onSelect(data)}
         style={{ flex: 1, overflow: 'hidden' }}
         value={props.value}
         options={props.list}
       />
-      <Button onClick={props.onRightClick} icon={<RightOutlined />} />
+      <Button
+        disabled={props.isRightDisable}
+        onClick={props.onRightClick}
+        icon={<RightOutlined />}
+      />
     </div>
   )
 }

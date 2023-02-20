@@ -1,14 +1,20 @@
-import { SaveOutlined } from '@ant-design/icons'
+import { PlusOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Dropdown, MenuProps, Space } from 'antd'
 import React, { useMemo } from 'react'
-import { IEvent } from '../../../../types/type'
+import QuickSelect from '../../../../Components/QuickSelect'
+import { IEvent, ILines } from '../../../../types/type'
 import style from './style.module.scss'
 
 interface ITopTools {
   events: IEvent[]
+  linesList: ILines[]
+  nowLines?: ILines
   choEvent?: IEvent
   onItemClick: (eventId: number) => void
+  onLeftInsert: () => void
+  onRightInsert: () => void
   onSave: () => void
+  onLinesSelectChange: (linesId: number) => void
 }
 
 function TopTools (props: ITopTools) {
@@ -39,7 +45,35 @@ function TopTools (props: ITopTools) {
           </Space>
         </Dropdown>
       </div>
-      <div>
+      <div className={style.top_right}>
+        <div className={style.linesOpe}>
+          <Button onClick={props.onLeftInsert} icon={<PlusOutlined />} />
+          <div className={style.linesSelect}>
+            <QuickSelect
+              value={props.nowLines?.id?.toString() || ''}
+              list={props.linesList.map((x) => {
+                const selectValue: { value: string; label: string } = {
+                  value: x.id?.toString() || '',
+                  label: `id${x.id} : ${x.LinesContent[0].linesContent1}`
+                }
+                return selectValue
+              })}
+              isLeftDisable={props.nowLines?.pre === 0}
+              isRightDisable={props.nowLines?.next === 0}
+              onLeftClick={() => {
+                props.onLinesSelectChange(props.nowLines?.pre || 0)
+              }}
+              onRightClick={() => {
+                props.onLinesSelectChange(props.nowLines?.next || 0)
+              }}
+              onSelect={(val) => {
+                props.onLinesSelectChange(parseInt(val))
+              }}
+            />
+          </div>
+          <Button onClick={props.onRightInsert} icon={<PlusOutlined />} />
+        </div>
+
         <Button icon={<SaveOutlined />} onClick={props.onSave} type="primary" />
       </div>
     </div>

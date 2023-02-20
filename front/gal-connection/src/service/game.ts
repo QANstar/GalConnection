@@ -70,6 +70,10 @@ export const getLines = (params: {
 export const createFirstLines = (params: ILines) =>
   request.post<ILines>('/api/Game/CreateFirstLines', params)
 
+// 插入台词
+export const insertLines = (params: ILines) =>
+  request.post<ILines>('/api/Game/InsertLines', params)
+
 // 编辑台词
 export const editLines = (params: ILines) =>
   request.post<ILines>('/api/Game/EditLines', params)
@@ -89,3 +93,12 @@ export const getBindingInfo = (params: { gameId: number }) =>
 // 删除绑定
 export const delBinding = (params: { bindingId: number }) =>
   request.delete<boolean>(`/api/Game/DelBingding?bindingId=${params.bindingId}`)
+
+// 获取事件所有的台词
+export const getLinesListOfEvent = (params: {
+  gameId: number
+  eventId: number
+}) =>
+  request.get<ILines[]>(
+    `/api/Game/GetLinesListOfEvent?gameId=${params.gameId}&eventId=${params.eventId}`
+  )

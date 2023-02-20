@@ -433,6 +433,69 @@ namespace GalConnection.Server.Services
             return lines;
         }
         /// <summary>
+        /// 获取事件所有的台词
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<Lines> GetLinesListOfEvent(int gameId, int eventId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            Event @event = null;
+            if (eventId == 0)
+            {
+                @event = Context.Event.FirstOrDefault(x => x.isStartEvent && x.gameId == gameId);
+            }
+            else
+            {
+                @event = Context.Event.FirstOrDefault(x => x.id == eventId);
+
+            }
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            List<Lines> linesList = Context.Lines.Include(x => x.LinesContent).Where(x => x.eventId == @event.id).ToList();
+            List<Lines> formetLinesList = new();
+            Lines firstLines = linesList.Find(x => x.pre == 0);
+            if (firstLines == null)
+            {
+                return formetLinesList;
+            }
+            formetLinesList.Add(firstLines);
+            int nowId = firstLines.next;
+            while (nowId != 0)
+            {
+                Lines nextLines = linesList.Find(x => x.id == nowId);
+                if (nextLines == null)
+                {
+                    return formetLinesList;
+                }
+                if (formetLinesList.Find(x => x.id == nowId) != null)
+                {
+                    return formetLinesList;
+                }
+                formetLinesList.Add(nextLines);
+                nowId = nextLines.next;
+            }
+
+            return formetLinesList;
+        }
+        /// <summary>
         /// 创建第一个台词
         /// </summary>
         /// <param name="newLines"></param>
@@ -552,7 +615,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("无权限");
             }
-            Game game = Context.Game.FirstOrDefault(x => x.id == @event.id);
+            Game game = Context.Game.FirstOrDefault(x => x.id == @event.gameId);
             if (game == null)
             {
                 throw new Exception("游戏不存在");
@@ -623,9 +686,10 @@ namespace GalConnection.Server.Services
                 }).ToList(),
             };
             Context.Add(lines);
-            if (newLines != null)
+            Context.SaveChanges();
+            if (nextLines != null)
             {
-                newLines.pre = lines.id;
+                nextLines.pre = lines.id;
             }
             if (preLines != null)
             {

@@ -12,6 +12,7 @@ import useBinding from '../../../../Hooks/useBinding'
 import { BindingType } from '../../../../types/enums'
 import useGameInfo from '../../../../Hooks/useGameInfo'
 import CharacterSetting from './CharacterSetting'
+import { ILines } from '../../../../types/type'
 
 function GameLine () {
   const navigate = useNavigate()
@@ -22,12 +23,14 @@ function GameLine () {
   const {
     lines,
     error,
+    linesList,
     createFirstLines,
     setSpeakChara,
     setSpeakLines,
     editLines,
     setBackground,
-    setChara
+    setChara,
+    insertLines
   } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
@@ -99,9 +102,48 @@ function GameLine () {
   return (
     <div className={style.main}>
       <TopTools
+        onLinesSelectChange={(linesId) => {
+          if (lines) {
+            navigate(`/createPage/${gameId}/lines/${lines.eventId}/${linesId}`)
+          }
+        }}
+        onLeftInsert={async () => {
+          const newLines: ILines | undefined = { ...lines } as
+            | ILines
+            | undefined
+          if (newLines && lines) {
+            newLines.next = lines.id
+            newLines.LinesContent = []
+            newLines.LinesVoice = []
+            const result = await insertLines(newLines)
+            if (result) {
+              navigate(
+                `/createPage/${gameId}/lines/${result.eventId}/${result.id}`
+              )
+            }
+          }
+        }}
+        onRightInsert={async () => {
+          const newLines: ILines | undefined = { ...lines } as
+            | ILines
+            | undefined
+          if (newLines && lines) {
+            newLines.pre = lines.id
+            newLines.LinesContent = []
+            newLines.LinesVoice = []
+            const result = await insertLines(newLines)
+            if (result) {
+              navigate(
+                `/createPage/${gameId}/lines/${result.eventId}/${result.id}`
+              )
+            }
+          }
+        }}
+        linesList={linesList}
         onSave={editLines}
         events={evnets}
         choEvent={choEvent}
+        nowLines={lines}
         onItemClick={(eventId) => {
           navigate(`/createPage/${gameId}/lines/${eventId}/0`)
         }}

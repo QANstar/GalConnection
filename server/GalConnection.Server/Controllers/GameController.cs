@@ -255,6 +255,28 @@ namespace GalConnection.Server.Controllers
             }
         }
         /// <summary>
+        /// 获取事件所有的台词
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetLinesListOfEvent(int gameId, int eventId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GetLinesListOfEvent(gameId, eventId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// 创建第一个台词
         /// </summary>
         /// <param name="newLines"></param>
