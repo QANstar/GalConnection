@@ -319,6 +319,27 @@ namespace GalConnection.Server.Controllers
             }
         }
         /// <summary>
+        /// 删除台词
+        /// </summary>
+        /// <param name="linesId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DelLines(int linesId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.DelLines(linesId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// 编辑台词
         /// </summary>
         /// <param name="newLines"></param>

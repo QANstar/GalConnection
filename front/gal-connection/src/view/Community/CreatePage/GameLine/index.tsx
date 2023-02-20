@@ -30,7 +30,8 @@ function GameLine () {
     editLines,
     setBackground,
     setChara,
-    insertLines
+    insertLines,
+    delLines
   } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
@@ -141,6 +142,18 @@ function GameLine () {
         }}
         linesList={linesList}
         onSave={editLines}
+        onDelete={async () => {
+          const res = await delLines(lines?.id || 0)
+          if (res) {
+            if (lines?.pre !== 0) {
+              navigate(`/createPage/${gameId}/lines/${eventId}/${lines?.pre}`)
+            } else if (lines?.next !== 0) {
+              navigate(`/createPage/${gameId}/lines/${eventId}/${lines?.next}`)
+            } else {
+              navigate(`/createPage/${gameId}/lines/${eventId}/0`)
+            }
+          }
+        }}
         events={evnets}
         choEvent={choEvent}
         nowLines={lines}

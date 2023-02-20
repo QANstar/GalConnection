@@ -79,6 +79,7 @@ const useLines = (params: IUseLines) => {
         LinesChara: []
       })
       if (status === 200) {
+        getLinesListOfEvent()
         getLines()
       }
     } catch (e: any) {
@@ -97,6 +98,7 @@ const useLines = (params: IUseLines) => {
         const { status } = await gameService.editLines(lines)
         if (status === 200) {
           getLines()
+          getLinesListOfEvent()
           message.success('编辑成功')
         }
       }
@@ -115,8 +117,33 @@ const useLines = (params: IUseLines) => {
         setError('')
         const { data, status } = await gameService.insertLines(newLines)
         if (status === 200) {
+          getLinesListOfEvent()
           message.success('插入成功')
           return data
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, eventId, linesId]
+  )
+
+  // 删除台词
+  const delLines = useCallback(
+    async (linesId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.delLines({ linesId })
+        if (status === 200) {
+          message.success('删除成功')
+          if (params.linesId === 0) {
+            getLines()
+          }
+          getLinesListOfEvent()
+          return true
         }
       } catch (e: any) {
         setError(e)
@@ -195,7 +222,8 @@ const useLines = (params: IUseLines) => {
     editLines,
     setBackground,
     setChara,
-    insertLines
+    insertLines,
+    delLines
   }
 }
 

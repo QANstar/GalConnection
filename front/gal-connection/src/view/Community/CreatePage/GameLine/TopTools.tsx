@@ -1,9 +1,16 @@
-import { PlusOutlined, SaveOutlined } from '@ant-design/icons'
-import { Button, Dropdown, MenuProps, Space } from 'antd'
+import {
+  DeleteOutlined,
+  ExclamationCircleFilled,
+  PlusOutlined,
+  SaveOutlined
+} from '@ant-design/icons'
+import { Button, Dropdown, MenuProps, Space, Modal } from 'antd'
 import React, { useMemo } from 'react'
 import QuickSelect from '../../../../Components/QuickSelect'
 import { IEvent, ILines } from '../../../../types/type'
 import style from './style.module.scss'
+
+const { confirm } = Modal
 
 interface ITopTools {
   events: IEvent[]
@@ -14,6 +21,7 @@ interface ITopTools {
   onLeftInsert: () => void
   onRightInsert: () => void
   onSave: () => void
+  onDelete: () => void
   onLinesSelectChange: (linesId: number) => void
 }
 
@@ -73,7 +81,25 @@ function TopTools (props: ITopTools) {
           </div>
           <Button onClick={props.onRightInsert} icon={<PlusOutlined />} />
         </div>
-
+        <Button
+          style={{ marginRight: 15 }}
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            confirm({
+              title: '确定删除这个台词?',
+              icon: <ExclamationCircleFilled />,
+              content: '此操作无法撤销',
+              okText: '确定',
+              okType: 'danger',
+              cancelText: '取消',
+              onOk () {
+                props.onDelete()
+              }
+            })
+          }}
+          type="primary"
+        />
         <Button icon={<SaveOutlined />} onClick={props.onSave} type="primary" />
       </div>
     </div>

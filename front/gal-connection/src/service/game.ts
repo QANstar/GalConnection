@@ -102,3 +102,7 @@ export const getLinesListOfEvent = (params: {
   request.get<ILines[]>(
     `/api/Game/GetLinesListOfEvent?gameId=${params.gameId}&eventId=${params.eventId}`
   )
+
+// 删除台词
+export const delLines = (params: { linesId: number }) =>
+  request.delete<boolean>(`/api/Game/DelLines?linesId=${params.linesId}`)

@@ -57,7 +57,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.idNavigation)
                     .WithOne(p => p.LinesBackground)
                     .HasForeignKey<LinesBackground>(d => d.id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LinesBackground_Lines");
             });
 
@@ -66,7 +65,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.lines)
                     .WithMany(p => p.LinesChara)
                     .HasForeignKey(d => d.linesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LinesChara_Lines");
             });
 
@@ -75,7 +73,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.lines)
                     .WithMany(p => p.LinesContent)
                     .HasForeignKey(d => d.linesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LinesContent_Lines");
             });
 
@@ -84,7 +81,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.lines)
                     .WithMany(p => p.LinesVoice)
                     .HasForeignKey(d => d.linesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LinesVoice_Lines");
             });
 

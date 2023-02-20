@@ -698,7 +698,43 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return lines;
         }
-
+        /// <summary>
+        /// 删除台词
+        /// </summary>
+        /// <param name="linesId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelLines(int linesId, int userId)
+        {
+            Lines linesDel = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == linesId);
+            Event @event = Context.Event.FirstOrDefault(x => x.id == linesDel.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Lines nextLines = Context.Lines.FirstOrDefault(x => x.id == linesDel.next);
+            Lines preLines = Context.Lines.FirstOrDefault(x => x.id == linesDel.pre);
+            if ((nextLines == null && linesDel.next != 0) || (preLines == null && linesDel.pre != 0))
+            {
+                throw new Exception("台词不存在");
+            }
+            Context.Lines.Remove(linesDel);
+            if (nextLines != null)
+            {
+                nextLines.pre = linesDel.pre;
+            }
+            if (preLines != null)
+            {
+                preLines.next = linesDel.next;
+            }
+            Context.SaveChanges();
+            return true;
+        }
         /// <summary>
         /// 编辑台词
         /// </summary>
