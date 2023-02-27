@@ -286,3 +286,20 @@ export interface IBindingForm {
   folderId: number
   cover: string
 }
+
+// 选项
+export interface IOptions {
+  id?: number
+  optionContent: string
+  eventId: number
+  selectNum?: number
+  gameId?: number
+}
+
+// 游戏运行
+export interface IGameRunData {
+  events: IEvent[]
+  edges: IEdge[]
+  lines: ILines[]
+  options: IOptions[]
+}

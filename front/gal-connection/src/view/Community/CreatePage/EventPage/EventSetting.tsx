@@ -1,12 +1,15 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Popconfirm, Select } from 'antd'
 import React, { useEffect } from 'react'
+import OptionsEditList from '../../../../Components/OptionsEditList'
+import useOption from '../../../../Hooks/useOption'
 import { EventEndType } from '../../../../types/enums'
 import { IEditEvent, IEvent } from '../../../../types/type'
 import style from './style.module.scss'
 
 interface IEventSettingProps {
   event?: IEvent
+  gameId: number
   onDelClick: (eventId: number) => void
   onSaveClick: (event: IEditEvent) => void
 }
@@ -19,6 +22,10 @@ const endTypeOptions = [
 ]
 
 function EventSetting (props: IEventSettingProps) {
+  const { evnetOptionsList, addOption, EditOption, delOption } = useOption(
+    props.gameId,
+    props.event?.id
+  )
   const [form] = Form.useForm()
   useEffect(() => {
     if (props.event) {
@@ -75,6 +82,21 @@ function EventSetting (props: IEventSettingProps) {
             <Form.Item name="endType" label="事件结束类型">
               <Select options={endTypeOptions} />
             </Form.Item>
+            {props.event.endType === EventEndType.OPTION && (
+              <Form.Item label="选项">
+                <OptionsEditList
+                  onItemDelClick={(id) => delOption({ optionId: id })}
+                  onItemSave={EditOption}
+                  onAddClick={() => {
+                    addOption({
+                      optionContent: '',
+                      eventId: props.event?.id || 0
+                    })
+                  }}
+                  options={evnetOptionsList}
+                />
+              </Form.Item>
+            )}
           </Form>
         )}
       </main>

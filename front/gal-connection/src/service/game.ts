@@ -10,7 +10,9 @@ import {
   IEventMap,
   IGame,
   IGameCreateInfo,
-  ILines
+  IGameRunData,
+  ILines,
+  IOptions
 } from '../types/type'
 import request from './request'
 
@@ -106,3 +108,27 @@ export const getLinesListOfEvent = (params: {
 // 删除台词
 export const delLines = (params: { linesId: number }) =>
   request.delete<boolean>(`/api/Game/DelLines?linesId=${params.linesId}`)
+
+// 获取绑定信息
+export const getGamePlayData = (params: { gameId: number }) =>
+  request.get<IGameRunData>(`/api/Game/GetGamePlayData?gameId=${params.gameId}`)
+
+// 获取某个事件的选项
+export const getOptions = (params: { eventId: number }) =>
+  request.get<IOptions[]>(`/api/Game/GetOptions?eventId=${params.eventId}`)
+
+// 获取某个游戏所有的选项
+export const getOptionsOfgame = (params: { gameId: number }) =>
+  request.get<IOptions[]>(`/api/Game/GetOptionsOfgame?gameId=${params.gameId}`)
+
+// 删除选项
+export const delOption = (params: { optionId: number }) =>
+  request.delete<boolean>(`/api/Game/DelOption?optionId=${params.optionId}`)
+
+// 添加选项
+export const addOption = (params: IOptions) =>
+  request.post<IOptions>('/api/Game/AddOption', params)
+
+// 编辑选项内容
+export const EditOption = (params: IOptions) =>
+  request.post<ILines>('/api/Game/EditOption', params)

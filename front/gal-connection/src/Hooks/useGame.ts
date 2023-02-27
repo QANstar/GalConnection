@@ -1,61 +1,93 @@
-import lines from '../test/lines.json'
-import events from '../test/events.json'
-import optionsData from '../test/options.json'
-import { useMemo, useState } from 'react'
-import { EndType, IEvents, IOptions } from '../types/gameTypes'
+import { useCallback, useEffect, useState } from 'react'
+import { IEdge, IEvent, ILines, IOptions } from '../types/type'
+import * as gameService from '../service/game'
 
-const useGame = () => {
-  const [choOptions, setChoOptions] = useState<string[]>([])
-  const [event, setEvent] = useState<IEvents>(events[0])
-  const [linesIndex, setLineIndex] = useState(0)
+const useGame = (gameId: number) => {
+  const [events, setEvents] = useState<IEvent[]>([])
+  const [edges, setEdges] = useState<IEdge[]>([])
+  const [lines, setLines] = useState<ILines[]>([])
+  const [linesNow, setLinesNow] = useState<ILines>()
+  const [evnetNow, setEventNow] = useState<IEvent>()
   const [options, setOptions] = useState<IOptions[]>([])
-  const [linesData, setLinesData] = useState(
-    lines.filter((line) => line.eventId === events[0].id)
-  )
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  // 下一个台词
-  const nextLines = () => {
-    if (linesIndex < linesData.length - 1) {
-      setLineIndex(linesIndex + 1)
+  // 通过游戏id获取创建游戏信息
+  const getGamePlayData = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await gameService.getGamePlayData({ gameId })
+      if (status === 200) {
+        setEvents(data.events)
+        setEdges(data.edges)
+        setLines(data.lines)
+        setOptions(data.options)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [gameId])
+
+  // 设置初始台词
+  const initLinesNow = useCallback(async () => {
+    if (linesNow === undefined) {
+      const startEvent = events.find((event) => event.isStartEvent)
+      if (!startEvent) return
+      setEventNow(startEvent)
+      const firstLines = lines.find(
+        (item) => item.pre === 0 && item.eventId === startEvent.id
+      )
+      setLinesNow(firstLines)
+    }
+  }, [gameId, events, lines])
+
+  // 下一句台词
+  const nextLines = useCallback(async () => {
+    if (linesNow) {
+      if (linesNow.next === 0) {
+        changeEvent()
+      } else {
+        const nextLines = lines.find((x) => x.id === linesNow.next)
+        setLinesNow(nextLines)
+      }
     } else {
-      const nextEvents = events.filter((x) => x.pid === event.id)
-      if (event.endType === EndType.NEXT && nextEvents.length > 0) {
-        setEvent(nextEvents[0])
-        const nextEventLines = lines.filter(
-          (x) => x.eventId === nextEvents[0].id
-        )
-        setLinesData(nextEventLines)
-        setLineIndex(0)
-      } else if (event.endType === EndType.OPTION) {
-        setOptions(optionsData.filter((x) => x.eventId === event.id))
-      }
+      changeEvent()
     }
+  }, [gameId, events, lines, edges, linesNow, evnetNow])
+
+  // 切换事件
+  const changeEvent = () => {
+    const nextEventIds = edges.filter((x) => x.source === evnetNow?.id)
+    if (nextEventIds.length <= 0) return
+    const nextEvent = events.find((x) => x.id === nextEventIds[0].target)
+    if (!nextEvent) return
+    setEventNow(nextEvent)
+    const nextLines = lines.find(
+      (item) => item.pre === 0 && item.eventId === nextEvent.id
+    )
+    setLinesNow(nextLines)
   }
 
-  // 当前台词
-  const currentLines = useMemo(() => {
-    return linesData[linesIndex]
-  }, [linesIndex, linesData])
+  useEffect(() => {
+    getGamePlayData()
+  }, [gameId])
 
-  // 选择选项
-  const choOption = (choId: string) => {
-    if (!choOptions.includes(choId)) choOptions.push(choId)
-    setChoOptions([...choOptions])
-    const nextEvents = events.filter((x) => x.pid === event.id)
-    // 找出下一个符合条件的事件
-    for (const item of nextEvents) {
-      if (item.enterCondition.every((item) => choOptions.includes(item))) {
-        setEvent(item)
-        const nextEventLines = lines.filter((x) => x.eventId === item.id)
-        setLinesData(nextEventLines)
-        setLineIndex(0)
-        break
-      }
-    }
-    setOptions([])
+  useEffect(() => {
+    initLinesNow()
+  }, [gameId, events, lines])
+
+  return {
+    loading,
+    error,
+    linesNow,
+    options,
+    edges,
+    evnetNow,
+    nextLines
   }
-
-  return { event, currentLines, nextLines, choOption, options }
 }
 
 export default useGame

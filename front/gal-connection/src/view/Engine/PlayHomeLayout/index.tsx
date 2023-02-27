@@ -1,10 +1,12 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import LeftNav, { INav } from '../../../Components/LeftNav'
 import style from './style.module.scss'
-import game from '../../../test/game.json'
+import useGameInfo from '../../../Hooks/useGameInfo'
 
 function PlayHomeLayout () {
+  const { gameId } = useParams()
+  const { gameInfo } = useGameInfo(parseInt(gameId || '0'))
   const navItems: INav[] = [
     {
       link: '/engine',
@@ -13,7 +15,7 @@ function PlayHomeLayout () {
       key: 'Continue'
     },
     {
-      link: '/engine/play',
+      link: `/engine/${gameId}/play`,
       text: '开始游戏',
       subtext: 'Start',
       key: 'Start'
@@ -40,7 +42,7 @@ function PlayHomeLayout () {
 
   return (
     <div
-      style={{ backgroundImage: `url(${game.homeBg})` }}
+      style={{ backgroundImage: `url(${gameInfo?.homeBg})` }}
       className={style.home_content}
     >
       <header className={style.left_nav}>

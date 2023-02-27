@@ -17,5 +17,6 @@ namespace GalConnection.Entity
         public string optionContent { get; set; }
         public int eventId { get; set; }
         public int selectNum { get; set; }
+        public int gameId { get; set; }
     }
 }

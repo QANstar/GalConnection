@@ -4,11 +4,12 @@ import {
   FormOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  PlayCircleOutlined,
   SettingOutlined
 } from '@ant-design/icons'
 import { Button, Menu, MenuProps } from 'antd'
 import React, { useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import style from './style.module.scss'
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -29,6 +30,7 @@ function getItem (
 }
 
 function CreatePage () {
+  const { gameId } = useParams()
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
@@ -53,6 +55,20 @@ function CreatePage () {
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
+          <a target="_blank" href={`/engine/${gameId}/home`} rel="noreferrer">
+            <Button block type="default" style={{ marginBottom: 16 }}>
+              {collapsed
+                ? (
+                <PlayCircleOutlined />
+                  )
+                : (
+                <div className={style.playBtn}>
+                  <PlayCircleOutlined style={{ marginRight: 10 }} />
+                  试玩
+                </div>
+                  )}
+            </Button>
+          </a>
         </div>
 
         <Menu

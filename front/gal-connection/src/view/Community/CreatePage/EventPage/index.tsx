@@ -53,6 +53,7 @@ function EventPage () {
       </div>
       <div className={style.setting}>
         <EventSetting
+          gameId={parseInt(gameId || '0')}
           onSaveClick={editEvent}
           onDelClick={delEvnet}
           event={choEvent}

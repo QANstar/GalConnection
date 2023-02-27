@@ -9,6 +9,7 @@ import style from './style.module.scss'
 interface IGameProps {
   lines: ILines
   isDevMode?: boolean
+  nextLinesClick?: () => void
 }
 
 function Game (props: IGameProps) {
@@ -69,7 +70,11 @@ function Game (props: IGameProps) {
         height: `${height}px`,
         width: `${width}px`
       }}
-      // onClick={nextLines}
+      onClick={() => {
+        if (!props.isDevMode && props.nextLinesClick) {
+          props.nextLinesClick()
+        }
+      }}
       className={style.main}
     >
       {/* <OptionList

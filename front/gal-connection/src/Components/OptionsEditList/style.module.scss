@@ -1,0 +1,17 @@
+.item {
+  margin: 10px 0;
+}
+
+.optionInput {
+  display: flex;
+  align-items: center;
+}
+
+.optionInputDelIcon {
+  color: #cf1322;
+  font-size: 18px;
+  margin-left: 10px;
+  &:hover {
+    color: #f5222d;
+  }
+}

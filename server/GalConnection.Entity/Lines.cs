@@ -25,6 +25,7 @@ namespace GalConnection.Entity
         public int next { get; set; }
         public int pre { get; set; }
         public int groupId { get; set; }
+        public int gameId { get; set; }
 
         [InverseProperty("idNavigation")]
         public virtual LinesBackground LinesBackground { get; set; }

@@ -444,5 +444,131 @@ namespace GalConnection.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 获取游戏游玩数据内容
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetGamePlayData(int gameId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GetGamePlayData(gameId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取某个事件的选项
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetOptions(int eventId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GetOptions(eventId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取某个游戏所有的选项
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetOptionsOfgame(int gameId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GetOptionsOfgame(gameId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 添加选项
+        /// </summary>
+        /// <param name="newOption"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddOption(OptionModel newOption)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.AddOption(newOption, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 编辑选项内容
+        /// </summary>
+        /// <param name="editOption"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult EditOption(OptionModel editOption)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.EditOption(editOption, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 删除选项
+        /// </summary>
+        /// <param name="optionId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DelOption(int optionId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.DelOption(optionId, userID)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

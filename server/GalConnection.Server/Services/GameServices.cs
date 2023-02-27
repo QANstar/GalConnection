@@ -70,7 +70,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER))
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER) && game.state != GameState.PUBLISH)
             {
                 throw new Exception("无权限");
             }
@@ -95,14 +95,25 @@ namespace GalConnection.Server.Services
         /// </summary>
         /// <param name="gameId"></param>
         /// <returns></returns>
-        public GamePlayModel getGamePlayData(int gameId)
+        public GamePlayModel GetGamePlayData(int gameId, int userId)
         {
-            List<Event> events = Context.Event.Where(x => x.gameId == gameId).ToList();
-            List<Lines> lines = Context.Lines.Where(x => events.Exists(y => y.id == x.eventId)).ToList();
-            List<Option> options = Context.Option.Where(x => events.Exists(y => y.id == x.eventId)).ToList();
+            Game game = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(game.groupId, userId, GroupRole.READER) && game.state != GameState.PUBLISH)
+            {
+                throw new Exception("无权限");
+            }
+            List<Event> events = Context.Event.Include(x => x.EventTreeViewData).Where(x => x.gameId == gameId).ToList();
+            List<EventsMap> edges = Context.EventsMap.Where(x => x.gameId == gameId).ToList();
+            List<Lines> lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesChara).Include(x => x.LinesContent).Include(x => x.LinesVoice).Where(x => x.gameId == gameId).ToList();
+            List<Option> options = Context.Option.Where(x => x.gameId == gameId).ToList();
             GamePlayModel gamePlayModel = new()
             {
                 lines = lines,
+                edges = edges,
                 options = options,
                 events = events
             };
@@ -537,6 +548,7 @@ namespace GalConnection.Server.Services
                 next = 0,
                 pre = 0,
                 groupId = (int)@event.groupId,
+                gameId = @event.gameId,
                 LinesBackground = new LinesBackground()
                 {
                     background = newLines.LinesBackground.background,
@@ -641,6 +653,7 @@ namespace GalConnection.Server.Services
                 next = (int)newLines.next,
                 pre = (int)newLines.pre,
                 groupId = (int)@event.groupId,
+                gameId = @event.gameId,
                 LinesContent = game.langeuage.Split(",").Select(x =>
                 {
                     LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);
@@ -776,6 +789,7 @@ namespace GalConnection.Server.Services
                 Context.LinesChara.Remove(x);
             });
             lines.eventId = newLines.eventId;
+            lines.gameId = @event.gameId;
             lines.LinesBackground.background = newLines.LinesBackground.background;
             lines.LinesBackground.style = newLines.LinesBackground.style;
             lines.LinesBackground.bindingId = newLines.LinesBackground.bindingId;
@@ -934,6 +948,130 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return true;
         }
-
+        /// <summary>
+        /// 添加选项
+        /// </summary>
+        /// <param name="newOption"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Option AddOption(OptionModel newOption, int userId)
+        {
+            Event @event = Context.Event.FirstOrDefault(x => x.id == newOption.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Option option = new()
+            {
+                gameId = @event.gameId,
+                optionContent = newOption.optionContent,
+                eventId = newOption.eventId,
+                selectNum = 0
+            };
+            Context.Option.Add(option);
+            Context.SaveChanges();
+            return option;
+        }
+        /// <summary>
+        /// 编辑选项内容
+        /// </summary>
+        /// <param name="newOption"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Option EditOption(OptionModel newOption, int userId)
+        {
+            Option option = Context.Option.FirstOrDefault(x => x.id == newOption.id);
+            if (option == null)
+            {
+                throw new Exception("选项不存在");
+            }
+            Event @event = Context.Event.FirstOrDefault(x => x.id == option.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            option.optionContent = newOption.optionContent;
+            Context.SaveChanges();
+            return option;
+        }
+        /// <summary>
+        /// 删除选项
+        /// </summary>
+        /// <param name="optionId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelOption(int optionId, int userId)
+        {
+            Option option = Context.Option.FirstOrDefault(x => x.id == optionId);
+            if (option == null)
+            {
+                throw new Exception("选项不存在");
+            }
+            Event @event = Context.Event.FirstOrDefault(x => x.id == option.eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Context.Option.Remove(option);
+            Context.SaveChanges();
+            return true;
+        }
+        /// <summary>
+        /// 获取某个事件的选项
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<Option> GetOptions(int eventId, int userId)
+        {
+            Event @event = Context.Event.FirstOrDefault(x => x.id == eventId);
+            if (@event == null)
+            {
+                throw new Exception("事件不存在");
+            }
+            if (!groupServices.CheckRole((int)@event.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            List<Option> options = Context.Option.Where(x => x.eventId == eventId).ToList();
+            return options;
+        }
+        /// <summary>
+        /// 获取某个游戏所有的选项
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<Option> GetOptionsOfgame(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole((int)game.groupId, userId, GroupRole.READER))
+            {
+                throw new Exception("无权限");
+            }
+            List<Option> options = Context.Option.Where(x => x.gameId == gameId).ToList();
+            return options;
+        }
     }
 }

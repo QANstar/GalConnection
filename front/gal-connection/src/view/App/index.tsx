@@ -44,8 +44,8 @@ function App () {
           <Route path="lines/:eventId/:linesId" element={<GameLine />} />
         </Route>
       </Route>
-      <Route path="/engine">
-        <Route path="" element={<PlayHomeLayout />} />
+      <Route path="/engine/:gameId">
+        <Route path="home" element={<PlayHomeLayout />} />
         <Route path="play" element={<Play />} />
       </Route>
       <Route path="/login" element={<AccountPage type="login" />} />
