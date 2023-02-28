@@ -1,6 +1,6 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Popconfirm, Select } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import OptionsEditList from '../../../../Components/OptionsEditList'
 import useOption from '../../../../Hooks/useOption'
 import { EventEndType } from '../../../../types/enums'
@@ -9,6 +9,7 @@ import style from './style.module.scss'
 
 interface IEventSettingProps {
   event?: IEvent
+  events: IEvent[]
   gameId: number
   onDelClick: (eventId: number) => void
   onSaveClick: (event: IEditEvent) => void
@@ -22,11 +23,32 @@ const endTypeOptions = [
 ]
 
 function EventSetting (props: IEventSettingProps) {
-  const { evnetOptionsList, addOption, EditOption, delOption } = useOption(
-    props.gameId,
-    props.event?.id
-  )
+  const {
+    gameOptionsList,
+    evnetOptionsList,
+    addOption,
+    EditOption,
+    delOption
+  } = useOption(props.gameId, props.event?.id)
   const [form] = Form.useForm()
+
+  const groupOptions = useMemo(() => {
+    const list = props.events.map((x) => {
+      return {
+        label: x.eventName,
+        options: gameOptionsList
+          .filter((y) => y.eventId === x.id)
+          .map((y) => {
+            return {
+              label: y.optionContent,
+              value: y.id!.toString()
+            }
+          })
+      }
+    })
+    return list.filter((x) => x.options.length > 0)
+  }, [props.events, gameOptionsList])
+
   useEffect(() => {
     if (props.event) {
       form.setFieldsValue({
@@ -34,6 +56,12 @@ function EventSetting (props: IEventSettingProps) {
       })
       form.setFieldsValue({
         endType: props.event.endType
+      })
+      form.setFieldsValue({
+        enterCondition:
+          props.event.enterCondition === ''
+            ? []
+            : props.event.enterCondition.split(',')
       })
     }
   }, [props.event])
@@ -50,7 +78,7 @@ function EventSetting (props: IEventSettingProps) {
                 id: props.event?.id,
                 eventName: form.getFieldValue('eventName'),
                 endType: form.getFieldValue('endType'),
-                enterCondition: []
+                enterCondition: form.getFieldValue('enterCondition')
               }
               props.onSaveClick(editEventData)
             }
@@ -97,6 +125,9 @@ function EventSetting (props: IEventSettingProps) {
                 />
               </Form.Item>
             )}
+            <Form.Item name="enterCondition" label="进入条件">
+              <Select mode="multiple" allowClear options={groupOptions} />
+            </Form.Item>
           </Form>
         )}
       </main>

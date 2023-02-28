@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import React from 'react'
-import { IOptions } from '../../../types/gameTypes'
+import { IOptions } from '../../../types/type'
 import style from './style.module.scss'
 
 interface IOptionListProps {
   data: IOptions[]
   visable: boolean
-  choOption: (choId: string) => void
+  choOption: (choId: number) => void
 }
 function OptionList (props: IOptionListProps) {
   const variants = {
@@ -24,12 +24,12 @@ function OptionList (props: IOptionListProps) {
         <div
           onClick={(event) => {
             event.stopPropagation()
-            props.choOption(item.id)
+            props.choOption(item.id!)
           }}
           className={style.option}
           key={item.id}
         >
-          {item.content}
+          {item.optionContent}
         </div>
       ))}
     </motion.div>

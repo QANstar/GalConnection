@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ILines } from '../../types/type'
+import { ILines, IOptions } from '../../types/type'
 import Background from './Background'
 import CharaPicList from './CharaPicList'
+import OptionList from './OptionList'
 // import OptionList from './OptionList'
 import PlayLines from './PlayLines'
 import style from './style.module.scss'
@@ -10,6 +11,9 @@ interface IGameProps {
   lines: ILines
   isDevMode?: boolean
   nextLinesClick?: () => void
+  options?: IOptions[]
+  isOptionVisable?: boolean
+  choOption?: (data: number) => void
 }
 
 function Game (props: IGameProps) {
@@ -57,12 +61,6 @@ function Game (props: IGameProps) {
     }
   }, [gameRef.current])
 
-  // useEffect(() => {
-  //   if (options.length > 0) {
-  //     setOptionVisable(true)
-  //   }
-  // }, [options])
-
   return (
     <div
       ref={gameRef}
@@ -77,14 +75,16 @@ function Game (props: IGameProps) {
       }}
       className={style.main}
     >
-      {/* <OptionList
-        choOption={(choId: string) => {
-          setOptionVisable(false)
-          choOption(choId)
-        }}
-        data={options}
-        visable={optionVisable}
-      /> */}
+      {props.options && props.isOptionVisable && (
+        <OptionList
+          choOption={(choId) => {
+            if (props.choOption) props.choOption(choId)
+          }}
+          data={props.options}
+          visable={props.isOptionVisable}
+        />
+      )}
+
       <CharaPicList charaPics={props.lines.LinesChara} />
       <PlayLines
         isDevMode={props.isDevMode}
