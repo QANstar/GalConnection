@@ -1,0 +1,150 @@
+.info {
+  overflow: auto;
+  width: 100vw;
+  height: 100vh;
+}
+
+.home {
+  width: 100%;
+  height: 125vh;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.wave_cover {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20vh;
+  display: flex;
+  align-items: flex-end;
+  img {
+    width: 100%;
+  }
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+  z-index: 5;
+}
+
+.start {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameName {
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.startBtn {
+  display: block;
+  transition: 0.1s ease-in;
+  font-weight: normal;
+  text-align: center;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 21px;
+  border-radius: 50px;
+  border: solid #ff85c0 1px;
+  color: #ff85c0;
+  &:hover {
+    color: #fff;
+    background-color: #ff85c0;
+  }
+}
+
+.menu {
+  position: absolute;
+  bottom: 100px;
+  z-index: 20;
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  ul {
+    display: flex;
+  }
+  li {
+    transition: 0.1s ease;
+    margin: 0 20px;
+    cursor: pointer;
+    color: #40a9ff;
+    &:hover {
+      color: #ff85c0;
+      scale: 1.2;
+    }
+  }
+}
+
+.introduce {
+  white-space: pre-wrap;
+  margin: 50px 0;
+  margin-bottom: 80px;
+  font-size: 18px;
+  color: #262626;
+}
+
+.introduction {
+  padding: 0 20vw;
+  margin-top: 30px;
+  margin-bottom: 100px;
+}
+.header {
+  display: flex;
+  align-items: flex-end;
+  h1 {
+    margin: 0;
+    font-size: 40px;
+  }
+  span {
+    font-size: 25px;
+    margin-left: 20px;
+    color: #ccc;
+  }
+}
+
+.imgList {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cover {
+  cursor: pointer;
+  overflow: hidden;
+  padding: 10px;
+  border-radius: 10px;
+  img {
+    width: 100%;
+    border-radius: 10px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .imgList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .imgList {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

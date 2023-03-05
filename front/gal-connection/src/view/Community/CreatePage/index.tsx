@@ -55,7 +55,7 @@ function CreatePage () {
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
-          <a target="_blank" href={`/engine/${gameId}/home`} rel="noreferrer">
+          <a target="_blank" href={`/engine/${gameId}/info`} rel="noreferrer">
             <Button block type="default" style={{ marginBottom: 16 }}>
               {collapsed
                 ? (

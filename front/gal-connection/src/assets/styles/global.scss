@@ -11,6 +11,14 @@ a {
   text-decoration: none;
 }
 
+ol,
+ul,
+dl {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
 .ant-upload-wrapper.ant-upload-picture-card-wrapper
   .ant-upload.ant-upload-select {
   width: 100% !important;

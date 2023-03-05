@@ -4,13 +4,22 @@ import style from './style.module.scss'
 interface IBackground {
   img: string
   style: string
+  isDevMode?: boolean
 }
 function Background (props: IBackground) {
   const backgroundStyle = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
     if (backgroundStyle.current) {
-      backgroundStyle.current.setAttribute('style', props.style)
+      let bgStyle = props.style
+      if (props.isDevMode) {
+        const devStyle = bgStyle
+          .split(';')
+          .filter((x) => !x.includes('transition'))
+        devStyle.push('transition:none')
+        bgStyle = devStyle.join(';')
+      }
+      backgroundStyle.current.setAttribute('style', bgStyle)
     }
   }, [props.style])
   return (

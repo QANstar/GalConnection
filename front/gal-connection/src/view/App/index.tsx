@@ -17,6 +17,7 @@ import GameInfo from '../Community/CreatePage/GameInfo'
 import EventPage from '../Community/CreatePage/EventPage'
 import GameLine from '../Community/CreatePage/GameLine'
 import MaterialBinding from '../Community/CreatePage/MaterialBinding'
+import GameInfoPage from '../Engine/GameInfoPage'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -45,6 +46,7 @@ function App () {
         </Route>
       </Route>
       <Route path="/engine/:gameId">
+        <Route path="info" element={<GameInfoPage />} />
         <Route path="home" element={<PlayHomeLayout />} />
         <Route path="play" element={<Play />} />
       </Route>

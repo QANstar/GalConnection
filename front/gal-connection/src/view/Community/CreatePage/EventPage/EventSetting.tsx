@@ -1,6 +1,7 @@
 import { DeleteOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Popconfirm, Select } from 'antd'
 import React, { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import OptionsEditList from '../../../../Components/OptionsEditList'
 import useOption from '../../../../Hooks/useOption'
 import { EventEndType } from '../../../../types/enums'
@@ -31,6 +32,7 @@ function EventSetting (props: IEventSettingProps) {
     delOption
   } = useOption(props.gameId, props.event?.id)
   const [form] = Form.useForm()
+  const navigate = useNavigate()
 
   const groupOptions = useMemo(() => {
     const list = props.events.map((x) => {
@@ -128,6 +130,18 @@ function EventSetting (props: IEventSettingProps) {
             <Form.Item name="enterCondition" label="进入条件">
               <Select mode="multiple" allowClear options={groupOptions} />
             </Form.Item>
+            <Button
+              style={{ marginTop: 20 }}
+              type="primary"
+              block
+              onClick={() => {
+                navigate(
+                  `/createPage/${props.gameId}/lines/${props.event?.id}/0`
+                )
+              }}
+            >
+              跳转到该事件内容编辑页面
+            </Button>
           </Form>
         )}
       </main>

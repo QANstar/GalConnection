@@ -85,13 +85,17 @@ function Game (props: IGameProps) {
         />
       )}
 
-      <CharaPicList charaPics={props.lines.LinesChara} />
+      <CharaPicList
+        isDevMode={props.isDevMode}
+        charaPics={props.lines.LinesChara}
+      />
       <PlayLines
         isDevMode={props.isDevMode}
         openSave={() => {}}
         data={props.lines.LinesContent[0]}
       />
       <Background
+        isDevMode={props.isDevMode}
         img={props.lines.LinesBackground.background}
         style={props.lines.LinesBackground.style}
       />

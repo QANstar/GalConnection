@@ -165,7 +165,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("权限不足");
             }
-            List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).ToList();
+            List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.groupId == groupId && x.pid == pid && x.state != FileState.DELETE).ToList();
             return materialFiles;
         }
         // 根据类型获取当前文件夹文件
@@ -177,7 +177,7 @@ namespace GalConnection.Server.Services
             }
             if (type == "all")
             {
-                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE).OrderBy(x => x.type != FileType.FOLDER).ToList();
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.groupId == groupId && x.pid == pid && x.state != FileState.DELETE).OrderBy(x => x.type != FileType.FOLDER).ToList();
                 return materialFiles;
             }
             else

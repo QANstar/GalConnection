@@ -4,6 +4,7 @@ import style from './style.module.scss'
 
 interface ICharaPicListProps {
   charaPics: ILinesChara[]
+  isDevMode?: boolean
 }
 
 const CharaPicList = (props: ICharaPicListProps) => {
@@ -12,7 +13,15 @@ const CharaPicList = (props: ICharaPicListProps) => {
     if (charaImgList.current) {
       let index = 0
       for (const charaImg of charaImgList.current.children) {
-        charaImg.setAttribute('style', props.charaPics[index].charaStyle)
+        let charaStyle = props.charaPics[index].charaStyle
+        if (props.isDevMode) {
+          const devStyle = charaStyle
+            .split(';')
+            .filter((x) => !x.includes('transition'))
+          devStyle.push('transition:none')
+          charaStyle = devStyle.join(';')
+        }
+        charaImg.setAttribute('style', charaStyle)
         index++
       }
     }
