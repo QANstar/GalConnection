@@ -132,3 +132,17 @@ export const addOption = (params: IOptions) =>
 // 编辑选项内容
 export const EditOption = (params: IOptions) =>
   request.post<ILines>('/api/Game/EditOption', params)
+
+// 游戏发布
+export const gamePublish = (params: { gameId: number; isPublish: boolean }) =>
+  request.post<boolean>(
+    `/api/Game/GamePublish?gameId=${params.gameId}&isPublish=${params.isPublish}`
+  )
+
+// 删除游戏
+export const delGame = (params: { gameId: number }) =>
+  request.post<boolean>(`/api/Game/DelGame?gameId=${params.gameId}`)
+
+// 获取游戏推荐
+export const getRecommenderGameList = () =>
+  request.get<IGame[]>('/api/Game/GetRecommenderGameList')

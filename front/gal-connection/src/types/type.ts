@@ -1,4 +1,4 @@
-import { BindingType, EventEndType } from './enums'
+import { BindingType, EventEndType, GameState } from './enums'
 
 // 筛选文件类型
 export type FilterFileTye = 'all' | 'folder' | 'video' | 'picture' | 'sound'
@@ -136,6 +136,14 @@ export interface IGame {
   introduce: string
   state: number
   gameName: string
+  user?: IUser
+}
+
+// 标签
+export interface ITag {
+  tagId: number
+  tag1: string
+  gameId: number
 }
 
 // 游戏创建信息
@@ -151,6 +159,8 @@ export interface IGameCreateInfo {
   voiceLangeuage: string[]
   introduce: string
   gameName: string
+  state: GameState
+  Tag: ITag[]
 }
 
 // 事件树数据

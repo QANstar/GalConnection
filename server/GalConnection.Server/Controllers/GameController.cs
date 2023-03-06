@@ -35,7 +35,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(gameServices.CreateGame(gameCreateModel, userID));
+                return Ok(JsonUtils.ToJson(gameServices.CreateGame(gameCreateModel, userID)));
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(gameServices.EditGame(gameCreateModel, userID));
+                return Ok(JsonUtils.ToJson(gameServices.EditGame(gameCreateModel, userID)));
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(gameServices.GetGameOfUser(userID));
+                return Ok(JsonUtils.ToJson(gameServices.GetGameOfUser(userID)));
             }
             catch (Exception ex)
             {
@@ -97,7 +97,69 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(gameServices.GetCreateGameInfoById(userID, gameId));
+                return Ok(JsonUtils.ToJson(gameServices.GetCreateGameInfoById(userID, gameId)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取游戏推荐
+        /// </summary>
+        /// <param name="lastId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetRecommenderGameList(int lastId)
+        {
+            try
+            {
+                return Ok(JsonUtils.ToJson(gameServices.GetRecommenderGameList(lastId)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 游戏发布
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="isPublish"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult GamePublish(int gameId, bool isPublish)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.GamePublish(userID, gameId, isPublish)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 删除游戏
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult DelGame(int gameId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(JsonUtils.ToJson(gameServices.DelGame(userID, gameId)));
             }
             catch (Exception ex)
             {

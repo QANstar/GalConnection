@@ -71,6 +71,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Tag]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[User]",
          "ObjectType": 0
       },

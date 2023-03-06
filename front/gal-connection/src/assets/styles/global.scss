@@ -31,6 +31,14 @@ dl {
   color: #1677ff;
 }
 
+.ant-tag {
+  border-radius: 50px;
+  padding: 3px 12px;
+  &:hover {
+    border-color: #1677ff;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

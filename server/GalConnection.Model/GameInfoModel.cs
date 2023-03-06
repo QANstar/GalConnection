@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalConnection.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,13 @@ namespace GalConnection.Model
         public int groupId { get; set; }
         public int userId { get; set; }
         public string gameName { get; set; }
-        public string[] tag { get; set; }
         public string cover { get; set; }
         public string homeBg { get; set; }
         public string[] preCG { get; set; }
         public string[] langeuage { get; set; }
         public string[] voiceLangeuage { get; set; }
         public string introduce { get; set; }
+        public int state { get; set; }
+        public virtual ICollection<Tag> Tag { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace GalConnection.Entity
         public virtual DbSet<Material> Material { get; set; }
         public virtual DbSet<MaterialFile> MaterialFile { get; set; }
         public virtual DbSet<Option> Option { get; set; }
+        public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<UserPlayedGame> UserPlayedGame { get; set; }
@@ -48,6 +49,15 @@ namespace GalConnection.Entity
                     .HasForeignKey<EventTreeViewData>(d => d.eventid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EventTreeViewData_Event");
+            });
+
+            modelBuilder.Entity<Game>(entity =>
+            {
+                entity.HasOne(d => d.user)
+                    .WithMany(p => p.Game)
+                    .HasForeignKey(d => d.userId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Game_User");
             });
 
             modelBuilder.Entity<LinesBackground>(entity =>
@@ -82,6 +92,14 @@ namespace GalConnection.Entity
                     .WithMany(p => p.LinesVoice)
                     .HasForeignKey(d => d.linesId)
                     .HasConstraintName("FK_LinesVoice_Lines");
+            });
+
+            modelBuilder.Entity<Tag>(entity =>
+            {
+                entity.HasOne(d => d.game)
+                    .WithMany(p => p.Tag)
+                    .HasForeignKey(d => d.gameId)
+                    .HasConstraintName("FK_Tag_Game");
             });
 
             modelBuilder.Entity<View_Group>(entity =>

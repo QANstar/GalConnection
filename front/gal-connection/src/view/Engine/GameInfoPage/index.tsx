@@ -4,7 +4,7 @@ import wave from '../../../assets/img/wave.svg'
 import { Link, useParams } from 'react-router-dom'
 import useGameInfo from '../../../Hooks/useGameInfo'
 import { motion } from 'framer-motion'
-import { Image } from 'antd'
+import { Image, Tag } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
 const GameInfoPage = () => {
@@ -64,6 +64,11 @@ const GameInfoPage = () => {
           viewport={{ once: false }}
           transition={{ duration: 1 }}
         >
+          <div className={style.tags}>
+            {gameInfo?.Tag.map((tag) => (
+              <Tag key={tag.tagId}>{tag.tag1}</Tag>
+            ))}
+          </div>
           <div className={style.introduce}> {gameInfo?.introduce}</div>
         </motion.div>
         <div className={style.imgList}>

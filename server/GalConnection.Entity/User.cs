@@ -10,6 +10,11 @@ namespace GalConnection.Entity
 {
     public partial class User
     {
+        public User()
+        {
+            Game = new HashSet<Game>();
+        }
+
         [Key]
         public int id { get; set; }
         [Required]
@@ -31,5 +36,8 @@ namespace GalConnection.Entity
         [StringLength(1000)]
         public string banner { get; set; }
         public long createdAt { get; set; }
+
+        [InverseProperty("user")]
+        public virtual ICollection<Game> Game { get; set; }
     }
 }

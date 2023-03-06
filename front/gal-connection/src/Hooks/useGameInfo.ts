@@ -45,6 +45,50 @@ const useGameInfo = (gameId: number) => {
     [gameId]
   )
 
+  // 发布游戏
+  const gamePublish = useCallback(
+    async (params: { gameId: number; isPublish: boolean }) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.gamePublish(params)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          if (params.isPublish) {
+            message.success('发布成功')
+          } else {
+            message.success('取消发布成功')
+          }
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId]
+  )
+
+  // 删除游戏
+  const delGame = useCallback(
+    async (params: { gameId: number }) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.delGame(params)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          message.success('删除成功')
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId]
+  )
+
   useEffect(() => {
     getCreateGamesInfoById()
   }, [gameId])
@@ -53,7 +97,9 @@ const useGameInfo = (gameId: number) => {
     gameInfo,
     loading,
     error,
-    editGame
+    editGame,
+    gamePublish,
+    delGame
   }
 }
 

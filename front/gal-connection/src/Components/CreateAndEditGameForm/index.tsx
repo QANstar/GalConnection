@@ -6,6 +6,7 @@ import stores from '../../store'
 import { ICreateGame, IGameCreateInfo } from '../../types/type'
 import CloudeFileSelect from '../CloudeFileSelect'
 import ImgSelectShow from '../ImgSelectShow'
+import TagEdit from '../TagEdit'
 import style from './style.module.scss'
 
 interface ICreateAndEditGameFormProps {
@@ -18,13 +19,14 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
   const [homeBg, setHomeBg] = useState('')
   const [preCG, setPreCG] = useState<string[]>([])
   const [form] = Form.useForm()
+  const [tags, setTags] = useState<string[]>([])
 
   const onCreateFinish = async (data: {
     gameName: string
     introduce: string
   }) => {
     const createGameData: ICreateGame = {
-      tag: [],
+      tag: tags,
       cover,
       homeBg,
       preCg: preCG,
@@ -42,6 +44,7 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
       setCover(props.initData.cover)
       setHomeBg(props.initData.homeBg)
       setPreCG(props.initData.preCG)
+      setTags(props.initData.Tag.map((item) => item.tag1))
       form.setFieldsValue({
         gameName: props.initData.gameName,
         introduce: props.initData.introduce
@@ -149,6 +152,9 @@ function CreateAndEditGameForm (props: ICreateAndEditGameFormProps) {
             ></Button>
           </CloudeFileSelect>
         </div>
+      </Form.Item>
+      <Form.Item label="标签" name="tag">
+        <TagEdit tags={tags} onTagsChange={setTags} />
       </Form.Item>
       <Form.Item>
         <Button

@@ -10,10 +10,15 @@ namespace GalConnection.Entity
 {
     public partial class Game
     {
+        public Game()
+        {
+            Tag = new HashSet<Tag>();
+        }
+
         [Key]
         public int id { get; set; }
         public int userId { get; set; }
-        [StringLength(500)]
+        [StringLength(4000)]
         public string tag { get; set; }
         [StringLength(1000)]
         public string cover { get; set; }
@@ -32,5 +37,11 @@ namespace GalConnection.Entity
         public int groupId { get; set; }
         [StringLength(500)]
         public string voiceLangeuage { get; set; }
+
+        [ForeignKey("userId")]
+        [InverseProperty("Game")]
+        public virtual User user { get; set; }
+        [InverseProperty("game")]
+        public virtual ICollection<Tag> Tag { get; set; }
     }
 }

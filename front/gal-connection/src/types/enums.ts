@@ -37,3 +37,10 @@ export enum BindingType {
   VOICE,
   BGM
 }
+
+// 游戏类型
+export enum GameState {
+  DELETE,
+  DEVELOPMENT,
+  PUBLISH
+}

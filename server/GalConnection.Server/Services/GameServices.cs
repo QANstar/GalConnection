@@ -27,7 +27,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public Game GetGameInfoById(int gameId)
         {
-            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            Game game = Context.Game.Include(x => x.user).Include(x => x.Tag).FirstOrDefault(x => x.id == gameId);
             if (game != null)
             {
                 return game;
@@ -44,7 +44,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public List<Game> GetGameByUser(int userId)
         {
-            List<Game> game = Context.Game.Where(x => x.userId == userId && x.state == GameState.PUBLISH).ToList();
+            List<Game> game = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state == GameState.PUBLISH).ToList();
             return game;
         }
         /// <summary>
@@ -54,7 +54,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public List<Game> GetGameOfUser(int userId)
         {
-            List<Game> game = Context.Game.Where(x => x.userId == userId && x.state != GameState.DELETE).ToList();
+            List<Game> game = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).ToList();
             return game;
         }
         /// <summary>
@@ -65,7 +65,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public GameInfoModel GetCreateGameInfoById(int userId, int gameId)
         {
-            Game game = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
+            Game game = Context.Game.Include(x => x.user).Include(x => x.Tag).FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
             if (game == null)
             {
                 throw new Exception("游戏不存在");
@@ -79,14 +79,15 @@ namespace GalConnection.Server.Services
                 id = game.id,
                 userId = game.userId,
                 gameName = game.gameName,
-                tag = game.tag.Split(","),
                 cover = game.cover,
                 homeBg = game.homeBg,
                 preCG = game.preCG.Split(","),
                 langeuage = game.langeuage.Split(","),
                 voiceLangeuage = game.voiceLangeuage.Split(","),
                 introduce = game.introduce,
-                groupId = game.groupId
+                groupId = game.groupId,
+                Tag = game.Tag,
+                state = game.state,
             };
             return gameInfo;
         }
@@ -97,7 +98,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public GamePlayModel GetGamePlayData(int gameId, int userId)
         {
-            Game game = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
+            Game game = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
             if (game == null)
             {
                 throw new Exception("游戏不存在");
@@ -144,6 +145,10 @@ namespace GalConnection.Server.Services
                 state = GameState.DEVELOPMENT,
                 gameName = createGame.gameName,
                 groupId = createGame.groupId,
+                Tag = createGame.tag.Select(x => new Tag()
+                {
+                    tag1 = x,
+                }).ToList()
             };
             Context.Game.Add(game);
             Context.SaveChanges();
@@ -165,7 +170,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int EditGame(GameCreateModel newGameInfo, int userId)
         {
-            Game gameInfo = Context.Game.FirstOrDefault(x => x.state != GameState.DELETE && x.id == newGameInfo.id);
+            Game gameInfo = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.state != GameState.DELETE && x.id == newGameInfo.id);
             if (gameInfo == null)
             {
                 throw new Exception("游戏不存在");
@@ -182,6 +187,10 @@ namespace GalConnection.Server.Services
             gameInfo.voiceLangeuage = newGameInfo.langeuage.Length > 0 ? string.Join(",", newGameInfo.voiceLangeuage) : "日文";
             gameInfo.introduce = newGameInfo.introduce;
             gameInfo.gameName = newGameInfo.gameName;
+            gameInfo.Tag = newGameInfo.tag.Select(x => new Tag()
+            {
+                tag1 = x,
+            }).ToList();
             Context.SaveChanges();
             return gameInfo.id;
         }
@@ -236,6 +245,67 @@ namespace GalConnection.Server.Services
             };
 
             return addEventResponseModel;
+        }
+        /// <summary>
+        /// 获取游戏推荐
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<Game> GetRecommenderGameList(int lastId)
+        {
+            List<Game> games = Context.Game.Include(x => x.user).Where(x => x.id > lastId && x.state == GameState.PUBLISH).Take(10).ToList();
+            return games;
+        }
+        /// <summary>
+        /// 游戏发布
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool GamePublish(int userId, int gameId, bool isPublish)
+        {
+            Game gameInfo = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            if (isPublish)
+            {
+                gameInfo.state = GameState.PUBLISH;
+            }
+            else
+            {
+                gameInfo.state = GameState.DEVELOPMENT;
+            }
+            Context.SaveChanges();
+            return true;
+        }
+        /// <summary>
+        /// 删除游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelGame(int userId, int gameId)
+        {
+            Game gameInfo = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.state != GameState.DELETE && x.id == gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            gameInfo.state = GameState.DELETE;
+            Context.SaveChanges();
+            return true;
         }
         /// <summary>
         /// 获取事件列表

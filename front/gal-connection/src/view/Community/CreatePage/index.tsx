@@ -1,5 +1,7 @@
 import {
+  CloudOutlined,
   ClusterOutlined,
+  ExclamationCircleFilled,
   FileOutlined,
   FormOutlined,
   MenuFoldOutlined,
@@ -7,10 +9,13 @@ import {
   PlayCircleOutlined,
   SettingOutlined
 } from '@ant-design/icons'
-import { Button, Menu, MenuProps } from 'antd'
+import { Button, Menu, MenuProps, Modal } from 'antd'
 import React, { useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import useGameInfo from '../../../Hooks/useGameInfo'
+import { GameState } from '../../../types/enums'
 import style from './style.module.scss'
+const { confirm } = Modal
 type MenuItem = Required<MenuProps>['items'][number]
 
 function getItem (
@@ -34,6 +39,7 @@ function CreatePage () {
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const { gameInfo, gamePublish } = useGameInfo(parseInt(gameId || '0'))
   const items: MenuItem[] = [
     getItem('游戏信息', 'info', <SettingOutlined />),
     getItem('素材绑定', 'material', <FileOutlined />),
@@ -69,6 +75,41 @@ function CreatePage () {
                   )}
             </Button>
           </a>
+          <Button
+            block
+            danger={gameInfo?.state === GameState.PUBLISH}
+            type="primary"
+            style={{ marginBottom: 16 }}
+            onClick={() => {
+              confirm({
+                title:
+                  gameInfo?.state === GameState.PUBLISH
+                    ? '确定要取消发布此游戏?'
+                    : '确定要发布此游戏?',
+                icon: <ExclamationCircleFilled />,
+                content: '你可以随时在这进行更改',
+                okText: '确定',
+                cancelText: '取消',
+                onOk () {
+                  gamePublish({
+                    gameId: parseInt(gameId || '0'),
+                    isPublish: gameInfo?.state !== GameState.PUBLISH
+                  })
+                }
+              })
+            }}
+          >
+            {collapsed
+              ? (
+              <CloudOutlined />
+                )
+              : (
+              <div className={style.playBtn}>
+                <CloudOutlined style={{ marginRight: 10 }} />
+                {gameInfo?.state === GameState.PUBLISH ? '取消发布' : '发布'}
+              </div>
+                )}
+          </Button>
         </div>
 
         <Menu
