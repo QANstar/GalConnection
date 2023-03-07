@@ -1,12 +1,14 @@
-import { AlignLeftOutlined } from '@ant-design/icons'
+import { MailOutlined, MenuOutlined, MessageOutlined } from '@ant-design/icons'
 import { Avatar, Drawer, Dropdown, Menu } from 'antd'
 import { Observer } from 'mobx-react'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useUser from '../../Hooks/useUser'
+import SearchInput from '../SearchInput'
 import style from './style.module.scss'
 
 function TopNav () {
+  const navigate = useNavigate()
   const { user, logout } = useUser()
   const [drawervisible, setDrawerVisible] = useState(false)
 
@@ -59,25 +61,29 @@ function TopNav () {
       {() => (
         <header className={style.topNav}>
           <div className={style.left}>
-            <AlignLeftOutlined
-              onClick={showDrawer}
-              className={style.menu_btn}
-            />
+            <MenuOutlined onClick={showDrawer} className={style.menu_btn} />
             <Link to="/" className={style.title}>
               GalConnection
             </Link>
           </div>
+          <SearchInput
+            onSearch={(val) => {
+              navigate(`/search/${val}`)
+            }}
+          />
           <div className={style.right}>
+            <MailOutlined className={style.actionIcon} />
+            <MessageOutlined className={style.actionIcon} />
             <Dropdown overlay={menu}>
               <Avatar className={style.avatar} src={user.avatar} size={40} />
             </Dropdown>
           </div>
           <Drawer
-            width="300px"
+            width="250px"
             title={<div className={style.title}>GalConnection</div>}
             placement="left"
             onClose={onClose}
-            visible={drawervisible}
+            open={drawervisible}
           ></Drawer>
         </header>
       )}

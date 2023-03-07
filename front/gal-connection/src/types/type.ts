@@ -15,6 +15,11 @@ export interface IUser {
   groupId: number
 }
 
+export interface IUserPageList {
+  users: IUser[]
+  total: number
+}
+
 export interface IRegister {
   email: string
   nickname: string
@@ -137,6 +142,13 @@ export interface IGame {
   state: number
   gameName: string
   user?: IUser
+  createdAt: number
+}
+
+// 游戏分页结果
+export interface IPageGameList {
+  total: number
+  games: IGame[]
 }
 
 // 标签
@@ -161,6 +173,7 @@ export interface IGameCreateInfo {
   gameName: string
   state: GameState
   Tag: ITag[]
+  createdAt: number
 }
 
 // 事件树数据

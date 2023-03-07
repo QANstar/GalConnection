@@ -16,6 +16,8 @@
 
 .right {
   margin-right: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .avatar {
@@ -35,8 +37,42 @@
   }
 }
 
-.menu_btn {
+.iconBtn {
+  transition: 0.2s ease-in;
   cursor: pointer;
+  font-size: 21px;
+  padding: 10px;
+  border-radius: 50%;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.menu_btn {
+  @extend .iconBtn;
   margin: 0 20px;
   font-size: 21px;
+}
+
+.actionIcon {
+  @extend .iconBtn;
+  margin-right: 20px;
+  padding: 10px;
+}
+
+.searchGroup {
+  display: flex !important;
+  width: 400px;
+}
+
+.searchInput {
+  flex: 1;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+}
+
+.searchBtn {
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+  width: 50px !important;
 }

@@ -1,0 +1,69 @@
+.page {
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+.list {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+}
+
+.item {
+  transition: 0.1s ease-in;
+  width: 400px;
+  display: flex;
+  margin: 40px 0;
+  border: 1px solid #e5e9ef;
+  padding: 20px 20px;
+  border-radius: 12px;
+  &:hover {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 3%), 0 1px 6px -1px rgb(0 0 0 / 2%),
+      0 2px 4px 0 rgb(0 0 0 / 2%);
+  }
+}
+
+.info {
+  width: 0;
+  flex: 1;
+  margin-left: 20px;
+}
+
+.avatar {
+  cursor: pointer;
+}
+
+.nickname {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .name {
+    cursor: pointer;
+    width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &:hover {
+      color: #40a9ff;
+    }
+  }
+}
+
+.intro {
+  width: 100%;
+  margin: 10px 0;
+  height: 16px;
+  font-size: 14px;
+  color: #8c8c8c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

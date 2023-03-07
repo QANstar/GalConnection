@@ -1,4 +1,10 @@
-import { IEditUserInfo, ILogin, IRegister, IUser } from '../types/type'
+import {
+  IEditUserInfo,
+  ILogin,
+  IRegister,
+  IUser,
+  IUserPageList
+} from '../types/type'
 import request from './request'
 
 // 注册
@@ -21,3 +27,12 @@ export const avatarUpdate = (params: { url: string }) =>
 // 上传用户头图
 export const bannerUpdate = (params: { url: string }) =>
   request.post<boolean>(`/api/User/EditBanner?url=${params.url}`)
+// 搜索用户
+export const searchUser = (
+  searchContent: string,
+  position: number,
+  limit: number
+) =>
+  request.get<IUserPageList>(
+    `/api/User/SearchUser?searchContent=${searchContent}&position=${position}&limit=${limit}`
+  )

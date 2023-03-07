@@ -70,13 +70,13 @@ namespace GalConnection.Server.Controllers
         [EnableCors("any")]
         [HttpGet]
         [Authorize]
-        public IActionResult GetGamesOfUser()
+        public IActionResult GetGamesOfUser(int position, int limit)
         {
             try
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(JsonUtils.ToJson(gameServices.GetGameOfUser(userID)));
+                return Ok(gameServices.GetGameOfUser(userID, position, limit));
             }
             catch (Exception ex)
             {
@@ -117,6 +117,27 @@ namespace GalConnection.Server.Controllers
             try
             {
                 return Ok(JsonUtils.ToJson(gameServices.GetRecommenderGameList(lastId)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 搜索游戏
+        /// </summary>
+        /// <param name="searchContent"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult SearchGame(string searchContent, int position, int limit = 12)
+        {
+            try
+            {
+                return Ok(gameServices.SearchGame(searchContent, position, limit));
             }
             catch (Exception ex)
             {

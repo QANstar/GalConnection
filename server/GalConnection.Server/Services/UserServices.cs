@@ -7,6 +7,7 @@ using System.Text;
 using GalConnection.Server.Config;
 using GalConnection.Server.Setting;
 using GalConnection.Server.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace GalConnection.Server.Services
 {
@@ -194,6 +195,24 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("用户不存在");
             }
+        }
+        /// <summary>
+        /// 搜索用户
+        /// </summary>
+        /// <param name="searchContent"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public string SearchUser(string searchContent, int position, int limit)
+        {
+            List<User> users = Context.User.Where(x => x.nickname.Contains(searchContent) || x.id.ToString() == searchContent).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                users,
+                total = Context.User.Where(x => x.nickname.Contains(searchContent) || x.id.ToString() == searchContent).Count()
+            };
+
+            return JsonUtils.ToJson(res);
         }
     }
 }

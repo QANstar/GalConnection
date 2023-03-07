@@ -24,7 +24,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int CreateFolder(CreateFloderModel createFileModel, int userId)
         {
-            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name);
+            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name && x.pid == createFileModel.pid);
             if (isHaveName)
             {
                 throw new Exception("文件名称重复");
@@ -75,7 +75,7 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public int CreateFile(CreateFileModel createFileModel, int userId)
         {
-            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name);
+            bool isHaveName = Context.MaterialFile.ToList().Exists(x => x.name == createFileModel.name && x.pid == createFileModel.pid);
             if (isHaveName)
             {
                 throw new Exception("文件名称重复");
@@ -182,7 +182,7 @@ namespace GalConnection.Server.Services
             }
             else
             {
-                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.pid == pid && x.state != FileState.DELETE && (x.type == type || x.type == FileType.FOLDER)).OrderBy(x => x.type != FileType.FOLDER).ToList();
+                List<MaterialFile> materialFiles = Context.MaterialFile.Where(x => x.groupId == groupId && x.pid == pid && x.state != FileState.DELETE && (x.type == type || x.type == FileType.FOLDER)).OrderBy(x => x.type != FileType.FOLDER).ToList();
                 return materialFiles;
             }
 

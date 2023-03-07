@@ -137,7 +137,7 @@ namespace GalConnection.Server.Controllers.User
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(userServices.AvatarUpload(url,userID));
+                return Ok(userServices.AvatarUpload(url, userID));
             }
             catch (Exception ex)
             {
@@ -159,6 +159,27 @@ namespace GalConnection.Server.Controllers.User
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(userServices.BannerUpload(url, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 搜索用户
+        /// </summary>
+        /// <param name="searchContent"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult SearchUser(string searchContent, int position, int limit)
+        {
+            try
+            {
+                return Ok(userServices.SearchUser(searchContent, position, limit));
             }
             catch (Exception ex)
             {

@@ -12,7 +12,8 @@ import {
   IGameCreateInfo,
   IGameRunData,
   ILines,
-  IOptions
+  IOptions,
+  IPageGameList
 } from '../types/type'
 import request from './request'
 
@@ -30,9 +31,21 @@ export const getCreateGamesInfoById = (gameId: number) =>
     `/api/Game/GetCreateGamesInfoById?gameId=${gameId}`
   )
 
+// 搜索游戏
+export const searchGame = (
+  searchContent: string,
+  position: number,
+  limit: number
+) =>
+  request.get<IPageGameList>(
+    `/api/Game/SearchGame?searchContent=${searchContent}&position=${position}&limit=${limit}`
+  )
+
 // 获取用户制作的游戏
-export const getGamesOfUser = () =>
-  request.get<IGame[]>('/api/Game/GetGamesOfUser')
+export const getGamesOfUser = (position: number, limit: number) =>
+  request.get<IPageGameList>(
+    `/api/Game/GetGamesOfUser?position=${position}&limit=${limit}`
+  )
 
 // 创建事件
 export const addEvent = (params: IAddEvent) =>

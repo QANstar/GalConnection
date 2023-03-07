@@ -1,0 +1,16 @@
+.searchGroup {
+  display: flex !important;
+  width: 400px;
+}
+
+.searchInput {
+  flex: 1;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+}
+
+.searchBtn {
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+  width: 50px !important;
+}

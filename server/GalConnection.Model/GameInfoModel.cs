@@ -20,6 +20,7 @@ namespace GalConnection.Model
         public string[] voiceLangeuage { get; set; }
         public string introduce { get; set; }
         public int state { get; set; }
+        public long createdAt { get; set; }
         public virtual ICollection<Tag> Tag { get; set; }
     }
 }

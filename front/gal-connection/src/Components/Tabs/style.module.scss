@@ -1,8 +1,8 @@
 $tabHeight: 40px;
 $tabWidth: 120px;
-.tabs {
+
+.main {
   display: flex;
-  position: relative;
   background-color: #fff;
   box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
   padding: 12px;
@@ -10,6 +10,13 @@ $tabWidth: 120px;
   * {
     z-index: 2;
   }
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabs {
+  display: flex;
+  position: relative;
 }
 
 .tab {
@@ -40,4 +47,19 @@ $tabWidth: 120px;
   z-index: 1;
   border-radius: 99px; // just a high number to create pill effect
   transition: 0.25s ease-out;
+}
+
+.actions {
+  margin-right: 20px;
+  font-size: 20px;
+  span {
+    transition: 0.1s ease;
+    cursor: pointer;
+    font-size: 21px;
+    padding: 10px;
+    border-radius: 50%;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
 }

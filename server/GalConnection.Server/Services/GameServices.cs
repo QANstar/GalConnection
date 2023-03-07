@@ -52,10 +52,15 @@ namespace GalConnection.Server.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public List<Game> GetGameOfUser(int userId)
+        public string GetGameOfUser(int userId, int position, int limit)
         {
-            List<Game> game = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).ToList();
-            return game;
+            List<Game> games = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                games,
+                total = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).Count()
+            };
+            return JsonUtils.ToJson(res);
         }
         /// <summary>
         /// 根据id获取游戏创建信息
@@ -88,6 +93,7 @@ namespace GalConnection.Server.Services
                 groupId = game.groupId,
                 Tag = game.Tag,
                 state = game.state,
+                createdAt = game.createdAt
             };
             return gameInfo;
         }
@@ -148,7 +154,8 @@ namespace GalConnection.Server.Services
                 Tag = createGame.tag.Select(x => new Tag()
                 {
                     tag1 = x,
-                }).ToList()
+                }).ToList(),
+                createdAt = TimeUtils.GetNowTime()
             };
             Context.Game.Add(game);
             Context.SaveChanges();
@@ -255,6 +262,22 @@ namespace GalConnection.Server.Services
         {
             List<Game> games = Context.Game.Include(x => x.user).Where(x => x.id > lastId && x.state == GameState.PUBLISH).Take(10).ToList();
             return games;
+        }
+        /// <summary>
+        /// 搜索游戏
+        /// </summary>
+        /// <param name="searchContent"></param>
+        /// <returns></returns>
+        public string SearchGame(string searchContent, int position, int limit)
+        {
+            List<Game> games = Context.Game.Include(x => x.user).Where(x => (x.gameName.Contains(searchContent) || x.tag.Contains(searchContent) || x.id.ToString() == searchContent) && x.state == GameState.PUBLISH).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                games,
+                total = Context.Game.Include(x => x.user).Where(x => (x.gameName.Contains(searchContent) || x.tag.Contains(searchContent) || x.id.ToString() == searchContent) && x.state == GameState.PUBLISH).Count()
+            };
+
+            return JsonUtils.ToJson(res);
         }
         /// <summary>
         /// 游戏发布
@@ -444,10 +467,6 @@ namespace GalConnection.Server.Services
             if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
             {
                 throw new Exception("无权限");
-            }
-            if (@event.isStartEvent)
-            {
-                throw new Exception("初始事件无法删除");
             }
             @event.eventName = eventEditData.eventName;
             @event.endType = eventEditData.endType;

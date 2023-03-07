@@ -1,12 +1,15 @@
-import { Button } from 'antd'
+import { Empty } from 'antd'
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import GamePaginationList from '../../../Components/GamePaginationList'
 import useGetGameList from '../../../Hooks/useGetGameList'
 import style from './style.module.scss'
 
-function MyCreation () {
-  const { gameList, page, total, limit, setPage } = useGetGameList('selfCreate')
+function SearchGamePage () {
+  const { content } = useParams()
+  const { gameList, page, total, limit, setPage } = useGetGameList('search', {
+    searchContent: content
+  })
   const navigate = useNavigate()
 
   return (
@@ -20,22 +23,15 @@ function MyCreation () {
           limit={limit}
           onPageChange={setPage}
           onItemClick={(gameData) => {
-            navigate(`/createPage/${gameData.id}`)
+            navigate(`/engine/${gameData.id}/info`)
           }}
         />
           )
         : (
-        <div className={style.startCreate}>
-          <div className={style.startCreateText}>来制作并发布你的作品吧</div>
-          <Link to="/startCreate">
-            <Button type="primary" shape="round" size="large">
-              开始创作
-            </Button>
-          </Link>
-        </div>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
     </div>
   )
 }
 
-export default MyCreation
+export default SearchGamePage

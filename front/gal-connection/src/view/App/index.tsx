@@ -18,6 +18,9 @@ import EventPage from '../Community/CreatePage/EventPage'
 import GameLine from '../Community/CreatePage/GameLine'
 import MaterialBinding from '../Community/CreatePage/MaterialBinding'
 import GameInfoPage from '../Engine/GameInfoPage'
+import SearchPage from '../Community/SearchPage'
+import SearchGamePage from '../Community/SearchPage/SearchGamePage'
+import SearchUserPage from '../Community/SearchPage/SearchUserPage'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -30,6 +33,11 @@ function App () {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
+        <Route path="/search/:content" element={<SearchPage />}>
+          <Route path="" element={<Navigate to={'games'} />} />
+          <Route path="games" element={<SearchGamePage />} />
+          <Route path="users" element={<SearchUserPage />} />
+        </Route>
         <Route path="/userCenter/:id" element={<UserCenter />} />
         <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>

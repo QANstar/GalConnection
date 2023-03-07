@@ -12,6 +12,7 @@ interface ITabsProps {
   items: ITab[]
   active: string
   onItemClick: (link: string) => void
+  actions?: { element: React.ReactNode }[]
 }
 
 function Tabs (props: ITabsProps) {
@@ -27,22 +28,30 @@ function Tabs (props: ITabsProps) {
   }, [props.active])
 
   return (
-    <div className={style.tabs}>
-      {props.items.map((item) => (
-        <TabsItem
-          isActive={props.active === item.link}
-          key={item.key}
-          data={item}
-          onClick={() => {
-            props.onItemClick(item.link)
-          }}
-        />
-      ))}
+    <div className={style.main}>
+      <div className={style.tabs}>
+        {props.items.map((item) => (
+          <TabsItem
+            isActive={props.active === item.link}
+            key={item.key}
+            data={item}
+            onClick={() => {
+              props.onItemClick(item.link)
+            }}
+          />
+        ))}
 
-      <span
-        style={{ transform: `translateX(${getIndex * 100}%)` }}
-        className={style.glider}
-      ></span>
+        <span
+          style={{ transform: `translateX(${getIndex * 100}%)` }}
+          className={style.glider}
+        ></span>
+      </div>
+      <div className={style.actions}>
+        {props.actions &&
+          props.actions.map((action, index) => (
+            <div key={index}>{action.element}</div>
+          ))}
+      </div>
     </div>
   )
 }
