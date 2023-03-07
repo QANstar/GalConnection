@@ -84,6 +84,27 @@ namespace GalConnection.Server.Controllers
             }
         }
         /// <summary>
+        /// 获取用户发布的游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetGameOfUserPublish(int userId, int position, int limit)
+        {
+            try
+            {
+                return Ok(gameServices.GetGameOfUserPublish(userId, position, limit));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         /// 通过游戏id获取创建游戏信息
         /// </summary>
         /// <param name="gameId"></param>

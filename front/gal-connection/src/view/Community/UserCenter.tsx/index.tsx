@@ -1,3 +1,4 @@
+import { RightOutlined } from '@ant-design/icons'
 import {
   Avatar,
   Button,
@@ -12,7 +13,9 @@ import TextArea from 'antd/lib/input/TextArea'
 import { Observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import GameShowList from '../../../Components/GameShowList'
 import ImgCropper from '../../../Components/ImgCropper'
+import useGetGameList from '../../../Hooks/useGetGameList'
 import useUser from '../../../Hooks/useUser'
 import { IUser, OssFileType } from '../../../types/type'
 import style from './style.module.scss'
@@ -32,6 +35,9 @@ function UserCenter () {
   } = useUser()
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const navigate = useNavigate()
+  const { gameList } = useGetGameList('publish', {
+    userId: parseInt(id || '0')
+  })
 
   const getUser = async () => {
     if (id) {
@@ -184,7 +190,23 @@ function UserCenter () {
               </div>
             </div>
             <div className={style.mygame}>
-              <div className={style.title}>作品</div>
+              <div className={style.title}>
+                作品{' '}
+                <Button
+                  onClick={() => {
+                    navigate(`/moreUserGame/${id}`)
+                  }}
+                  style={{ marginLeft: 20 }}
+                >
+                  更多 <RightOutlined />
+                </Button>
+              </div>
+              <GameShowList
+                onItemClick={(gameData) => {
+                  window.open(`/engine/${gameData.id}/info`)
+                }}
+                games={gameList}
+              />
             </div>
           </div>
         </div>

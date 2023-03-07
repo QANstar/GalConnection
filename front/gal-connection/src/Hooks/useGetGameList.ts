@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { IGame } from '../types/type'
 import * as gameService from '../service/game'
 
-type GetGameType = 'selfCreate' | 'search'
+type GetGameType = 'selfCreate' | 'search' | 'publish'
 
 interface IGameRequestData {
   searchContent?: string
-  userId?: string
+  userId?: number
 }
 
 const limit = 12
@@ -59,11 +59,34 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
     }
   }, [reqData?.searchContent, limit, page, type])
 
+  // 获取用户发布的游戏
+  const getGameOfUserPublish = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await gameService.getGameOfUserPublish(
+        reqData?.userId || 0,
+        (page - 1) * limit,
+        limit
+      )
+      if (status === 200) {
+        setGameList(data.games)
+        setTotal(data.total)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [reqData?.searchContent, limit, page, type])
+
   useEffect(() => {
     if (type === 'selfCreate') {
       getGamesOfUser()
     } else if (type === 'search') {
       searchGame()
+    } else if (type === 'publish') {
+      getGameOfUserPublish()
     }
   }, [type, reqData?.searchContent, limit, page])
 

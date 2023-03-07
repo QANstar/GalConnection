@@ -54,11 +54,28 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public string GetGameOfUser(int userId, int position, int limit)
         {
-            List<Game> games = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).Skip(position).Take(limit).ToList();
+            List<Game> games = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).OrderByDescending(x => x.createdAt).Skip(position).Take(limit).ToList();
             var res = new
             {
                 games,
                 total = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state != GameState.DELETE).Count()
+            };
+            return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 获取用户发布的游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public string GetGameOfUserPublish(int userId, int position, int limit)
+        {
+            List<Game> games = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state == GameState.PUBLISH).OrderByDescending(x => x.createdAt).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                games,
+                total = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state == GameState.PUBLISH).Count()
             };
             return JsonUtils.ToJson(res);
         }

@@ -5,10 +5,10 @@ import GamePaginationList from '../../../Components/GamePaginationList'
 import useGetGameList from '../../../Hooks/useGetGameList'
 import style from './style.module.scss'
 
-function SearchGamePage () {
-  const { content } = useParams()
-  const { gameList, page, total, limit, setPage } = useGetGameList('search', {
-    searchContent: content
+function MoreUserGame () {
+  const { userId } = useParams()
+  const { gameList, page, total, limit, setPage } = useGetGameList('publish', {
+    userId: parseInt(userId || '0')
   })
 
   return (
@@ -33,4 +33,4 @@ function SearchGamePage () {
   )
 }
 
-export default SearchGamePage
+export default MoreUserGame

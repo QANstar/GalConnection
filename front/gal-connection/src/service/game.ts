@@ -47,6 +47,16 @@ export const getGamesOfUser = (position: number, limit: number) =>
     `/api/Game/GetGamesOfUser?position=${position}&limit=${limit}`
   )
 
+// 获取用户发布的游戏
+export const getGameOfUserPublish = (
+  userId: number,
+  position: number,
+  limit: number
+) =>
+  request.get<IPageGameList>(
+    `/api/Game/GetGameOfUserPublish?userId=${userId}&position=${position}&limit=${limit}`
+  )
+
 // 创建事件
 export const addEvent = (params: IAddEvent) =>
   request.post<IAddEventResponse>('/api/Game/AddEvent', params)

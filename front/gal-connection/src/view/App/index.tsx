@@ -21,6 +21,7 @@ import GameInfoPage from '../Engine/GameInfoPage'
 import SearchPage from '../Community/SearchPage'
 import SearchGamePage from '../Community/SearchPage/SearchGamePage'
 import SearchUserPage from '../Community/SearchPage/SearchUserPage'
+import MoreUserGame from '../Community/MoreUserGame'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -39,6 +40,7 @@ function App () {
           <Route path="users" element={<SearchUserPage />} />
         </Route>
         <Route path="/userCenter/:id" element={<UserCenter />} />
+        <Route path="/moreUserGame/:userId" element={<MoreUserGame />} />
         <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
