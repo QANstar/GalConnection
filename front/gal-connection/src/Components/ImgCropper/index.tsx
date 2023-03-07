@@ -111,6 +111,7 @@ function ImgCropper (props: IImgCropper) {
         </div>
       </Modal>
       <Upload
+        accept="image/*"
         name="upload"
         listType="picture-card"
         className={inputType}

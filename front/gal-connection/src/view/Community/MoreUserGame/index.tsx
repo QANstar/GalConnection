@@ -1,18 +1,61 @@
-import { Empty } from 'antd'
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Divider, Empty } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import GamePaginationList from '../../../Components/GamePaginationList'
 import useGetGameList from '../../../Hooks/useGetGameList'
+import useUser from '../../../Hooks/useUser'
+import { IUser } from '../../../types/type'
 import style from './style.module.scss'
 
 function MoreUserGame () {
+  const navigate = useNavigate()
   const { userId } = useParams()
   const { gameList, page, total, limit, setPage } = useGetGameList('publish', {
     userId: parseInt(userId || '0')
   })
+  const [userInfo, setUserInfo] = useState<IUser>()
+  const { getUserInfo } = useUser()
+
+  const getUser = async () => {
+    if (userId) {
+      const res = await getUserInfo(parseInt(userId))
+      if (res) {
+        setUserInfo(res)
+      } else {
+        navigate('/userNotFound')
+      }
+    }
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [userId])
 
   return (
     <div className={style.main}>
+      <div className={style.title}>
+        {userInfo && (
+          <Divider orientation="left">
+            <div className={style.userInfo}>
+              <Avatar
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/userCenter/${userInfo.id}`)}
+                size={50}
+                icon={<UserOutlined />}
+                src={userInfo.avatar}
+              />
+              <span
+                onClick={() => navigate(`/userCenter/${userInfo.id}`)}
+                className={style.nickname}
+              >
+                {userInfo?.nickname}
+              </span>
+              发布的游戏
+            </div>
+          </Divider>
+        )}
+      </div>
       {gameList.length > 0
         ? (
         <GamePaginationList

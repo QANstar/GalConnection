@@ -1,5 +1,5 @@
 import { message, Upload, UploadProps } from 'antd'
-import React from 'react'
+import React, { useMemo } from 'react'
 import store from '../../store'
 import { OssFileType } from '../../types/type'
 
@@ -10,6 +10,18 @@ interface IOssUploadProps {
 }
 
 function OssUpload (props: IOssUploadProps) {
+  const acceptType = useMemo(() => {
+    if (props.type === OssFileType.Picture) {
+      return 'image/*'
+    } else if (props.type === OssFileType.Video) {
+      return 'video/*'
+    } else if (props.type === OssFileType.Sound) {
+      return 'audio/*'
+    } else {
+      return '*'
+    }
+  }, [props.type])
+
   const uploadProps: UploadProps = {
     action: `${process.env.REACT_APP_SERVER_URL}/api/Oss/Upload?ossFileType=${props.type}`,
     headers: {
@@ -32,7 +44,11 @@ function OssUpload (props: IOssUploadProps) {
       }
     }
   }
-  return <Upload {...uploadProps}>{props.children}</Upload>
+  return (
+    <Upload accept={acceptType} {...uploadProps}>
+      {props.children}
+    </Upload>
+  )
 }
 
 export default OssUpload
