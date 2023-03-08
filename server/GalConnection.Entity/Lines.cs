@@ -20,8 +20,6 @@ namespace GalConnection.Entity
         [Key]
         public int id { get; set; }
         public int eventId { get; set; }
-        [StringLength(1000)]
-        public string bgm { get; set; }
         public int next { get; set; }
         public int pre { get; set; }
         public int groupId { get; set; }
@@ -29,6 +27,8 @@ namespace GalConnection.Entity
 
         [InverseProperty("idNavigation")]
         public virtual LinesBackground LinesBackground { get; set; }
+        [InverseProperty("idNavigation")]
+        public virtual LinesBgm LinesBgm { get; set; }
         [InverseProperty("lines")]
         public virtual ICollection<LinesChara> LinesChara { get; set; }
         [InverseProperty("lines")]

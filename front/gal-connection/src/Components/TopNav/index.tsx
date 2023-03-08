@@ -68,7 +68,7 @@ function TopNav () {
           </div>
           <SearchInput
             onSearch={(val) => {
-              navigate(`/search/${val}`)
+              if (val !== '') navigate(`/search/${val}`)
             }}
           />
           <div className={style.right}>

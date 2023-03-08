@@ -258,6 +258,14 @@ export interface ILinesBackground {
   isCG: boolean
 }
 
+// Bgm
+export interface ILinesBgm {
+  id?: number
+  bindingId?: number
+  materialId?: number
+  bgm: string
+}
+
 // 语音
 export interface ILinesVoice {
   id?: number
@@ -284,13 +292,13 @@ export interface ILines {
   eventId: number
   gameId?: number
   LinesBackground: ILinesBackground
-  bgm: string
   next?: number
   pre?: number
   groupId?: number
   LinesContent: ILinesContent[]
   LinesVoice: ILinesVoice[]
   LinesChara: ILinesChara[]
+  LinesBgm: ILinesBgm
 }
 
 // 绑定

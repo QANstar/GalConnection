@@ -42,16 +42,21 @@ namespace GalConnection.Model
             public int? bindingId { get; set; }
             public bool isCG { get; set; }
         }
+        public class LinesBgmCreateModel
+        {
+            public string bgm { get; set; }
+            public int? bindingId { get; set; }
+            public int? materialId { get; set; }
+        }
         public int? id { get; set; }
         public int? gameId { get; set; }
         public int eventId { get; set; }
-        [StringLength(1000)]
-        public string bgm { get; set; }
         public int? next { get; set; }
         public int? pre { get; set; }
         public virtual LinesBackgroundCreateModel LinesBackground { get; set; }
         public virtual ICollection<LinesContentCreateModel> LinesContent { get; set; }
         public virtual ICollection<LinesVoiceCreateModel> LinesVoice { get; set; }
         public virtual ICollection<LinesCharaCreateModel> LinesChara { get; set; }
+        public virtual LinesBgmCreateModel LinesBgm { get; set; }
     }
 }

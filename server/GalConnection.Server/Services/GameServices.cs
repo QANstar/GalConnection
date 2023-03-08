@@ -532,11 +532,11 @@ namespace GalConnection.Server.Services
             Lines lines = null;
             if (lineId == 0)
             {
-                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBgm).Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.pre == 0 && x.eventId == @event.id);
             }
             else
             {
-                lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
+                lines = Context.Lines.Include(x => x.LinesBgm).Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == lineId && x.eventId == @event.id);
             }
             if (lines == null)
             {
@@ -650,7 +650,6 @@ namespace GalConnection.Server.Services
             Lines lines = new()
             {
                 eventId = @event.id,
-                bgm = newLines.bgm,
                 next = 0,
                 pre = 0,
                 groupId = (int)@event.groupId,
@@ -662,6 +661,12 @@ namespace GalConnection.Server.Services
                     bindingId = newLines.LinesBackground.bindingId,
                     materialId = newLines.LinesBackground.materialId,
                     isCG = newLines.LinesBackground.isCG,
+                },
+                LinesBgm = new LinesBgm()
+                {
+                    bgm = newLines.LinesBgm.bgm,
+                    bindingId = newLines.LinesBgm.bindingId,
+                    materialId = newLines.LinesBgm.materialId,
                 },
                 LinesContent = game.langeuage.Split(",").Select(x =>
                 {
@@ -755,7 +760,12 @@ namespace GalConnection.Server.Services
                     materialId = newLines.LinesBackground.materialId,
                     isCG = newLines.LinesBackground.isCG,
                 },
-                bgm = newLines.bgm,
+                LinesBgm = new LinesBgm()
+                {
+                    bgm = newLines.LinesBgm.bgm,
+                    bindingId = newLines.LinesBgm.bindingId,
+                    materialId = newLines.LinesBgm.materialId,
+                },
                 next = (int)newLines.next,
                 pre = (int)newLines.pre,
                 groupId = (int)@event.groupId,
@@ -826,7 +836,7 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public bool DelLines(int linesId, int userId)
         {
-            Lines linesDel = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == linesId);
+            Lines linesDel = Context.Lines.Include(x => x.LinesBgm).Include(x => x.LinesBackground).Include(x => x.LinesContent).Include(x => x.LinesVoice).Include(x => x.LinesChara).FirstOrDefault(x => x.id == linesId);
             Event @event = Context.Event.FirstOrDefault(x => x.id == linesDel.eventId);
             if (@event == null)
             {
@@ -881,7 +891,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("游戏不存在");
             }
-            Lines lines = Context.Lines.Include(x => x.LinesBackground).FirstOrDefault(x => x.id == newLines.id);
+            Lines lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesBgm).FirstOrDefault(x => x.id == newLines.id);
             Context.LinesContent.Where(x => x.linesId == lines.id).ToList().ForEach(x =>
             {
                 Context.LinesContent.Remove(x);
@@ -901,7 +911,12 @@ namespace GalConnection.Server.Services
             lines.LinesBackground.bindingId = newLines.LinesBackground.bindingId;
             lines.LinesBackground.materialId = newLines.LinesBackground.materialId;
             lines.LinesBackground.isCG = newLines.LinesBackground.isCG;
-            lines.bgm = newLines.bgm;
+            lines.LinesBgm = new LinesBgm()
+            {
+                bgm = newLines.LinesBgm.bgm,
+                bindingId = newLines.LinesBgm.bindingId,
+                materialId = newLines.LinesBgm.materialId,
+            };
             lines.LinesContent = game.langeuage.Split(",").Select(x =>
             {
                 LinesContentCreateModel linesContentCreateModel = newLines.LinesContent.FirstOrDefault(y => y.language == x);

@@ -26,6 +26,7 @@ namespace GalConnection.Entity
         public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Lines> Lines { get; set; }
         public virtual DbSet<LinesBackground> LinesBackground { get; set; }
+        public virtual DbSet<LinesBgm> LinesBgm { get; set; }
         public virtual DbSet<LinesChara> LinesChara { get; set; }
         public virtual DbSet<LinesContent> LinesContent { get; set; }
         public virtual DbSet<LinesVoice> LinesVoice { get; set; }
@@ -68,6 +69,16 @@ namespace GalConnection.Entity
                     .WithOne(p => p.LinesBackground)
                     .HasForeignKey<LinesBackground>(d => d.id)
                     .HasConstraintName("FK_LinesBackground_Lines");
+            });
+
+            modelBuilder.Entity<LinesBgm>(entity =>
+            {
+                entity.Property(e => e.id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.idNavigation)
+                    .WithOne(p => p.LinesBgm)
+                    .HasForeignKey<LinesBgm>(d => d.id)
+                    .HasConstraintName("FK_LinesBgm_Lines");
             });
 
             modelBuilder.Entity<LinesChara>(entity =>
