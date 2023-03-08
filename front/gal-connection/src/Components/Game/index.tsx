@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ILines, IOptions } from '../../types/type'
 import Background from './Background'
 import CharaPicList from './CharaPicList'
+import GameAudio from './GameAudio'
 import OptionList from './OptionList'
 // import OptionList from './OptionList'
 import PlayLines from './PlayLines'
@@ -98,6 +99,16 @@ function Game (props: IGameProps) {
         isDevMode={props.isDevMode}
         img={props.lines.LinesBackground.background}
         style={props.lines.LinesBackground.style}
+      />
+      <GameAudio
+        isDevMode={props.isDevMode}
+        loop
+        url={props.lines.LinesBgm.bgm}
+      />
+      <GameAudio
+        isDevMode={props.isDevMode}
+        loop={false}
+        url={props.lines.LinesVoice[0].voice || ''}
       />
     </div>
   )

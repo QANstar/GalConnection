@@ -132,7 +132,7 @@ namespace GalConnection.Server.Services
             }
             List<Event> events = Context.Event.Include(x => x.EventTreeViewData).Where(x => x.gameId == gameId).ToList();
             List<EventsMap> edges = Context.EventsMap.Where(x => x.gameId == gameId).ToList();
-            List<Lines> lines = Context.Lines.Include(x => x.LinesBackground).Include(x => x.LinesChara).Include(x => x.LinesContent).Include(x => x.LinesVoice).Where(x => x.gameId == gameId).ToList();
+            List<Lines> lines = Context.Lines.Include(x => x.LinesBgm).Include(x => x.LinesBackground).Include(x => x.LinesChara).Include(x => x.LinesContent).Include(x => x.LinesVoice).Where(x => x.gameId == gameId).ToList();
             List<Option> options = Context.Option.Where(x => x.gameId == gameId).ToList();
             GamePlayModel gamePlayModel = new()
             {

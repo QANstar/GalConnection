@@ -1,7 +1,13 @@
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import * as gameService from '../service/game'
-import { ILines, ILinesBackground, ILinesChara } from '../types/type'
+import {
+  ILines,
+  ILinesBackground,
+  ILinesBgm,
+  ILinesChara,
+  ILinesVoice
+} from '../types/type'
 
 interface IUseLines {
   gameId: number
@@ -73,7 +79,11 @@ const useLines = (params: IUseLines) => {
           bindingId: 0,
           materialId: 0
         },
-        bgm: '',
+        LinesBgm: {
+          bgm: '',
+          bindingId: 0,
+          materialId: 0
+        },
         LinesContent: [],
         LinesVoice: [],
         LinesChara: []
@@ -180,11 +190,35 @@ const useLines = (params: IUseLines) => {
     [gameId, eventId, linesId, lines]
   )
 
+  // 修改语音
+  const setVoice = useCallback(
+    async (voice: ILinesVoice) => {
+      if (lines) {
+        if (lines.LinesVoice.length > 0) {
+          lines.LinesVoice[0] = voice
+          setLines({ ...lines })
+        }
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
   // 修改背景
   const setBackground = useCallback(
     async (background: ILinesBackground) => {
       if (lines) {
         lines.LinesBackground = background
+        setLines({ ...lines })
+      }
+    },
+    [gameId, eventId, linesId, lines]
+  )
+
+  // 修改BGM
+  const setBgm = useCallback(
+    async (bgm: ILinesBgm) => {
+      if (lines) {
+        lines.LinesBgm = bgm
         setLines({ ...lines })
       }
     },
@@ -223,7 +257,9 @@ const useLines = (params: IUseLines) => {
     setBackground,
     setChara,
     insertLines,
-    delLines
+    delLines,
+    setBgm,
+    setVoice
   }
 }
 

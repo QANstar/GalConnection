@@ -13,6 +13,7 @@ import { BindingType } from '../../../../types/enums'
 import useGameInfo from '../../../../Hooks/useGameInfo'
 import CharacterSetting from './CharacterSetting'
 import { ILines } from '../../../../types/type'
+import AudioSetting from './AudioSetting'
 
 function GameLine () {
   const navigate = useNavigate()
@@ -31,7 +32,9 @@ function GameLine () {
     setBackground,
     setChara,
     insertLines,
-    delLines
+    delLines,
+    setBgm,
+    setVoice
   } = useLines({
     gameId: parseInt(gameId || '0'),
     eventId: parseInt(eventId || '0'),
@@ -80,7 +83,21 @@ function GameLine () {
       {
         key: 'sound',
         label: 'BGM/配音',
-        children: 'Content of Tab Pane 3'
+        children: lines && (
+          <AudioSetting
+            onBgmChange={(value) => {
+              setBgm(value)
+            }}
+            onVoiceChange={(value) => {
+              setVoice(value)
+            }}
+            bgm={lines.LinesBgm}
+            voice={lines.LinesVoice[0]}
+            groupId={gameInfo ? gameInfo.groupId : 0}
+            bgmData={bindingInfo.filter((x) => x.type === BindingType.BGM)}
+            voiceData={bindingInfo.filter((x) => x.type === BindingType.VOICE)}
+          />
+        )
       }
     ]
     return tabItems
