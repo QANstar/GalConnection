@@ -1,0 +1,26 @@
+.actionBtn {
+  transition: 0.2s ease;
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px 20px;
+  color: #4096ff;
+  &:hover {
+    color: #ff85c0;
+  }
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.subTitle {
+  font-size: 14px;
+  margin-top: 3px;
+  text-align: center;
+}
+
+.activeBtn {
+  @extend .actionBtn;
+  color: #ff85c0;
+}

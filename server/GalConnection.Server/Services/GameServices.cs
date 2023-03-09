@@ -134,12 +134,14 @@ namespace GalConnection.Server.Services
             List<EventsMap> edges = Context.EventsMap.Where(x => x.gameId == gameId).ToList();
             List<Lines> lines = Context.Lines.Include(x => x.LinesBgm).Include(x => x.LinesBackground).Include(x => x.LinesChara).Include(x => x.LinesContent).Include(x => x.LinesVoice).Where(x => x.gameId == gameId).ToList();
             List<Option> options = Context.Option.Where(x => x.gameId == gameId).ToList();
+            List<UserSave> saves = Context.UserSave.Where(x => x.gameId == gameId && x.userId == userId).ToList();
             GamePlayModel gamePlayModel = new()
             {
                 lines = lines,
                 edges = edges,
                 options = options,
-                events = events
+                events = events,
+                saves = saves
             };
             return gamePlayModel;
         }
@@ -1194,5 +1196,71 @@ namespace GalConnection.Server.Services
             List<Option> options = Context.Option.Where(x => x.gameId == gameId).ToList();
             return options;
         }
+        /// <summary>
+        /// 保存游戏存档
+        /// </summary>
+        /// <param name="userSave"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public UserSave SaveGame(UserSaveModel userSave, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == userSave.gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            UserSave saveData = Context.UserSave.FirstOrDefault(x => x.saveIndex == userSave.saveIndex && x.userId == userId && x.gameId == userSave.gameId);
+            if (saveData != null)
+            {
+                saveData.linesContent = userSave.linesContent;
+                saveData.choOptions = string.Join(',', userSave.choOptions);
+                saveData.img = userSave.img;
+                saveData.eventName = userSave.eventName;
+                saveData.saveTime = userSave.saveTime;
+                saveData.linesId = userSave.linesId;
+            }
+            else
+            {
+                saveData = new()
+                {
+                    gameId = userSave.gameId,
+                    saveTime = userSave.saveTime,
+                    img = userSave.img,
+                    eventName = userSave.eventName,
+                    linesContent = userSave.linesContent,
+                    linesId = userSave.linesId,
+                    choOptions = string.Join(',', userSave.choOptions),
+                    saveIndex = userSave.saveIndex,
+                    userId = userSave.userId
+                };
+                Context.Add(saveData);
+            }
+            Context.SaveChanges();
+            return saveData;
+        }
+        /// <summary>
+        /// 删除存档
+        /// </summary>
+        /// <param name="saveId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool DelSave(int saveId, int userId)
+        {
+            UserSave save = Context.UserSave.FirstOrDefault(x => x.id == saveId);
+            if (save == null)
+            {
+                throw new Exception("存档不存在");
+            }
+            if (save.userId != userId)
+            {
+                throw new Exception("无权限");
+            }
+            Context.Remove(save);
+            Context.SaveChanges();
+            return true;
+        }
+
     }
 }

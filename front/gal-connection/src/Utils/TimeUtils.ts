@@ -10,3 +10,8 @@ export function getRelativeTime (time: number) {
     return dayjs(new Date(time)).format('YYYY-MM-DD')
   } else return dayjs(time).fromNow().replace(' ', '')
 }
+
+// 格式化时间
+export function formatTime (time: number) {
+  return dayjs(new Date(time)).format('YYYY-MM-DD HH:mm:ss')
+}

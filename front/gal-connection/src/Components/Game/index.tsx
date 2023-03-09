@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ILines, IOptions } from '../../types/type'
+import { ILines, IOptions, ISave } from '../../types/type'
 import Background from './Background'
 import CharaPicList from './CharaPicList'
 import GameAudio from './GameAudio'
 import OptionList from './OptionList'
 // import OptionList from './OptionList'
 import PlayLines from './PlayLines'
+import SaveAndLoad from './SaveAndLoad'
 import style from './style.module.scss'
 
 interface IGameProps {
@@ -15,6 +16,7 @@ interface IGameProps {
   options?: IOptions[]
   isOptionVisable?: boolean
   choOption?: (data: number) => void
+  saveList?: ISave[]
 }
 
 function Game (props: IGameProps) {
@@ -22,6 +24,8 @@ function Game (props: IGameProps) {
   const gameRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
   const [width, setWidth] = useState(0)
+  const [saveAndLoadOpen, setSaveAndLoadOpen] = useState(false)
+  const [isSave, setIsSave] = useState(false)
 
   // 设置游戏大小
   const setGameSize = (parentWidth: number, parentHeight: number) => {
@@ -63,43 +67,47 @@ function Game (props: IGameProps) {
   }, [gameRef.current])
 
   return (
-    <div
-      ref={gameRef}
-      style={{
-        height: `${height}px`,
-        width: `${width}px`
-      }}
-      onClick={() => {
-        if (!props.isDevMode && props.nextLinesClick) {
-          props.nextLinesClick()
-        }
-      }}
-      className={style.main}
-    >
-      {props.options && props.isOptionVisable && (
-        <OptionList
-          choOption={(choId) => {
-            if (props.choOption) props.choOption(choId)
-          }}
-          data={props.options}
-          visable={props.isOptionVisable}
+    <>
+      <div
+        ref={gameRef}
+        style={{
+          height: `${height}px`,
+          width: `${width}px`
+        }}
+        onClick={() => {
+          if (!props.isDevMode && props.nextLinesClick) {
+            props.nextLinesClick()
+          }
+        }}
+        className={style.main}
+      >
+        {props.options && props.isOptionVisable && (
+          <OptionList
+            choOption={(choId) => {
+              if (props.choOption) props.choOption(choId)
+            }}
+            data={props.options}
+            visable={props.isOptionVisable}
+          />
+        )}
+        <CharaPicList
+          isDevMode={props.isDevMode}
+          charaPics={props.lines.LinesChara}
         />
-      )}
-
-      <CharaPicList
-        isDevMode={props.isDevMode}
-        charaPics={props.lines.LinesChara}
-      />
-      <PlayLines
-        isDevMode={props.isDevMode}
-        openSave={() => {}}
-        data={props.lines.LinesContent[0]}
-      />
-      <Background
-        isDevMode={props.isDevMode}
-        img={props.lines.LinesBackground.background}
-        style={props.lines.LinesBackground.style}
-      />
+        <PlayLines
+          isDevMode={props.isDevMode}
+          openSave={() => {
+            setIsSave(true)
+            setSaveAndLoadOpen(true)
+          }}
+          data={props.lines.LinesContent[0]}
+        />
+        <Background
+          isDevMode={props.isDevMode}
+          img={props.lines.LinesBackground.background}
+          style={props.lines.LinesBackground.style}
+        />
+      </div>
       <GameAudio
         isDevMode={props.isDevMode}
         loop
@@ -110,7 +118,21 @@ function Game (props: IGameProps) {
         loop={false}
         url={props.lines.LinesVoice[0].voice || ''}
       />
-    </div>
+      {props.saveList && (
+        <SaveAndLoad
+          saveList={props.saveList}
+          onClose={() => {
+            setSaveAndLoadOpen(false)
+          }}
+          setIsSave={(val) => {
+            setIsSave(val)
+          }}
+          isSave={isSave}
+          open={saveAndLoadOpen}
+          gameRef={gameRef}
+        />
+      )}
+    </>
   )
 }
 

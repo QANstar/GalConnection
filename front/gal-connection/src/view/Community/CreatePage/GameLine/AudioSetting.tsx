@@ -48,7 +48,7 @@ function AudioSetting (props: IBackgroundSettingProps) {
       <MaterialQuickAction
         onBindingSelect={(value) => {
           const newVoice = { ...props.voice }
-          newVoice.bindingId = value
+          newVoice.bingdingId = value
           props.onVoiceChange(newVoice)
         }}
         onMaterialSelect={(value) => {
@@ -57,7 +57,7 @@ function AudioSetting (props: IBackgroundSettingProps) {
           newVoice.voice = value.url
           props.onVoiceChange(newVoice)
         }}
-        bindingId={props.voice.bindingId}
+        bindingId={props.voice.bingdingId}
         materialId={props.voice.materialId}
         type="sound"
         groupId={props.groupId}

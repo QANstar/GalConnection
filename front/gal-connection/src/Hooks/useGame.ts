@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IEdge, IEvent, ILines, IOptions } from '../types/type'
+import { IEdge, IEvent, ILines, IOptions, ISave } from '../types/type'
 import * as gameService from '../service/game'
 import { checkArrayIncludeAnother } from '../Utils/ArrayUtils'
 import { EventEndType } from '../types/enums'
@@ -8,6 +8,7 @@ const useGame = (gameId: number) => {
   const [events, setEvents] = useState<IEvent[]>([])
   const [edges, setEdges] = useState<IEdge[]>([])
   const [lines, setLines] = useState<ILines[]>([])
+  const [saves, setSaves] = useState<ISave[]>([])
   const [linesNow, setLinesNow] = useState<ILines>()
   const [evnetNow, setEventNow] = useState<IEvent>()
   const [options, setOptions] = useState<IOptions[]>([])
@@ -28,6 +29,7 @@ const useGame = (gameId: number) => {
         setEdges(data.edges)
         setLines(data.lines)
         setOptions(data.options)
+        setSaves(data.saves)
       }
     } catch (e: any) {
       setError(e)
@@ -134,6 +136,7 @@ const useGame = (gameId: number) => {
     evnetNow,
     optionsNow,
     optionsVisable,
+    saves,
     nextLines,
     selectOptions
   }

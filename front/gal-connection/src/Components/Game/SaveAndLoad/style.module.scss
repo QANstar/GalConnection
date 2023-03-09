@@ -1,0 +1,58 @@
+.savePage {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+}
+
+.top {
+  height: 90px;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+.bottom {
+  height: 100px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.drawer {
+  background-color: rgba($color: #000000, $alpha: 0.2) !important;
+  backdrop-filter: blur(12px);
+}
+
+.title {
+  font-size: 50px;
+  font-weight: bold;
+  color: #4096ff;
+  position: relative;
+}
+
+.titltText {
+  transition: 0.2s ease-in-out;
+  width: 175px;
+  text-align: center;
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  padding: 10px 20px;
+  border: 1px solid #e5e9ef;
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 3%), 0 1px 6px -1px rgb(0 0 0 / 2%),
+    0 2px 4px 0 rgb(0 0 0 / 2%);
+  border-radius: 12px;
+}
+
+.page {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

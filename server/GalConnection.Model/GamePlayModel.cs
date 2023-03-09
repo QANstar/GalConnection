@@ -13,5 +13,6 @@ namespace GalConnection.Model
         public List<EventsMap> edges { get; set; }
         public List<Lines> lines { get; set; }
         public List<Option> options { get; set; }
+        public List<UserSave> saves { get; set; }
     }
 }

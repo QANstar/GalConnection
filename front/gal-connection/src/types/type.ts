@@ -272,7 +272,7 @@ export interface ILinesVoice {
   linesId?: number
   voice?: string
   language?: string
-  bindingId?: number
+  bingdingId?: number
   materialId?: number
 }
 
@@ -327,10 +327,25 @@ export interface IOptions {
   gameId?: number
 }
 
+// 存档
+export interface ISave {
+  id: number
+  saveTime: number
+  img: string
+  eventName: string
+  linesContent: string
+  linesId: number
+  choOptions: string
+  saveIndex: number
+  gameId: number
+  userId: number
+}
+
 // 游戏运行
 export interface IGameRunData {
   events: IEvent[]
   edges: IEdge[]
   lines: ILines[]
   options: IOptions[]
+  saves: ISave[]
 }
