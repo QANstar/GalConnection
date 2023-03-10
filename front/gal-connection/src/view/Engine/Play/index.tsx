@@ -12,7 +12,9 @@ function Play () {
     optionsVisable,
     saves,
     selectOptions,
-    nextLines
+    nextLines,
+    saveGame,
+    loadGame
   } = useGame(parseInt(gameId || '0'))
   useEffect(() => {}, [])
 
@@ -20,6 +22,8 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          onSave={saveGame}
+          onLoad={loadGame}
           saveList={saves}
           options={optionsNow}
           isOptionVisable={optionsVisable}

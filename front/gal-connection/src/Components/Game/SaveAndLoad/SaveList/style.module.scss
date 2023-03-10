@@ -1,7 +1,7 @@
 .item {
   transition: 0.2s ease;
-  width: 220px;
-  height: 220px;
+  width: 235px;
+  height: 235px;
   margin: 11px 20px;
   border: 1px solid #e5e9ef;
   background-color: #fafafa;
@@ -10,6 +10,7 @@
   border-radius: 12px;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
 }
 
 .tag {
@@ -46,4 +47,37 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+
+.cover {
+  height: 58%;
+  margin: 5px;
+  border-radius: 8px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.event {
+  width: 100%;
+  margin: 5px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linescontent {
+  margin: 5px;
+  width: 100%;
+  line-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time {
+  margin: 5px;
+  margin-top: 15px;
 }

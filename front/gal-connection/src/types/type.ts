@@ -329,8 +329,8 @@ export interface IOptions {
 
 // 存档
 export interface ISave {
-  id: number
-  saveTime: number
+  id?: number
+  saveTime?: number
   img: string
   eventName: string
   linesContent: string

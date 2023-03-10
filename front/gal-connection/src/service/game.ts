@@ -13,7 +13,8 @@ import {
   IGameRunData,
   ILines,
   IOptions,
-  IPageGameList
+  IPageGameList,
+  ISave
 } from '../types/type'
 import request from './request'
 
@@ -169,3 +170,7 @@ export const delGame = (params: { gameId: number }) =>
 // 获取游戏推荐
 export const getRecommenderGameList = () =>
   request.get<IGame[]>('/api/Game/GetRecommenderGameList')
+
+// 存档
+export const saveGame = (params: ISave) =>
+  request.post<ISave>('/api/Game/SaveGame', params)

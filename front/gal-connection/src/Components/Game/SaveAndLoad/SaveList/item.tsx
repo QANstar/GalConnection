@@ -8,22 +8,33 @@ interface ISaveItemProps {
   item?: ISave
   index: number
   isSave?: boolean
+  onClick: () => void
 }
 
 function SaveItem (props: ISaveItemProps) {
   const { item, isSave } = props
   return (
-    <div className={isSave ? style.saveItem : style.loadItem}>
+    <div
+      onClick={() => props.onClick()}
+      className={isSave ? style.saveItem : style.loadItem}
+    >
       {item
         ? (
         <>
+          <div
+            className={style.cover}
+            style={{
+              backgroundImage: `url(${item.img}?x-oss-process=style/low)`
+            }}
+          ></div>
           <div>
-            <img src={item.img} alt="存档预览" />
-          </div>
-          <div>
-            <div>{item.eventName}</div>
-            <div>{item.linesContent}</div>
-            <div>{formatTime(item.saveTime)}</div>
+            <div className={style.event}>{item.eventName}</div>
+            <div className={style.linescontent}>
+              {'[ '}
+              {item.linesContent}
+              {' ]'}
+            </div>
+            <div className={style.time}>{formatTime(item.saveTime!)}</div>
           </div>
         </>
           )

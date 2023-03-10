@@ -1,10 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IEdge, IEvent, ILines, IOptions, ISave } from '../types/type'
+import {
+  IEdge,
+  IEvent,
+  ILines,
+  IOptions,
+  ISave,
+  OssFileType
+} from '../types/type'
 import * as gameService from '../service/game'
 import { checkArrayIncludeAnother } from '../Utils/ArrayUtils'
 import { EventEndType } from '../types/enums'
+import { dataURLtoBlob } from '../Utils/ImageUtils'
+import { uploadFile } from '../service/oss'
+import useUser from './useUser'
+import { message } from 'antd'
 
 const useGame = (gameId: number) => {
+  const { user } = useUser()
   const [events, setEvents] = useState<IEvent[]>([])
   const [edges, setEdges] = useState<IEdge[]>([])
   const [lines, setLines] = useState<ILines[]>([])
@@ -37,6 +49,65 @@ const useGame = (gameId: number) => {
       setLoading(false)
     }
   }, [gameId])
+
+  // 存档
+  const saveGame = useCallback(
+    async (index: number, imgDataUrl: string) => {
+      try {
+        setError('')
+        const imgRes = ''
+        if (imgDataUrl !== '') {
+          const formData = new FormData()
+          // 添加要上传的文件
+          formData.append('file', dataURLtoBlob(imgDataUrl), 'avatar')
+          setLoading(true)
+          const res = await uploadFile({
+            body: formData,
+            query: OssFileType.Picture
+          })
+          imgDataUrl = res.data
+        }
+        const saveData: ISave = {
+          img: imgRes,
+          eventName: evnetNow?.eventName || '',
+          linesContent: linesNow?.LinesContent[0].linesContent1 || '',
+          linesId: linesNow?.id || 0,
+          choOptions: choOptions.join(','),
+          saveIndex: index,
+          gameId,
+          userId: user.id
+        }
+        const { data, status } = await gameService.saveGame(saveData)
+        if (status === 200) {
+          const save = saves.find((item) => item.id === data.id)
+          if (save) {
+            const index = saves.indexOf(save)
+            saves[index] = data
+          } else {
+            saves.push(data)
+          }
+          setSaves([...saves])
+          message.success('保存成功')
+        }
+      } catch (e: any) {
+        setError(e)
+      }
+    },
+    [gameId, saves, evnetNow, linesNow, user, choOptions]
+  )
+
+  // 读档
+  const loadGame = useCallback(
+    (saveData: ISave) => {
+      const linesData = lines.find((x) => x.id === saveData.linesId)
+      setLinesNow(linesData)
+      const eventData = events.find((x) => x.id === linesData?.eventId)
+      setEventNow(eventData)
+      setChoOptions(saveData.choOptions.split(','))
+      message.success('读档成功')
+    },
+    [lines, events]
+  )
 
   // 设置初始台词
   const initLinesNow = useCallback(async () => {
@@ -138,7 +209,9 @@ const useGame = (gameId: number) => {
     optionsVisable,
     saves,
     nextLines,
-    selectOptions
+    selectOptions,
+    saveGame,
+    loadGame
   }
 }
 

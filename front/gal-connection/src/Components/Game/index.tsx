@@ -1,3 +1,4 @@
+import { toJpeg } from 'html-to-image'
 import React, { useEffect, useRef, useState } from 'react'
 import { ILines, IOptions, ISave } from '../../types/type'
 import Background from './Background'
@@ -17,6 +18,8 @@ interface IGameProps {
   isOptionVisable?: boolean
   choOption?: (data: number) => void
   saveList?: ISave[]
+  onSave?: (index: number, imgDataUrl: string) => void
+  onLoad?: (data: ISave) => void
 }
 
 function Game (props: IGameProps) {
@@ -45,6 +48,19 @@ function Game (props: IGameProps) {
         gameRef.current.parentElement.clientHeight
       )
     }
+  }
+
+  const saveGame = async (index: number) => {
+    if (gameRef.current === null || !props.onSave) {
+      return
+    }
+    let dataUrl = ''
+    try {
+      dataUrl = await toJpeg(gameRef.current, { quality: 0.95 })
+    } catch (error) {
+      console.log(error)
+    }
+    props.onSave(index, dataUrl)
   }
 
   useEffect(() => {
@@ -100,6 +116,10 @@ function Game (props: IGameProps) {
             setIsSave(true)
             setSaveAndLoadOpen(true)
           }}
+          openLoad={() => {
+            setIsSave(false)
+            setSaveAndLoadOpen(true)
+          }}
           data={props.lines.LinesContent[0]}
         />
         <Background
@@ -126,6 +146,11 @@ function Game (props: IGameProps) {
           }}
           setIsSave={(val) => {
             setIsSave(val)
+          }}
+          onSave={(index) => saveGame(index)}
+          onLoad={(val) => {
+            if (props.onLoad) props.onLoad(val)
+            setSaveAndLoadOpen(false)
           }}
           isSave={isSave}
           open={saveAndLoadOpen}

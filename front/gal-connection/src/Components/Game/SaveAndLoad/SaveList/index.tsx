@@ -7,6 +7,8 @@ interface ISaveListProps {
   list: ISave[]
   page: number
   isSave?: boolean
+  onItemSaveClick: (index: number, isSaved: boolean) => void
+  onItemLoadClick: (data: ISave) => void
 }
 
 const onePageItemNum = 10
@@ -19,11 +21,21 @@ function SaveList (props: ISaveListProps) {
       i <= onePageItemNum * props.page;
       i++
     ) {
+      const itemData = props.list.find((x) => x.saveIndex === i)
       elementList.push(
         <SaveItem
+          onClick={() => {
+            if (props.isSave) {
+              props.onItemSaveClick(i, !!itemData)
+            } else {
+              if (itemData) {
+                props.onItemLoadClick(itemData)
+              }
+            }
+          }}
           isSave={props.isSave}
           index={i}
-          item={props.list.find((x) => x.saveTime === i)}
+          item={itemData}
           key={i}
         />
       )

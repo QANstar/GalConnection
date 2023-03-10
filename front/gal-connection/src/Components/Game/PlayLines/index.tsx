@@ -6,6 +6,7 @@ import style from './style.module.scss'
 interface IPlayLinesProps {
   data?: ILinesContent
   openSave: () => void
+  openLoad: () => void
   isDevMode?: boolean
 }
 function PlayLines (props: IPlayLinesProps) {
@@ -15,6 +16,11 @@ function PlayLines (props: IPlayLinesProps) {
   const openSave = (e: any) => {
     e.stopPropagation()
     props.openSave()
+  }
+
+  const openLoad = (e: any) => {
+    e.stopPropagation()
+    props.openLoad()
   }
   return (
     <div className={style.play_lines}>
@@ -35,7 +41,7 @@ function PlayLines (props: IPlayLinesProps) {
             <li>Back</li>
             <li>Next</li>
             <li onClick={openSave}>Save</li>
-            <li>Load</li>
+            <li onClick={openLoad}>Load</li>
             <li>Config</li>
           </ul>
         </div>

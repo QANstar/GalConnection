@@ -1214,10 +1214,10 @@ namespace GalConnection.Server.Services
             if (saveData != null)
             {
                 saveData.linesContent = userSave.linesContent;
-                saveData.choOptions = string.Join(',', userSave.choOptions);
+                saveData.choOptions = userSave.choOptions;
                 saveData.img = userSave.img;
                 saveData.eventName = userSave.eventName;
-                saveData.saveTime = userSave.saveTime;
+                saveData.saveTime = TimeUtils.GetNowTime();
                 saveData.linesId = userSave.linesId;
             }
             else
@@ -1225,12 +1225,12 @@ namespace GalConnection.Server.Services
                 saveData = new()
                 {
                     gameId = userSave.gameId,
-                    saveTime = userSave.saveTime,
+                    saveTime = TimeUtils.GetNowTime(),
                     img = userSave.img,
                     eventName = userSave.eventName,
                     linesContent = userSave.linesContent,
                     linesId = userSave.linesId,
-                    choOptions = string.Join(',', userSave.choOptions),
+                    choOptions = userSave.choOptions,
                     saveIndex = userSave.saveIndex,
                     userId = userSave.userId
                 };

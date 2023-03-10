@@ -1,10 +1,11 @@
-import { Button, Drawer, Pagination } from 'antd'
-import { toJpeg } from 'html-to-image'
-import React, { useCallback, useState } from 'react'
+import { ExclamationCircleFilled } from '@ant-design/icons'
+import { Drawer, Modal, Pagination } from 'antd'
+import React, { useState } from 'react'
 import { ISave } from '../../../types/type'
 import ActionBtn from './ActionBtn'
 import SaveList from './SaveList'
 import style from './style.module.scss'
+const { confirm } = Modal
 
 interface ISaveAndLoadProps {
   gameRef: React.RefObject<HTMLDivElement>
@@ -13,21 +14,12 @@ interface ISaveAndLoadProps {
   isSave?: boolean
   setIsSave?: (isSave: boolean) => void
   saveList: ISave[]
+  onSave?: (index: number) => void
+  onLoad?: (data: ISave) => void
 }
 
 function SaveAndLoad (props: ISaveAndLoadProps) {
   const [page, setPage] = useState(1)
-  const onSaveClick = useCallback(() => {
-    if (props.gameRef.current === null) {
-      return
-    }
-
-    toJpeg(props.gameRef.current, { quality: 0.95 }).then(function (dataUrl) {
-      const img = new Image()
-      img.src = dataUrl
-      console.log(img)
-    })
-  }, [props.gameRef])
 
   return (
     <Drawer
@@ -71,8 +63,37 @@ function SaveAndLoad (props: ISaveAndLoadProps) {
           </div>
         </div>
         <div className={style.content}>
-          <SaveList isSave={props.isSave} page={page} list={props.saveList} />
-          <Button onClick={onSaveClick}></Button>
+          <SaveList
+            onItemSaveClick={(index, isSaved) => {
+              if (props.onSave) {
+                confirm({
+                  title: isSaved ? '确定覆盖此存档?' : '确定在此处存档？',
+                  icon: <ExclamationCircleFilled />,
+                  onOk () {
+                    props.onSave!(index)
+                  },
+                  okText: '确定',
+                  cancelText: '取消'
+                })
+              }
+            }}
+            onItemLoadClick={(val) => {
+              if (props.onLoad) {
+                confirm({
+                  title: '确定加载此存档?',
+                  icon: <ExclamationCircleFilled />,
+                  onOk () {
+                    props.onLoad!(val)
+                  },
+                  okText: '确定',
+                  cancelText: '取消'
+                })
+              }
+            }}
+            isSave={props.isSave}
+            page={page}
+            list={props.saveList}
+          />
         </div>
         <div className={style.bottom}>
           <ActionBtn
