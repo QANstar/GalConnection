@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import useGame from '../../../Hooks/useGame'
 import Game from '../../../Components/Game'
 import style from './style.module.scss'
 
 function Play () {
   const { gameId } = useParams()
+  const loaction = useLocation()
   const {
     linesNow,
     optionsNow,
@@ -15,7 +16,17 @@ function Play () {
     nextLines,
     saveGame,
     loadGame
-  } = useGame(parseInt(gameId || '0'))
+  } = useGame(
+    parseInt(gameId || '0'),
+    loaction.state !== null &&
+      loaction.state.linesId !== undefined &&
+      loaction.state.choOptions !== undefined
+      ? {
+          linesId: parseInt(loaction.state.linesId),
+          choOptions: loaction.state.choOptions
+        }
+      : undefined
+  )
   useEffect(() => {}, [])
 
   return (

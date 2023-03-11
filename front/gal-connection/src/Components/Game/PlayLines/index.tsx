@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ILinesContent } from '../../../types/type'
 import style from './style.module.scss'
 
@@ -10,6 +10,7 @@ interface IPlayLinesProps {
   isDevMode?: boolean
 }
 function PlayLines (props: IPlayLinesProps) {
+  const { gameId } = useParams()
   const test = (e: any) => {
     e.stopPropagation()
   }
@@ -34,7 +35,7 @@ function PlayLines (props: IPlayLinesProps) {
         <div className={style.play_tool}>
           <ul>
             <li>
-              <Link to="/">Title</Link>
+              <Link to={`/engine/${gameId}/home`}>Title</Link>
             </li>
             <li onClick={test}>Auto</li>
             <li>Skip</li>

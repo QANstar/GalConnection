@@ -349,3 +349,9 @@ export interface IGameRunData {
   options: IOptions[]
   saves: ISave[]
 }
+
+// 游戏状态
+export interface IGameState {
+  linesId: number
+  choOptions: string
+}

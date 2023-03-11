@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import {
   IEdge,
   IEvent,
+  IGameState,
   ILines,
   IOptions,
   ISave,
@@ -15,7 +16,7 @@ import { uploadFile } from '../service/oss'
 import useUser from './useUser'
 import { message } from 'antd'
 
-const useGame = (gameId: number) => {
+const useGame = (gameId: number, state?: IGameState) => {
   const { user } = useUser()
   const [events, setEvents] = useState<IEvent[]>([])
   const [edges, setEdges] = useState<IEdge[]>([])
@@ -98,7 +99,9 @@ const useGame = (gameId: number) => {
 
   // 读档
   const loadGame = useCallback(
-    (saveData: ISave) => {
+    (saveData: IGameState) => {
+      console.log(saveData)
+
       const linesData = lines.find((x) => x.id === saveData.linesId)
       setLinesNow(linesData)
       const eventData = events.find((x) => x.id === linesData?.eventId)
@@ -197,6 +200,18 @@ const useGame = (gameId: number) => {
   useEffect(() => {
     initLinesNow()
   }, [gameId, events, lines])
+
+  useEffect(() => {
+    if (
+      state &&
+      state.choOptions &&
+      state.linesId &&
+      lines.length > 0 &&
+      events.length > 0
+    ) {
+      loadGame(state)
+    }
+  }, [lines, events])
 
   return {
     loading,

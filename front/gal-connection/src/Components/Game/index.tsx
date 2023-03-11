@@ -154,7 +154,6 @@ function Game (props: IGameProps) {
           }}
           isSave={isSave}
           open={saveAndLoadOpen}
-          gameRef={gameRef}
         />
       )}
     </>

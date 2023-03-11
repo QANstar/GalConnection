@@ -9,7 +9,7 @@
   font-size: 20px;
 }
 
-.leftNav a {
+.leftNav {
   color: #fff;
   font-size: 20px;
   transition: 0.2s;
@@ -20,14 +20,15 @@
 }
 
 .leftNav ul li {
+  transition: 0.2s ease;
   list-style: none;
   margin: 25px 0;
-}
-
-.leftNav a:hover {
-  color: #33b6ee;
-  font-size: 25px;
-  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    color: #33b6ee;
+    font-size: 25px;
+    font-weight: bold;
+  }
 }
 
 .subtitle {

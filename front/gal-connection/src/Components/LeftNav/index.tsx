@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import style from './style.module.scss'
 
 export interface INav {
-  link: string
+  onClick?: () => void
   text: string
   subtext: string
   key: string
@@ -18,11 +17,9 @@ function LeftNav (props: LeftNavProps) {
     <div className={style.leftNav}>
       <ul>
         {props.items.map((item) => (
-          <li key={item.key}>
-            <Link to={item.link}>
-              <div>{item.text}</div>
-              <div className={style.subtitle}>{item.subtext}</div>
-            </Link>
+          <li onClick={item.onClick} key={item.key}>
+            <div>{item.text}</div>
+            <div className={style.subtitle}>{item.subtext}</div>
           </li>
         ))}
       </ul>

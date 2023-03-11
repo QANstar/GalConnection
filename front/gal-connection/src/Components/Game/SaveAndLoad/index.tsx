@@ -8,7 +8,6 @@ import style from './style.module.scss'
 const { confirm } = Modal
 
 interface ISaveAndLoadProps {
-  gameRef: React.RefObject<HTMLDivElement>
   open: boolean
   onClose: () => void
   isSave?: boolean
@@ -16,6 +15,7 @@ interface ISaveAndLoadProps {
   saveList: ISave[]
   onSave?: (index: number) => void
   onLoad?: (data: ISave) => void
+  isHome?: boolean
 }
 
 function SaveAndLoad (props: ISaveAndLoadProps) {
@@ -104,14 +104,16 @@ function SaveAndLoad (props: ISaveAndLoadProps) {
             title="读档"
             subTitle="LOAD"
           />
-          <ActionBtn
-            onClick={() => {
-              if (props.setIsSave) props.setIsSave(true)
-            }}
-            isActive={props.isSave}
-            title="存档"
-            subTitle="SAVE"
-          />
+          {!props.isHome && (
+            <ActionBtn
+              onClick={() => {
+                if (props.setIsSave) props.setIsSave(true)
+              }}
+              isActive={props.isSave}
+              title="存档"
+              subTitle="SAVE"
+            />
+          )}
           <ActionBtn
             onClick={() => {
               props.onClose()
