@@ -202,13 +202,10 @@ const useGame = (gameId: number, state?: IGameState) => {
   }, [gameId, events, lines])
 
   useEffect(() => {
-    if (
-      state &&
-      state.choOptions &&
-      state.linesId &&
-      lines.length > 0 &&
-      events.length > 0
-    ) {
+    if (state && state.linesId && lines.length > 0 && events.length > 0) {
+      if (!state.choOptions) {
+        state.choOptions = ''
+      }
       loadGame(state)
     }
   }, [lines, events])
