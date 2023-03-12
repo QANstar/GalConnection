@@ -77,8 +77,8 @@ const useGameInfo = (gameId: number) => {
         setError('')
         const { status } = await gameService.delGame(params)
         if (status === 200) {
-          getCreateGamesInfoById()
           message.success('删除成功')
+          return true
         }
       } catch (e: any) {
         setError(e)

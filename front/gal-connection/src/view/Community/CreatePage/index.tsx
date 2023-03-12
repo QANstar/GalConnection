@@ -1,6 +1,7 @@
 import {
   CloudOutlined,
   ClusterOutlined,
+  DeleteOutlined,
   ExclamationCircleFilled,
   FileOutlined,
   FormOutlined,
@@ -39,7 +40,9 @@ function CreatePage () {
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const { gameInfo, gamePublish } = useGameInfo(parseInt(gameId || '0'))
+  const { gameInfo, gamePublish, delGame } = useGameInfo(
+    parseInt(gameId || '0')
+  )
   const items: MenuItem[] = [
     getItem('游戏信息', 'info', <SettingOutlined />),
     getItem('素材绑定', 'material', <FileOutlined />),
@@ -109,6 +112,32 @@ function CreatePage () {
                 {gameInfo?.state === GameState.PUBLISH ? '取消发布' : '发布'}
               </div>
                 )}
+          </Button>
+          <Button
+            block
+            danger={gameInfo?.state === GameState.PUBLISH}
+            type="primary"
+            style={{ marginBottom: 16 }}
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              confirm({
+                title: '你确定要删除此游戏？',
+                icon: <ExclamationCircleFilled />,
+                content: '你可以在回收站将其恢复',
+                okText: '确定',
+                cancelText: '取消',
+                async onOk () {
+                  const isSuccess = await delGame({
+                    gameId: gameInfo?.id || 0
+                  })
+                  if (isSuccess) {
+                    navigate('/creation')
+                  }
+                }
+              })
+            }}
+          >
+            删除
           </Button>
         </div>
 
