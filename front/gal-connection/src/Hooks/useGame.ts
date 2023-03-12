@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   IEdge,
   IEvent,
@@ -16,6 +16,9 @@ import { uploadFile } from '../service/oss'
 import useUser from './useUser'
 import { message } from 'antd'
 
+const autoDuring = 1000
+const skipDuring = 100
+
 const useGame = (gameId: number, state?: IGameState) => {
   const { user } = useUser()
   const [events, setEvents] = useState<IEvent[]>([])
@@ -28,6 +31,12 @@ const useGame = (gameId: number, state?: IGameState) => {
   const [choOptions, setChoOptions] = useState<string[]>([])
   const [optionsNow, setOptionsNow] = useState<IOptions[]>([])
   const [optionsVisable, setOptionsVisable] = useState<boolean>(false)
+
+  const [isAuto, setIsAuto] = useState(false)
+  const [isSkip, setIsSkip] = useState(false)
+  const timer = useRef<any>(null)
+  const nextLinesRef = useRef<any>()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -145,9 +154,11 @@ const useGame = (gameId: number, state?: IGameState) => {
       if (evnetNow.endType === EventEndType.NEXT) {
         changeEvent()
       } else if (evnetNow.endType === EventEndType.OPTION) {
+        setIsAuto(false)
         setOptionsVisable(true)
         setOptionsNow(options.filter((x) => x.eventId === evnetNow.id))
       } else {
+        setIsAuto(false)
         changeEvent()
       }
     }
@@ -197,8 +208,53 @@ const useGame = (gameId: number, state?: IGameState) => {
     getGamePlayData()
   }, [gameId])
 
+  // 自动模式
+  const autoMode = useCallback(
+    (auto?: boolean) => {
+      if (auto !== undefined) {
+        setIsAuto(auto)
+      } else {
+        setIsAuto(!isAuto)
+      }
+    },
+    [isAuto]
+  )
+
+  useEffect(() => {
+    if (timer.current) {
+      clearInterval(timer.current)
+    }
+    if (isAuto) {
+      timer.current = setInterval(() => nextLinesRef.current(), autoDuring)
+    }
+    return () => clearInterval(timer.current)
+  }, [isAuto])
+
+  // 快进模式
+  const skipMode = useCallback(
+    (skip?: boolean) => {
+      if (skip !== undefined) {
+        setIsSkip(skip)
+      } else {
+        setIsSkip(!isSkip)
+      }
+    },
+    [isSkip]
+  )
+
+  useEffect(() => {
+    if (timer.current) {
+      clearInterval(timer.current)
+    }
+    if (isSkip) {
+      timer.current = setInterval(() => nextLinesRef.current(), skipDuring)
+    }
+    return () => clearInterval(timer.current)
+  }, [isSkip])
+
   useEffect(() => {
     initLinesNow()
+    nextLinesRef.current = nextLines
   }, [gameId, events, lines])
 
   useEffect(() => {
@@ -209,6 +265,10 @@ const useGame = (gameId: number, state?: IGameState) => {
       loadGame(state)
     }
   }, [lines, events])
+
+  useEffect(() => {
+    nextLinesRef.current = nextLines
+  })
 
   return {
     loading,
@@ -223,7 +283,9 @@ const useGame = (gameId: number, state?: IGameState) => {
     nextLines,
     selectOptions,
     saveGame,
-    loadGame
+    loadGame,
+    autoMode,
+    skipMode
   }
 }
 

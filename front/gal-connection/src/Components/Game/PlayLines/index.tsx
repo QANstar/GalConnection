@@ -7,12 +7,15 @@ interface IPlayLinesProps {
   data?: ILinesContent
   openSave: () => void
   openLoad: () => void
+  autoClick: () => void
+  skipClick: () => void
   isDevMode?: boolean
 }
 function PlayLines (props: IPlayLinesProps) {
   const { gameId } = useParams()
-  const test = (e: any) => {
+  const skipClick = (e: any) => {
     e.stopPropagation()
+    props.skipClick()
   }
   const openSave = (e: any) => {
     e.stopPropagation()
@@ -22,6 +25,11 @@ function PlayLines (props: IPlayLinesProps) {
   const openLoad = (e: any) => {
     e.stopPropagation()
     props.openLoad()
+  }
+
+  const autoClick = (e: any) => {
+    e.stopPropagation()
+    props.autoClick()
   }
   return (
     <div className={style.play_lines}>
@@ -37,8 +45,8 @@ function PlayLines (props: IPlayLinesProps) {
             <li>
               <Link to={`/engine/${gameId}/home`}>Title</Link>
             </li>
-            <li onClick={test}>Auto</li>
-            <li>Skip</li>
+            <li onClick={autoClick}>Auto</li>
+            <li onClick={skipClick}>Skip</li>
             <li>Back</li>
             <li>Next</li>
             <li onClick={openSave}>Save</li>

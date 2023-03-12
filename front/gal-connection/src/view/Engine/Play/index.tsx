@@ -28,7 +28,9 @@ function Play () {
     selectOptions,
     nextLines,
     saveGame,
-    loadGame
+    loadGame,
+    autoMode,
+    skipMode
   } = useGame(parseInt(gameId || '0'), gameState)
   useEffect(() => {}, [])
 
@@ -36,6 +38,8 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          skipClick={skipMode}
+          autoClick={autoMode}
           onSave={saveGame}
           onLoad={loadGame}
           saveList={saves}
@@ -43,7 +47,11 @@ function Play () {
           isOptionVisable={optionsVisable}
           choOption={selectOptions}
           lines={linesNow}
-          nextLinesClick={nextLines}
+          nextLinesClick={() => {
+            skipMode(false)
+            autoMode(false)
+            nextLines()
+          }}
         />
       )}
     </div>

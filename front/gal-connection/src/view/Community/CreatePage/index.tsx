@@ -118,7 +118,6 @@ function CreatePage () {
             danger={gameInfo?.state === GameState.PUBLISH}
             type="primary"
             style={{ marginBottom: 16 }}
-            icon={<DeleteOutlined />}
             onClick={() => {
               confirm({
                 title: '你确定要删除此游戏？',
@@ -137,7 +136,16 @@ function CreatePage () {
               })
             }}
           >
-            删除
+            {collapsed
+              ? (
+              <DeleteOutlined />
+                )
+              : (
+              <div className={style.playBtn}>
+                <DeleteOutlined style={{ marginRight: 10 }} />
+                删除
+              </div>
+                )}
           </Button>
         </div>
 

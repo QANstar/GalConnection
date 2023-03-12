@@ -20,6 +20,8 @@ interface IGameProps {
   saveList?: ISave[]
   onSave?: (index: number, imgDataUrl: string) => void
   onLoad?: (data: ISave) => void
+  autoClick?: () => void
+  skipClick?: () => void
 }
 
 function Game (props: IGameProps) {
@@ -111,6 +113,16 @@ function Game (props: IGameProps) {
           charaPics={props.lines.LinesChara}
         />
         <PlayLines
+          autoClick={() => {
+            if (props.autoClick) {
+              props.autoClick()
+            }
+          }}
+          skipClick={() => {
+            if (props.skipClick) {
+              props.skipClick()
+            }
+          }}
           isDevMode={props.isDevMode}
           openSave={() => {
             setIsSave(true)
