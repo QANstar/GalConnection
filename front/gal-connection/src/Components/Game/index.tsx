@@ -20,6 +20,7 @@ interface IGameProps {
   saveList?: ISave[]
   onSave?: (index: number, imgDataUrl: string) => void
   onLoad?: (data: ISave) => void
+  onDelSave?: (saveId: number) => void
   autoClick?: () => void
   skipClick?: () => void
 }
@@ -152,6 +153,7 @@ function Game (props: IGameProps) {
       />
       {props.saveList && (
         <SaveAndLoad
+          onDel={props.onDelSave}
           saveList={props.saveList}
           onClose={() => {
             setSaveAndLoadOpen(false)

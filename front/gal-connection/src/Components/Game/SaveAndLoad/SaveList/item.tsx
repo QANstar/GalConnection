@@ -1,4 +1,5 @@
-import { Empty, Tag } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Button, Empty, Tag } from 'antd'
 import React from 'react'
 import { ISave } from '../../../../types/type'
 import { formatTime } from '../../../../Utils/TimeUtils'
@@ -9,6 +10,7 @@ interface ISaveItemProps {
   index: number
   isSave?: boolean
   onClick: () => void
+  onDelClick: () => void
 }
 
 function SaveItem (props: ISaveItemProps) {
@@ -34,7 +36,19 @@ function SaveItem (props: ISaveItemProps) {
               {item.linesContent}
               {' ]'}
             </div>
-            <div className={style.time}>{formatTime(item.saveTime!)}</div>
+            <div className={style.bottom}>
+              <div className={style.time}>{formatTime(item.saveTime!)}</div>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  props.onDelClick()
+                }}
+                className={style.delBtn}
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </div>
           </div>
         </>
           )

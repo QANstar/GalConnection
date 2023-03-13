@@ -9,7 +9,7 @@ import useGame from '../../../Hooks/useGame'
 function PlayHomeLayout () {
   const { gameId } = useParams()
   const navigate = useNavigate()
-  const { saves } = useGame(parseInt(gameId || '0'))
+  const { saves, delSave } = useGame(parseInt(gameId || '0'))
   const { gameInfo } = useGameInfo(parseInt(gameId || '0'))
   const [saveAndLoadOpen, setSaveAndLoadOpen] = useState(false)
   const navItems: INav[] = [
@@ -55,6 +55,7 @@ function PlayHomeLayout () {
         <LeftNav items={navItems} />
       </header>
       <SaveAndLoad
+        onDel={delSave}
         saveList={saves}
         onClose={() => {
           setSaveAndLoadOpen(false)

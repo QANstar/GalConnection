@@ -15,6 +15,7 @@ interface ISaveAndLoadProps {
   saveList: ISave[]
   onSave?: (index: number) => void
   onLoad?: (data: ISave) => void
+  onDel?: (id: number) => void
   isHome?: boolean
 }
 
@@ -64,6 +65,19 @@ function SaveAndLoad (props: ISaveAndLoadProps) {
         </div>
         <div className={style.content}>
           <SaveList
+            onItemDelClick={(id) => {
+              if (props.onDel) {
+                confirm({
+                  title: '确定删除此存档?',
+                  icon: <ExclamationCircleFilled />,
+                  onOk () {
+                    props.onDel!(id)
+                  },
+                  okText: '确定',
+                  cancelText: '取消'
+                })
+              }
+            }}
             onItemSaveClick={(index, isSaved) => {
               if (props.onSave) {
                 confirm({

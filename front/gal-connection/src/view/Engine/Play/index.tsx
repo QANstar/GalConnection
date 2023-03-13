@@ -30,7 +30,8 @@ function Play () {
     saveGame,
     loadGame,
     autoMode,
-    skipMode
+    skipMode,
+    delSave
   } = useGame(parseInt(gameId || '0'), gameState)
   useEffect(() => {}, [])
 
@@ -38,6 +39,7 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          onDelSave={delSave}
           skipClick={skipMode}
           autoClick={autoMode}
           onSave={saveGame}

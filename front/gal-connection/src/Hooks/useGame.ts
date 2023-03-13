@@ -106,6 +106,23 @@ const useGame = (gameId: number, state?: IGameState) => {
     [gameId, saves, evnetNow, linesNow, user, choOptions]
   )
 
+  // 删除存档
+  const delSave = useCallback(
+    async (saveId: number) => {
+      try {
+        setError('')
+        const { status } = await gameService.delSave(saveId)
+        if (status === 200) {
+          setSaves(saves.filter((x) => x.id !== saveId))
+          message.success('删除成功')
+        }
+      } catch (e: any) {
+        setError(e)
+      }
+    },
+    [saves]
+  )
+
   // 读档
   const loadGame = useCallback(
     (saveData: IGameState) => {
@@ -285,7 +302,8 @@ const useGame = (gameId: number, state?: IGameState) => {
     saveGame,
     loadGame,
     autoMode,
-    skipMode
+    skipMode,
+    delSave
   }
 }
 

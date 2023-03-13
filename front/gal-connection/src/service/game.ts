@@ -174,3 +174,7 @@ export const getRecommenderGameList = () =>
 // 存档
 export const saveGame = (params: ISave) =>
   request.post<ISave>('/api/Game/SaveGame', params)
+
+// 删除存档
+export const delSave = (saveId: number) =>
+  request.delete<boolean>(`/api/Game/DelSave?saveId=${saveId}`)

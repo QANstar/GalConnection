@@ -9,6 +9,7 @@ interface ISaveListProps {
   isSave?: boolean
   onItemSaveClick: (index: number, isSaved: boolean) => void
   onItemLoadClick: (data: ISave) => void
+  onItemDelClick: (id: number) => void
 }
 
 const onePageItemNum = 10
@@ -24,6 +25,11 @@ function SaveList (props: ISaveListProps) {
       const itemData = props.list.find((x) => x.saveIndex === i)
       elementList.push(
         <SaveItem
+          onDelClick={() => {
+            if (itemData && itemData.id) {
+              props.onItemDelClick(itemData.id)
+            }
+          }}
           onClick={() => {
             if (props.isSave) {
               props.onItemSaveClick(i, !!itemData)
