@@ -9,6 +9,7 @@ interface IPlayLinesProps {
   openLoad: () => void
   autoClick: () => void
   skipClick: () => void
+  backLogClick: () => void
   isDevMode?: boolean
 }
 function PlayLines (props: IPlayLinesProps) {
@@ -16,6 +17,10 @@ function PlayLines (props: IPlayLinesProps) {
   const skipClick = (e: any) => {
     e.stopPropagation()
     props.skipClick()
+  }
+  const backLogClick = (e: any) => {
+    e.stopPropagation()
+    props.backLogClick()
   }
   const openSave = (e: any) => {
     e.stopPropagation()
@@ -47,8 +52,7 @@ function PlayLines (props: IPlayLinesProps) {
             </li>
             <li onClick={autoClick}>Auto</li>
             <li onClick={skipClick}>Skip</li>
-            <li>Back</li>
-            <li>Next</li>
+            <li onClick={backLogClick}>BackLog</li>
             <li onClick={openSave}>Save</li>
             <li onClick={openLoad}>Load</li>
             <li>Config</li>

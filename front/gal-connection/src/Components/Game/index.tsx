@@ -1,7 +1,8 @@
 import { toJpeg } from 'html-to-image'
 import React, { useEffect, useRef, useState } from 'react'
-import { ILines, IOptions, ISave } from '../../types/type'
+import { IBackLog, ILines, IOptions, ISave } from '../../types/type'
 import Background from './Background'
+import BackLog from './BackLog'
 import CharaPicList from './CharaPicList'
 import GameAudio from './GameAudio'
 import OptionList from './OptionList'
@@ -18,6 +19,7 @@ interface IGameProps {
   isOptionVisable?: boolean
   choOption?: (data: number) => void
   saveList?: ISave[]
+  backLogData?: IBackLog[]
   onSave?: (index: number, imgDataUrl: string) => void
   onLoad?: (data: ISave) => void
   onDelSave?: (saveId: number) => void
@@ -26,11 +28,11 @@ interface IGameProps {
 }
 
 function Game (props: IGameProps) {
-  // const [optionVisable, setOptionVisable] = useState(false)
   const gameRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
   const [width, setWidth] = useState(0)
   const [saveAndLoadOpen, setSaveAndLoadOpen] = useState(false)
+  const [backLogOpen, setBackLogOpen] = useState(false)
   const [isSave, setIsSave] = useState(false)
 
   // 设置游戏大小
@@ -133,6 +135,9 @@ function Game (props: IGameProps) {
             setIsSave(false)
             setSaveAndLoadOpen(true)
           }}
+          backLogClick={() => {
+            setBackLogOpen(true)
+          }}
           data={props.lines.LinesContent[0]}
         />
         <Background
@@ -168,6 +173,15 @@ function Game (props: IGameProps) {
           }}
           isSave={isSave}
           open={saveAndLoadOpen}
+        />
+      )}
+      {props.backLogData && (
+        <BackLog
+          backLogData={props.backLogData}
+          open={backLogOpen}
+          onClose={() => {
+            setBackLogOpen(false)
+          }}
         />
       )}
     </>

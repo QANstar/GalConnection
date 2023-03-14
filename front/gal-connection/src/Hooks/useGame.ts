@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
+  IBackLog,
   IEdge,
   IEvent,
   IGameState,
@@ -27,6 +28,7 @@ const useGame = (gameId: number, state?: IGameState) => {
   const [saves, setSaves] = useState<ISave[]>([])
   const [linesNow, setLinesNow] = useState<ILines>()
   const [evnetNow, setEventNow] = useState<IEvent>()
+  const [backLog, setBackLog] = useState<IBackLog[]>([])
   const [options, setOptions] = useState<IOptions[]>([])
   const [choOptions, setChoOptions] = useState<string[]>([])
   const [optionsNow, setOptionsNow] = useState<IOptions[]>([])
@@ -126,8 +128,7 @@ const useGame = (gameId: number, state?: IGameState) => {
   // 读档
   const loadGame = useCallback(
     (saveData: IGameState) => {
-      console.log(saveData)
-
+      setBackLog([])
       const linesData = lines.find((x) => x.id === saveData.linesId)
       setLinesNow(linesData)
       const eventData = events.find((x) => x.id === linesData?.eventId)
@@ -172,10 +173,12 @@ const useGame = (gameId: number, state?: IGameState) => {
         changeEvent()
       } else if (evnetNow.endType === EventEndType.OPTION) {
         setIsAuto(false)
+        setIsSkip(false)
         setOptionsVisable(true)
         setOptionsNow(options.filter((x) => x.eventId === evnetNow.id))
       } else {
         setIsAuto(false)
+        setIsSkip(false)
         changeEvent()
       }
     }
@@ -271,7 +274,6 @@ const useGame = (gameId: number, state?: IGameState) => {
 
   useEffect(() => {
     initLinesNow()
-    nextLinesRef.current = nextLines
   }, [gameId, events, lines])
 
   useEffect(() => {
@@ -282,6 +284,19 @@ const useGame = (gameId: number, state?: IGameState) => {
       loadGame(state)
     }
   }, [lines, events])
+
+  useEffect(() => {
+    if (linesNow) {
+      backLog.push({
+        gameState: {
+          linesId: linesNow.id!,
+          choOptions: choOptions.join(',')
+        },
+        lines: linesNow
+      })
+      setBackLog([...backLog])
+    }
+  }, [linesNow])
 
   useEffect(() => {
     nextLinesRef.current = nextLines
@@ -297,6 +312,7 @@ const useGame = (gameId: number, state?: IGameState) => {
     optionsNow,
     optionsVisable,
     saves,
+    backLog,
     nextLines,
     selectOptions,
     saveGame,

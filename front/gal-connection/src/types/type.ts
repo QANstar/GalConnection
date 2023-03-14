@@ -355,3 +355,9 @@ export interface IGameState {
   linesId: number
   choOptions: string
 }
+
+// 台词回顾
+export interface IBackLog {
+  gameState: IGameState
+  lines: ILines
+}
