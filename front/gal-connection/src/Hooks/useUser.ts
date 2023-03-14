@@ -151,6 +151,46 @@ const useUser = () => {
     }
   }, [])
 
+  // 关注
+  const followUser = useCallback(async (followId: number) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.followUser(followId)
+      if (status === 200) {
+        message.success('关注成功')
+        return true
+      } else {
+        setError(data.toString())
+        return false
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // 取消关注
+  const unFollowUser = useCallback(async (followId: number) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.unFollowUser(followId)
+      if (status === 200) {
+        message.success('取消关注成功')
+        return true
+      } else {
+        setError(data.toString())
+        return false
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     signup,
     login,
@@ -160,6 +200,8 @@ const useUser = () => {
     editUserInfo,
     avatarUpdate,
     bannerUpdate,
+    followUser,
+    unFollowUser,
     user,
     error,
     loading

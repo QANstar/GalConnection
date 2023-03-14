@@ -36,3 +36,9 @@ export const searchUser = (
   request.get<IUserPageList>(
     `/api/User/SearchUser?searchContent=${searchContent}&position=${position}&limit=${limit}`
   )
+// 关注
+export const followUser = (followId: number) =>
+  request.post<boolean>(`/api/User/FollowUser?followId=${followId}`)
+// 取消关注
+export const unFollowUser = (followId: number) =>
+  request.post<boolean>(`/api/User/UnFollowUser?followId=${followId}`)

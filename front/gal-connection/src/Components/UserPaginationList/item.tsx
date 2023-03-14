@@ -1,6 +1,7 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Tag } from 'antd'
 import React from 'react'
+import useUser from '../../Hooks/useUser'
 import { IUser } from '../../types/type'
 import style from './style.module.scss'
 
@@ -11,6 +12,7 @@ interface IUserItemProps {
 }
 
 function UserItem (props: IUserItemProps) {
+  const { user } = useUser()
   return (
     <div className={style.item}>
       <div className={style.avatar}>
@@ -32,9 +34,14 @@ function UserItem (props: IUserItemProps) {
           <Tag color="#87d068">id: {props.user.id}</Tag>
         </div>
         <div className={style.intro}>{props.user.introduce}</div>
-        <Button onClick={() => props.onFllowClick(props.user)} type="primary">
-          关注
-        </Button>
+        {user.id !== props.user.id && (
+          <Button
+            onClick={() => props.onFllowClick(props.user)}
+            type={props.user.isFollow ? 'default' : 'primary'}
+          >
+            {props.user.isFollow ? '已关注' : '关注'}
+          </Button>
+        )}
       </div>
     </div>
   )

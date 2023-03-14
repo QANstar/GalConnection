@@ -21,6 +21,7 @@ namespace GalConnection.Entity
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<EventTreeViewData> EventTreeViewData { get; set; }
         public virtual DbSet<EventsMap> EventsMap { get; set; }
+        public virtual DbSet<Follow> Follow { get; set; }
         public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<GameBinding> GameBinding { get; set; }
         public virtual DbSet<Group> Group { get; set; }

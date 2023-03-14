@@ -19,7 +19,7 @@ namespace GalConnection.Server.Utils
             };
         }
 
-        public static UserShowModel userToShowModel(User x, int groupId)
+        public static UserShowModel userToShowModel(User x, int groupId, bool isFollow)
         {
             return new UserShowModel()
             {
@@ -30,7 +30,8 @@ namespace GalConnection.Server.Utils
                 createdAt = x.createdAt,
                 introduce = x.introduce,
                 banner = x.banner,
-                groupId = groupId
+                groupId = groupId,
+                isFollow = isFollow
             };
         }
     }

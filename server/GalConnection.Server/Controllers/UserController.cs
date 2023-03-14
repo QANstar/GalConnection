@@ -90,11 +90,14 @@ namespace GalConnection.Server.Controllers.User
         /// <returns></returns>
         [EnableCors("any")]
         [HttpGet]
+        [Authorize]
         public IActionResult GetUserInfo(int userId)
         {
             try
             {
-                return Ok(userServices.GetUserInfo(userId));
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.GetUserInfo(userId, userID));
             }
             catch (Exception ex)
             {
@@ -179,7 +182,51 @@ namespace GalConnection.Server.Controllers.User
         {
             try
             {
-                return Ok(userServices.SearchUser(searchContent, position, limit));
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.SearchUser(searchContent, position, limit, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        /// <param name="followId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult FollowUser(int followId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.FollowUser(followId, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 取消关注
+        /// </summary>
+        /// <param name="followId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpPost]
+        [Authorize]
+        public IActionResult UnFollowUser(int followId)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(userServices.UnFollowUser(followId, userID));
             }
             catch (Exception ex)
             {

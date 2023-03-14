@@ -22,5 +22,6 @@ namespace GalConnection.Model
         public string introduce { get; set; }
         public long createdAt { get; set; }
         public int groupId { get; set; }
+        public bool isFollow { get; set; }
     }
 }

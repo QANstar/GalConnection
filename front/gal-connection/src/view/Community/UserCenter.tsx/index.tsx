@@ -29,6 +29,8 @@ function UserCenter () {
     editUserInfo,
     bannerUpdate,
     avatarUpdate,
+    followUser,
+    unFollowUser,
     user,
     error,
     loading
@@ -185,7 +187,23 @@ function UserCenter () {
                   <Button onClick={() => setEditModalOpen(true)}>编辑</Button>
                     )
                   : (
-                  <Button type="primary">关注</Button>
+                  <>
+                    {userInfo && (
+                      <Button
+                        onClick={async () => {
+                          if (userInfo.isFollow) {
+                            await unFollowUser(userInfo.id)
+                          } else {
+                            await followUser(userInfo.id)
+                          }
+                          getUser()
+                        }}
+                        type={userInfo.isFollow ? 'default' : 'primary'}
+                      >
+                        {userInfo.isFollow ? '已关注' : '关注'}
+                      </Button>
+                    )}
+                  </>
                     )}
               </div>
             </div>

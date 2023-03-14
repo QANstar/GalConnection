@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { IUser } from '../types/type'
 import * as userService from '../service/user'
+import { message } from 'antd'
 
 interface IUserRequestData {
   searchContent?: string
@@ -36,6 +37,60 @@ const useUserList = (reqData?: IUserRequestData) => {
     }
   }, [reqData?.searchContent, limit, page])
 
+  // 关注
+  const followUser = useCallback(
+    async (followId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await userService.followUser(followId)
+        if (status === 200) {
+          message.success('关注成功')
+          const user = userList.find((x) => x.id === followId)
+          if (user) {
+            user.isFollow = true
+            setUserList([...userList])
+          }
+        } else {
+          setError(data.toString())
+          return false
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [userList]
+  )
+
+  // 取消关注
+  const unFollowUser = useCallback(
+    async (followId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await userService.unFollowUser(followId)
+        if (status === 200) {
+          message.success('取消关注成功')
+          const user = userList.find((x) => x.id === followId)
+          if (user) {
+            user.isFollow = false
+            setUserList([...userList])
+          }
+        } else {
+          setError(data.toString())
+          return false
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [userList]
+  )
+
   useEffect(() => {
     searchUser()
   }, [reqData?.searchContent, limit, page])
@@ -47,7 +102,9 @@ const useUserList = (reqData?: IUserRequestData) => {
     page,
     total,
     limit,
-    setPage
+    setPage,
+    followUser,
+    unFollowUser
   }
 }
 

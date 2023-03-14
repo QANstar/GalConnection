@@ -103,7 +103,7 @@ namespace GalConnection.Server.Services
             View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userID && x.type == GroupType.SELF);
             if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user, group.groupId);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId, false);
             }
             else
             {
@@ -114,13 +114,19 @@ namespace GalConnection.Server.Services
         /// 显示用户信息
         /// </summary>
         /// <returns></returns>
-        public UserShowModel GetUserInfo(int userId)
+        public UserShowModel GetUserInfo(int userId, int selfId)
         {
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userId);
             View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userId && x.type == GroupType.SELF);
+            bool isFollow = false;
+            Follow follow = Context.Follow.FirstOrDefault(x => x.userId == selfId && userId == x.followUserId);
+            if (follow != null)
+            {
+                isFollow = true;
+            }
             if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user, group.groupId);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId, isFollow);
             }
             else
             {
@@ -203,9 +209,10 @@ namespace GalConnection.Server.Services
         /// <param name="position"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public string SearchUser(string searchContent, int position, int limit)
+        public string SearchUser(string searchContent, int position, int limit, int userId)
         {
-            List<User> users = Context.User.Where(x => x.nickname.Contains(searchContent) || x.id.ToString() == searchContent).Skip(position).Take(limit).ToList();
+            List<User> userList = Context.User.Where(x => x.nickname.Contains(searchContent) || x.id.ToString() == searchContent).Skip(position).Take(limit).ToList();
+            List<UserShowModel> users = userList.Select(x => ChangeModel.userToShowModel(x, Context.View_Group.FirstOrDefault(y => x.id == y.userId && y.type == GroupType.SELF).groupId, Context.Follow.FirstOrDefault(y => y.userId == userId && x.id == y.followUserId) != null)).ToList();
             var res = new
             {
                 users,
@@ -213,6 +220,63 @@ namespace GalConnection.Server.Services
             };
 
             return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        /// <param name="followUserId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool FollowUser(int followUserId, int userId)
+        {
+            if (followUserId == userId)
+            {
+                throw new Exception("不可关注自己");
+            }
+            User followUser = Context.User.FirstOrDefault(x => x.id == followUserId);
+            if (followUser == null)
+            {
+                throw new Exception("用户不存在");
+            }
+            Follow follow = Context.Follow.FirstOrDefault(x => x.userId == userId && x.followUserId == followUserId);
+            if (follow != null)
+            {
+                throw new Exception("已关注");
+            }
+            Follow newFollow = new()
+            {
+                followUserId = followUserId,
+                userId = userId,
+                followTime = TimeUtils.GetNowTime()
+            };
+            Context.Follow.Add(newFollow);
+            Context.SaveChanges();
+
+            return true;
+        }
+        /// <summary>
+        /// 取消关注
+        /// </summary>
+        /// <param name="followUserId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool UnFollowUser(int followUserId, int userId)
+        {
+            User followUser = Context.User.FirstOrDefault(x => x.id == followUserId);
+            if (followUser == null)
+            {
+                throw new Exception("用户不存在");
+            }
+            Follow follow = Context.Follow.FirstOrDefault(x => x.userId == userId && x.followUserId == followUserId);
+            if (follow == null)
+            {
+                throw new Exception("已取消关注");
+            }
+            Context.Follow.Remove(follow);
+            Context.SaveChanges();
+
+            return true;
         }
     }
 }

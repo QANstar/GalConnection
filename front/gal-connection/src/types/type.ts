@@ -13,6 +13,7 @@ export interface IUser {
   introduce: string
   createdAt: number
   groupId: number
+  isFollow?: boolean
 }
 
 export interface IUserPageList {
