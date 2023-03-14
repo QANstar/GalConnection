@@ -1,6 +1,6 @@
 import { toJpeg } from 'html-to-image'
 import React, { useEffect, useRef, useState } from 'react'
-import { IBackLog, ILines, IOptions, ISave } from '../../types/type'
+import { IBackLog, IGameState, ILines, IOptions, ISave } from '../../types/type'
 import Background from './Background'
 import BackLog from './BackLog'
 import CharaPicList from './CharaPicList'
@@ -25,6 +25,7 @@ interface IGameProps {
   onDelSave?: (saveId: number) => void
   autoClick?: () => void
   skipClick?: () => void
+  jumpClick?: (gameState: IGameState) => void
 }
 
 function Game (props: IGameProps) {
@@ -177,6 +178,11 @@ function Game (props: IGameProps) {
       )}
       {props.backLogData && (
         <BackLog
+          onJumpClick={(val) => {
+            if (props.jumpClick) {
+              props.jumpClick(val)
+            }
+          }}
           backLogData={props.backLogData}
           open={backLogOpen}
           onClose={() => {

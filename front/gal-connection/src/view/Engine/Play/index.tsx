@@ -40,6 +40,7 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          jumpClick={loadGame}
           backLogData={backLog}
           onDelSave={delSave}
           skipClick={skipMode}
