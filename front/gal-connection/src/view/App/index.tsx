@@ -22,6 +22,8 @@ import SearchPage from '../Community/SearchPage'
 import SearchGamePage from '../Community/SearchPage/SearchGamePage'
 import SearchUserPage from '../Community/SearchPage/SearchUserPage'
 import MoreUserGame from '../Community/MoreUserGame'
+import FollowList from '../Community/FollowsAndFans/FollowList'
+import FansList from '../Community/FollowsAndFans/FansList'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -40,6 +42,8 @@ function App () {
           <Route path="users" element={<SearchUserPage />} />
         </Route>
         <Route path="/userCenter/:id" element={<UserCenter />} />
+        <Route path="/follows/:userId" element={<FollowList />} />
+        <Route path="/fans/:userId" element={<FansList />} />
         <Route path="/moreUserGame/:userId" element={<MoreUserGame />} />
         <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>

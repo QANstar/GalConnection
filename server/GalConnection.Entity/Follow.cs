@@ -15,5 +15,12 @@ namespace GalConnection.Entity
         public int userId { get; set; }
         public int followUserId { get; set; }
         public long followTime { get; set; }
+
+        [ForeignKey("followUserId")]
+        [InverseProperty("FollowfollowUser")]
+        public virtual User followUser { get; set; }
+        [ForeignKey("userId")]
+        [InverseProperty("Followuser")]
+        public virtual User user { get; set; }
     }
 }

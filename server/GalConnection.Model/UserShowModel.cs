@@ -23,5 +23,7 @@ namespace GalConnection.Model
         public long createdAt { get; set; }
         public int groupId { get; set; }
         public bool isFollow { get; set; }
+        public int followCount { get; set; }
+        public int fansCount { get; set; }
     }
 }

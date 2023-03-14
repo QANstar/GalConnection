@@ -12,7 +12,7 @@ import {
 import TextArea from 'antd/lib/input/TextArea'
 import { Observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import GameShowList from '../../../Components/GameShowList'
 import ImgCropper from '../../../Components/ImgCropper'
 import useGetGameList from '../../../Hooks/useGetGameList'
@@ -178,6 +178,17 @@ function UserCenter () {
                   </div>
                   <div className={style.introuduce}>
                     {userInfo ? userInfo.introduce : ''}
+                  </div>
+                  <div className={style.follow}>
+                    <Link
+                      to={`/follows/${userInfo?.id}`}
+                      className={style.follow}
+                    >
+                      关注: {userInfo?.followCount}
+                    </Link>
+                    <Link to={`/fans/${userInfo?.id}`} className={style.fans}>
+                      粉丝: {userInfo?.fansCount}
+                    </Link>
                   </div>
                 </div>
               </div>

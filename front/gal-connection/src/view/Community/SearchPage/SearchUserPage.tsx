@@ -8,7 +8,7 @@ import style from './style.module.scss'
 function SearchUserPage () {
   const { content } = useParams()
   const { userList, page, total, limit, setPage, followUser, unFollowUser } =
-    useUserList({
+    useUserList('search', {
       searchContent: content
     })
 

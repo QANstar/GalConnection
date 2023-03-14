@@ -14,6 +14,8 @@ export interface IUser {
   createdAt: number
   groupId: number
   isFollow?: boolean
+  fansCount: number
+  followCount: number
 }
 
 export interface IUserPageList {

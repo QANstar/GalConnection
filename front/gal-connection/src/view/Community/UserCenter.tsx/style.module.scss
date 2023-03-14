@@ -43,6 +43,10 @@
 .introuduce {
   font-size: 14px;
   margin-top: 10px;
+  max-width: 800px;
+  height: 45px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .title {
@@ -125,4 +129,18 @@
   .banner {
     height: 15vw;
   }
+}
+
+.follow {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.follow {
+  color: #40a9ff;
+  margin-right: 20px;
+}
+
+.fans {
+  color: #ff85c0;
 }

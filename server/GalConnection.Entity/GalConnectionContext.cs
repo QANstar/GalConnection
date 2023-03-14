@@ -54,6 +54,21 @@ namespace GalConnection.Entity
                     .HasConstraintName("FK_EventTreeViewData_Event");
             });
 
+            modelBuilder.Entity<Follow>(entity =>
+            {
+                entity.HasOne(d => d.followUser)
+                    .WithMany(p => p.FollowfollowUser)
+                    .HasForeignKey(d => d.followUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fans");
+
+                entity.HasOne(d => d.user)
+                    .WithMany(p => p.Followuser)
+                    .HasForeignKey(d => d.userId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FollowUsers");
+            });
+
             modelBuilder.Entity<Game>(entity =>
             {
                 entity.HasOne(d => d.user)

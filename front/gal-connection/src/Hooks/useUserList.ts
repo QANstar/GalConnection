@@ -3,26 +3,71 @@ import { IUser } from '../types/type'
 import * as userService from '../service/user'
 import { message } from 'antd'
 
+type UserListType = 'search' | 'follows' | 'fans'
+
 interface IUserRequestData {
   searchContent?: string
+  userId?: number
 }
 
 const limit = 12
 
-const useUserList = (reqData?: IUserRequestData) => {
+const useUserList = (type: UserListType, reqData?: IUserRequestData) => {
   const [userList, setUserList] = useState<IUser[]>([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // 获取指定文件夹下所有文件
+  // 搜索用户
   const searchUser = useCallback(async () => {
     try {
       setLoading(true)
       setError('')
       const { data, status } = await userService.searchUser(
         reqData?.searchContent || '',
+        (page - 1) * limit,
+        limit
+      )
+      if (status === 200) {
+        setUserList(data.users)
+        setTotal(data.total)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [reqData?.searchContent, limit, page])
+
+  // 获取用户关注列表
+  const getFollows = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.getFollows(
+        reqData?.userId || 0,
+        (page - 1) * limit,
+        limit
+      )
+      if (status === 200) {
+        setUserList(data.users)
+        setTotal(data.total)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [reqData?.searchContent, limit, page])
+
+  // 获取粉丝列表
+  const getFans = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await userService.getFans(
+        reqData?.userId || 0,
         (page - 1) * limit,
         limit
       )
@@ -92,8 +137,14 @@ const useUserList = (reqData?: IUserRequestData) => {
   )
 
   useEffect(() => {
-    searchUser()
-  }, [reqData?.searchContent, limit, page])
+    if (type === 'search' && reqData?.searchContent) {
+      searchUser()
+    } else if (type === 'follows' && reqData?.userId) {
+      getFollows()
+    } else if (type === 'fans' && reqData?.userId) {
+      getFans()
+    }
+  }, [reqData?.searchContent, reqData?.userId, limit, page, type])
 
   return {
     userList,

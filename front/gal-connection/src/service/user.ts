@@ -42,3 +42,13 @@ export const followUser = (followId: number) =>
 // 取消关注
 export const unFollowUser = (followId: number) =>
   request.post<boolean>(`/api/User/UnFollowUser?followId=${followId}`)
+// 获取用户关注列表
+export const getFollows = (userId: number, position: number, limit: number) =>
+  request.get<IUserPageList>(
+    `/api/User/GetFollows?userId=${userId}&position=${position}&limit=${limit}`
+  )
+// 获取粉丝列表
+export const getFans = (userId: number, position: number, limit: number) =>
+  request.get<IUserPageList>(
+    `/api/User/GetFans?userId=${userId}&position=${position}&limit=${limit}`
+  )

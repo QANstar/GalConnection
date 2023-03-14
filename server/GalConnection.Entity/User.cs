@@ -12,6 +12,8 @@ namespace GalConnection.Entity
     {
         public User()
         {
+            FollowfollowUser = new HashSet<Follow>();
+            Followuser = new HashSet<Follow>();
             Game = new HashSet<Game>();
         }
 
@@ -37,6 +39,10 @@ namespace GalConnection.Entity
         public string banner { get; set; }
         public long createdAt { get; set; }
 
+        [InverseProperty("followUser")]
+        public virtual ICollection<Follow> FollowfollowUser { get; set; }
+        [InverseProperty("user")]
+        public virtual ICollection<Follow> Followuser { get; set; }
         [InverseProperty("user")]
         public virtual ICollection<Game> Game { get; set; }
     }

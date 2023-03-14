@@ -101,9 +101,11 @@ namespace GalConnection.Server.Services
         {
             Entity.User user = Context.User.FirstOrDefault(x => x.id == userID);
             View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userID && x.type == GroupType.SELF);
+            int fansCount = Context.Follow.Where(x => x.followUserId == userID).Count();
+            int followCount = Context.Follow.Where(x => x.userId == userID).Count();
             if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user, group.groupId, false);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId, false, followCount, fansCount);
             }
             else
             {
@@ -120,13 +122,15 @@ namespace GalConnection.Server.Services
             View_Group group = Context.View_Group.FirstOrDefault(x => x.userId == userId && x.type == GroupType.SELF);
             bool isFollow = false;
             Follow follow = Context.Follow.FirstOrDefault(x => x.userId == selfId && userId == x.followUserId);
+            int fansCount = Context.Follow.Where(x => x.followUserId == userId).Count();
+            int followCount = Context.Follow.Where(x => x.userId == userId).Count();
             if (follow != null)
             {
                 isFollow = true;
             }
             if (user != null && group != null)
             {
-                return Utils.ChangeModel.userToShowModel(user, group.groupId, isFollow);
+                return Utils.ChangeModel.userToShowModel(user, group.groupId, isFollow, followCount, fansCount);
             }
             else
             {
@@ -212,7 +216,14 @@ namespace GalConnection.Server.Services
         public string SearchUser(string searchContent, int position, int limit, int userId)
         {
             List<User> userList = Context.User.Where(x => x.nickname.Contains(searchContent) || x.id.ToString() == searchContent).Skip(position).Take(limit).ToList();
-            List<UserShowModel> users = userList.Select(x => ChangeModel.userToShowModel(x, Context.View_Group.FirstOrDefault(y => x.id == y.userId && y.type == GroupType.SELF).groupId, Context.Follow.FirstOrDefault(y => y.userId == userId && x.id == y.followUserId) != null)).ToList();
+            List<UserShowModel> users = userList.Select(x =>
+            {
+                int groupId = Context.View_Group.FirstOrDefault(y => x.id == y.userId && y.type == GroupType.SELF).groupId;
+                bool isFollow = Context.Follow.FirstOrDefault(y => y.userId == userId && x.id == y.followUserId) != null;
+                int fansCount = Context.Follow.Where(y => y.followUserId == x.id).Count();
+                int followCount = Context.Follow.Where(y => y.userId == x.id).Count();
+                return ChangeModel.userToShowModel(x, groupId, isFollow, followCount, fansCount);
+            }).ToList();
             var res = new
             {
                 users,
@@ -277,6 +288,56 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
 
             return true;
+        }
+        /// <summary>
+        /// 获取关注列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public string GetFollows(int position, int limit, int userId)
+        {
+            List<Follow> follows = Context.Follow.Include(x => x.followUser).Where(x => x.userId == userId).Skip(position).Take(limit).ToList();
+            List<User> userList = follows.Select(x => x.followUser).ToList();
+            List<UserShowModel> users = userList.Select(x =>
+            {
+                int groupId = Context.View_Group.FirstOrDefault(y => x.id == y.userId && y.type == GroupType.SELF).groupId;
+                bool isFollow = Context.Follow.FirstOrDefault(y => y.userId == userId && x.id == y.followUserId) != null;
+                int fansCount = Context.Follow.Where(y => y.followUserId == x.id).Count();
+                int followCount = Context.Follow.Where(y => y.userId == x.id).Count();
+                return ChangeModel.userToShowModel(x, groupId, isFollow, followCount, fansCount);
+            }).ToList();
+            var res = new
+            {
+                users,
+                total = Context.Follow.Where(x => x.userId == userId).Count()
+            };
+            return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 获取粉丝列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public string GetFans(int position, int limit, int userId)
+        {
+            List<Follow> follows = Context.Follow.Include(x => x.user).Where(x => x.followUserId == userId).Skip(position).Take(limit).ToList();
+            List<User> userList = follows.Select(x => x.user).ToList();
+            List<UserShowModel> users = userList.Select(x =>
+            {
+                int groupId = Context.View_Group.FirstOrDefault(y => x.id == y.userId && y.type == GroupType.SELF).groupId;
+                bool isFollow = Context.Follow.FirstOrDefault(y => y.userId == userId && x.id == y.followUserId) != null;
+                int fansCount = Context.Follow.Where(y => y.followUserId == x.id).Count();
+                int followCount = Context.Follow.Where(y => y.userId == x.id).Count();
+                return ChangeModel.userToShowModel(x, groupId, isFollow, followCount, fansCount);
+            }).ToList();
+            var res = new
+            {
+                users,
+                total = Context.Follow.Where(x => x.followUserId == userId).Count()
+            };
+            return JsonUtils.ToJson(res);
         }
     }
 }

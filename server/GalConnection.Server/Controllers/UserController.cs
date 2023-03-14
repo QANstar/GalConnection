@@ -7,6 +7,7 @@ using GalConnection.Model;
 using System.Security.Claims;
 using GalConnection.Server.Services;
 using Microsoft.AspNetCore.Hosting;
+using GalConnection.Server.Utils;
 
 namespace GalConnection.Server.Controllers.User
 {
@@ -227,6 +228,48 @@ namespace GalConnection.Server.Controllers.User
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(userServices.UnFollowUser(followId, userID));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取用户关注列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFollows(int userId, int position, int limit)
+        {
+            try
+            {
+                return Ok(userServices.GetFollows(position, limit, userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取粉丝列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFans(int userId, int position, int limit)
+        {
+            try
+            {
+                return Ok(userServices.GetFans(position, limit, userId));
             }
             catch (Exception ex)
             {
