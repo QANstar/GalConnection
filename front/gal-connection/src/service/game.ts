@@ -178,3 +178,19 @@ export const saveGame = (params: ISave) =>
 // 删除存档
 export const delSave = (saveId: number) =>
   request.delete<boolean>(`/api/Game/DelSave?saveId=${saveId}`)
+
+// 收藏
+export const star = (gameId: number) =>
+  request.post<boolean>(`/api/Game/Star?gameId=${gameId}`)
+
+// 存档
+export const unStar = (gameId: number) =>
+  request.post<boolean>(`/api/Game/UnStar?gameId=${gameId}`)
+
+// 点赞
+export const like = (gameId: number) =>
+  request.post<boolean>(`/api/Game/Like?gameId=${gameId}`)
+
+// 取消点赞
+export const unLike = (gameId: number) =>
+  request.post<boolean>(`/api/Game/UnLike?gameId=${gameId}`)

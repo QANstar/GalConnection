@@ -67,3 +67,25 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.follow {
+  margin-top: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.follow {
+  color: #40a9ff;
+  margin: 0;
+  margin-right: 20px;
+}
+
+.fans {
+  color: #ff85c0;
+}
+
+.itemBottom {
+  display: flex;
+  align-items: center;
+}

@@ -59,7 +59,7 @@ const useUserList = (type: UserListType, reqData?: IUserRequestData) => {
     } finally {
       setLoading(false)
     }
-  }, [reqData?.searchContent, limit, page])
+  }, [reqData?.userId, limit, page])
 
   // 获取粉丝列表
   const getFans = useCallback(async () => {
@@ -80,7 +80,7 @@ const useUserList = (type: UserListType, reqData?: IUserRequestData) => {
     } finally {
       setLoading(false)
     }
-  }, [reqData?.searchContent, limit, page])
+  }, [reqData?.userId, limit, page])
 
   // 关注
   const followUser = useCallback(

@@ -177,6 +177,11 @@ export interface IGameCreateInfo {
   state: GameState
   Tag: ITag[]
   createdAt: number
+  isStar: boolean
+  isLike: boolean
+  playNum: number
+  starNum: number
+  likeNum: number
 }
 
 // 事件树数据

@@ -21,6 +21,11 @@ namespace GalConnection.Model
         public string introduce { get; set; }
         public int state { get; set; }
         public long createdAt { get; set; }
+        public int starNum { get; set; }
+        public int playNum { get; set; }
+        public int likeNum { get; set; }
+        public bool isStar { get; set; }
+        public bool isLike { get; set; }
         public virtual ICollection<Tag> Tag { get; set; }
     }
 }

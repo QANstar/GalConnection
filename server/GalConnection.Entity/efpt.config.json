@@ -43,6 +43,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Like]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Lines]",
          "ObjectType": 0
       },
@@ -76,6 +80,10 @@
       },
       {
          "Name": "[dbo].[Option]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Star]",
          "ObjectType": 0
       },
       {

@@ -25,17 +25,23 @@ namespace GalConnection.Server.Services
         /// <param name="gameId"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public Game GetGameInfoById(int gameId)
+        public GameUserViewModel GetGameInfoById(int gameId, int useId)
         {
             Game game = Context.Game.Include(x => x.user).Include(x => x.Tag).FirstOrDefault(x => x.id == gameId);
-            if (game != null)
-            {
-                return game;
-            }
-            else
+            if (game == null)
             {
                 throw new Exception("游戏不存在");
             }
+            GameUserViewModel gameUserView = (GameUserViewModel)game;
+            if (Context.Star.FirstOrDefault(x => x.gameId == gameId && x.userId == useId) != null)
+            {
+                gameUserView.isStar = true;
+            }
+            if (Context.Like.FirstOrDefault(x => x.gameId == gameId && x.userId == useId) != null)
+            {
+                gameUserView.isLike = true;
+            }
+            return gameUserView;
         }
         /// <summary>
         /// 根据用户获取发布的游戏
@@ -110,7 +116,12 @@ namespace GalConnection.Server.Services
                 groupId = game.groupId,
                 Tag = game.Tag,
                 state = game.state,
-                createdAt = game.createdAt
+                createdAt = game.createdAt,
+                playNum = game.playNum,
+                starNum = game.starNum,
+                likeNum = game.likeNum,
+                isLike = Context.Like.FirstOrDefault(x => x.gameId == gameId && x.userId == userId) != null,
+                isStar = Context.Star.FirstOrDefault(x => x.gameId == gameId && x.userId == userId) != null
             };
             return gameInfo;
         }
@@ -1261,6 +1272,123 @@ namespace GalConnection.Server.Services
             Context.SaveChanges();
             return true;
         }
+        /// <summary>
+        /// 收藏
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool Star(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            Star star = Context.Star.FirstOrDefault(x => x.userId == userId && x.gameId == gameId);
+            if (star != null)
+            {
+                throw new Exception("已收藏");
+            }
+            game.starNum++;
+            Star newstar = new()
+            {
+                gameId = gameId,
+                userId = userId,
+                starTime = TimeUtils.GetNowTime()
+            };
+            Context.Star.Add(newstar);
+            Context.SaveChanges();
 
+            return true;
+        }
+        /// <summary>
+        /// 取消收藏
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool UnStar(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            Star star = Context.Star.FirstOrDefault(x => x.userId == userId && x.gameId == gameId);
+            if (star == null)
+            {
+                throw new Exception("已取消收藏");
+            }
+            if (game.starNum > 0)
+            {
+                game.starNum--;
+            }
+            Context.Star.Remove(star);
+            Context.SaveChanges();
+
+            return true;
+        }
+        /// <summary>
+        /// 点赞
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool Like(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            Like like = Context.Like.FirstOrDefault(x => x.userId == userId && x.gameId == gameId);
+            if (like != null)
+            {
+                throw new Exception("已点赞");
+            }
+            game.likeNum++;
+            Like newLike = new()
+            {
+                gameId = gameId,
+                userId = userId,
+                likeTime = TimeUtils.GetNowTime()
+            };
+            Context.Like.Add(newLike);
+            Context.SaveChanges();
+
+            return true;
+        }
+        /// <summary>
+        /// 取消点赞
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool UnLike(int gameId, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            Like like = Context.Like.FirstOrDefault(x => x.userId == userId && x.gameId == gameId);
+            if (like == null)
+            {
+                throw new Exception("已取消点赞");
+            }
+            if (game.likeNum > 0)
+            {
+                game.likeNum--;
+            }
+            Context.Like.Remove(like);
+            Context.SaveChanges();
+
+            return true;
+        }
     }
 }

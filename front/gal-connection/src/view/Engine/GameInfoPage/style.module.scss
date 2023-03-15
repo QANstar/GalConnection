@@ -73,7 +73,7 @@
 
 .menu {
   position: absolute;
-  bottom: 100px;
+  bottom: 120px;
   z-index: 20;
   color: #fff;
   font-size: 22px;
@@ -109,6 +109,7 @@
 .header {
   display: flex;
   align-items: flex-end;
+  padding-top: 20px;
   h1 {
     margin: 0;
     font-size: 40px;
@@ -139,6 +140,35 @@
 
 .tags {
   margin-top: 20px;
+}
+
+.flowData {
+  margin-top: 20px;
+  color: #8c8c8c;
+  .flowDataItem {
+    margin-right: 20px;
+  }
+}
+
+.actions {
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.actionItem {
+  transition: 0.2s ease;
+  color: #757575;
+  font-size: 28px;
+  cursor: pointer;
+  margin-right: 20px;
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.activeItem {
+  @extend .actionItem;
+  color: #ff85c0;
 }
 
 @media screen and (max-width: 1000px) {

@@ -34,14 +34,20 @@ function UserItem (props: IUserItemProps) {
           <Tag color="#87d068">id: {props.user.id}</Tag>
         </div>
         <div className={style.intro}>{props.user.introduce}</div>
-        {user.id !== props.user.id && (
-          <Button
-            onClick={() => props.onFllowClick(props.user)}
-            type={props.user.isFollow ? 'default' : 'primary'}
-          >
-            {props.user.isFollow ? '已关注' : '关注'}
-          </Button>
-        )}
+        <div className={style.itemBottom}>
+          <div className={style.follow}>
+            <div className={style.follow}>关注: {props.user?.followCount}</div>
+            <div className={style.fans}>粉丝: {props.user?.fansCount}</div>
+          </div>
+          {user.id !== props.user.id && (
+            <Button
+              onClick={() => props.onFllowClick(props.user)}
+              type={props.user.isFollow ? 'default' : 'primary'}
+            >
+              {props.user.isFollow ? '已关注' : '关注'}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

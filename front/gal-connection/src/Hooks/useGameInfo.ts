@@ -89,6 +89,86 @@ const useGameInfo = (gameId: number) => {
     [gameId]
   )
 
+  // 收藏游戏
+  const star = useCallback(
+    async (gameId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.star(gameId)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          return true
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, gameInfo]
+  )
+
+  // 取消收藏游戏
+  const unStar = useCallback(
+    async (gameId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.unStar(gameId)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          return true
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, gameInfo]
+  )
+
+  // 点赞
+  const like = useCallback(
+    async (gameId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.like(gameId)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          return true
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, gameInfo]
+  )
+
+  // 取消点赞
+  const unLike = useCallback(
+    async (gameId: number) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { status } = await gameService.unLike(gameId)
+        if (status === 200) {
+          getCreateGamesInfoById()
+          return true
+        }
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [gameId, gameInfo]
+  )
+
   useEffect(() => {
     getCreateGamesInfoById()
   }, [gameId])
@@ -99,7 +179,11 @@ const useGameInfo = (gameId: number) => {
     error,
     editGame,
     gamePublish,
-    delGame
+    delGame,
+    star,
+    unStar,
+    like,
+    unLike
   }
 }
 

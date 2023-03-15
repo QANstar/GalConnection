@@ -25,6 +25,7 @@ namespace GalConnection.Entity
         public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<GameBinding> GameBinding { get; set; }
         public virtual DbSet<Group> Group { get; set; }
+        public virtual DbSet<Like> Like { get; set; }
         public virtual DbSet<Lines> Lines { get; set; }
         public virtual DbSet<LinesBackground> LinesBackground { get; set; }
         public virtual DbSet<LinesBgm> LinesBgm { get; set; }
@@ -34,6 +35,7 @@ namespace GalConnection.Entity
         public virtual DbSet<Material> Material { get; set; }
         public virtual DbSet<MaterialFile> MaterialFile { get; set; }
         public virtual DbSet<Option> Option { get; set; }
+        public virtual DbSet<Star> Star { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }

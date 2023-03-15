@@ -25,15 +25,13 @@
 }
 
 .title {
+  transition: 0.2s ease-in;
   cursor: pointer;
   font-weight: bold;
-  font-size: 21px;
   line-height: 21px;
   color: $theme;
-  a {
-    &:hover {
-      color: $theme_hover;
-    }
+  &:hover {
+    transform: translateY(-2px);
   }
 }
 
@@ -75,4 +73,14 @@
   border-top-right-radius: 50px !important;
   border-bottom-right-radius: 50px !important;
   width: 50px !important;
+}
+
+.gal {
+  color: $pink_theme;
+  font-size: 20px;
+}
+
+.connection {
+  color: $theme;
+  font-size: 16px;
 }

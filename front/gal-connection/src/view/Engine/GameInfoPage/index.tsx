@@ -1,15 +1,27 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import style from './style.module.scss'
 import wave from '../../../assets/img/wave.svg'
 import { Link, useParams } from 'react-router-dom'
 import useGameInfo from '../../../Hooks/useGameInfo'
 import { motion } from 'framer-motion'
-import { Image, Tag } from 'antd'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { Image, message, Tag } from 'antd'
+import {
+  ArrowRightOutlined,
+  ClockCircleFilled,
+  LikeFilled,
+  PlayCircleFilled,
+  ShareAltOutlined,
+  StarFilled
+} from '@ant-design/icons'
+import { formatTime } from '../../../Utils/TimeUtils'
+import copy from 'copy-to-clipboard'
+import FloatMenu from '../../../Components/FloatMenu'
 
 const GameInfoPage = () => {
   const { gameId } = useParams()
-  const { gameInfo } = useGameInfo(parseInt(gameId || '0'))
+  const { gameInfo, star, unStar, like, unLike } = useGameInfo(
+    parseInt(gameId || '0')
+  )
 
   const scrollToAnchor = (anchorName: string) => {
     if (anchorName) {
@@ -19,6 +31,57 @@ const GameInfoPage = () => {
       }
     }
   }
+
+  const floatMenu = useMemo(() => {
+    return [
+      {
+        item: (
+          <LikeFilled
+            onClick={() => {
+              if (gameInfo) {
+                if (gameInfo.isLike) {
+                  unLike(gameInfo.id)
+                } else {
+                  like(gameInfo.id)
+                }
+              }
+            }}
+            className={gameInfo?.isLike ? style.activeItem : style.actionItem}
+          />
+        ),
+        key: 'like'
+      },
+      {
+        item: (
+          <StarFilled
+            onClick={() => {
+              if (gameInfo) {
+                if (gameInfo.isStar) {
+                  unStar(gameInfo.id)
+                } else {
+                  star(gameInfo.id)
+                }
+              }
+            }}
+            className={gameInfo?.isStar ? style.activeItem : style.actionItem}
+          />
+        ),
+        key: 'star'
+      },
+      {
+        item: (
+          <ShareAltOutlined
+            onClick={() => {
+              copy(window.location.href)
+              message.success('已复制到剪贴板')
+            }}
+            className={style.actionItem}
+          />
+        ),
+        key: 'share'
+      }
+    ]
+  }, [gameInfo])
 
   return (
     <div className={style.info}>
@@ -69,6 +132,25 @@ const GameInfoPage = () => {
               <Tag key={tag.tagId}>{tag.tag1}</Tag>
             ))}
           </div>
+          <div className={style.flowData}>
+            {gameInfo && (
+              <>
+                <span className={style.flowDataItem}>
+                  <PlayCircleFilled /> {gameInfo?.playNum}
+                </span>
+                <span className={style.flowDataItem}>
+                  <LikeFilled /> {gameInfo?.likeNum}
+                </span>
+                <span className={style.flowDataItem}>
+                  <StarFilled /> {gameInfo?.starNum}
+                </span>
+                <span className={style.flowDataItem}>
+                  <ClockCircleFilled /> {formatTime(gameInfo!.createdAt)}
+                </span>
+              </>
+            )}
+          </div>
+
           <div className={style.introduce}> {gameInfo?.introduce}</div>
         </motion.div>
         <div className={style.imgList}>
@@ -95,6 +177,7 @@ const GameInfoPage = () => {
           </Image.PreviewGroup>
         </div>
       </div>
+      <FloatMenu menus={floatMenu} />
     </div>
   )
 }

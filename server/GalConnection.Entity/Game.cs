@@ -38,6 +38,9 @@ namespace GalConnection.Entity
         [StringLength(500)]
         public string voiceLangeuage { get; set; }
         public long createdAt { get; set; }
+        public int starNum { get; set; }
+        public int playNum { get; set; }
+        public int likeNum { get; set; }
 
         [ForeignKey("userId")]
         [InverseProperty("Game")]

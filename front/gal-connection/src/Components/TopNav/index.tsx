@@ -63,7 +63,8 @@ function TopNav () {
           <div className={style.left}>
             <MenuOutlined onClick={showDrawer} className={style.menu_btn} />
             <Link to="/" className={style.title}>
-              GalConnection
+              <span className={style.gal}>Gal</span>
+              <span className={style.connection}>Connection</span>
             </Link>
           </div>
           <SearchInput
