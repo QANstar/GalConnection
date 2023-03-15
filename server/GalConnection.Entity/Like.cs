@@ -15,5 +15,9 @@ namespace GalConnection.Entity
         public int userId { get; set; }
         public int gameId { get; set; }
         public long likeTime { get; set; }
+
+        [ForeignKey("gameId")]
+        [InverseProperty("Like")]
+        public virtual Game game { get; set; }
     }
 }

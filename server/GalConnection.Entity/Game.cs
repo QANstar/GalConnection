@@ -12,6 +12,8 @@ namespace GalConnection.Entity
     {
         public Game()
         {
+            Like = new HashSet<Like>();
+            Star = new HashSet<Star>();
             Tag = new HashSet<Tag>();
         }
 
@@ -45,6 +47,10 @@ namespace GalConnection.Entity
         [ForeignKey("userId")]
         [InverseProperty("Game")]
         public virtual User user { get; set; }
+        [InverseProperty("game")]
+        public virtual ICollection<Like> Like { get; set; }
+        [InverseProperty("game")]
+        public virtual ICollection<Star> Star { get; set; }
         [InverseProperty("game")]
         public virtual ICollection<Tag> Tag { get; set; }
     }

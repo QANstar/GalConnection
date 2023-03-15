@@ -1390,5 +1390,23 @@ namespace GalConnection.Server.Services
 
             return true;
         }
+        /// <summary>
+        /// 获取收藏的游戏
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public string GetStarGame(int position, int limit, int userId)
+        {
+            List<Star> stars = Context.Star.Include(x => x.game.user).Include(x => x.game).Where(x => x.userId == userId).Skip(position).Take(limit).ToList();
+            List<Game> games = stars.Select(x => x.game).ToList();
+            var res = new
+            {
+                games,
+                total = Context.Star.Where(x => x.userId == userId).Count()
+            };
+            return JsonUtils.ToJson(res);
+        }
     }
 }

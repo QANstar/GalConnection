@@ -80,6 +80,15 @@ namespace GalConnection.Entity
                     .HasConstraintName("FK_Game_User");
             });
 
+            modelBuilder.Entity<Like>(entity =>
+            {
+                entity.HasOne(d => d.game)
+                    .WithMany(p => p.Like)
+                    .HasForeignKey(d => d.gameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Like_Game");
+            });
+
             modelBuilder.Entity<LinesBackground>(entity =>
             {
                 entity.Property(e => e.id).ValueGeneratedNever();
@@ -122,6 +131,15 @@ namespace GalConnection.Entity
                     .WithMany(p => p.LinesVoice)
                     .HasForeignKey(d => d.linesId)
                     .HasConstraintName("FK_LinesVoice_Lines");
+            });
+
+            modelBuilder.Entity<Star>(entity =>
+            {
+                entity.HasOne(d => d.game)
+                    .WithMany(p => p.Star)
+                    .HasForeignKey(d => d.gameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Star_Game");
             });
 
             modelBuilder.Entity<Tag>(entity =>

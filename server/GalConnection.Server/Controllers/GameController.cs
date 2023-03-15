@@ -800,5 +800,26 @@ namespace GalConnection.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 获取用户收藏的游戏
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetStarGame(int position, int limit, int userId)
+        {
+            try
+            {
+                return Ok(gameServices.GetStarGame(position, limit, userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

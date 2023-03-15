@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { IGame } from '../types/type'
 import * as gameService from '../service/game'
 
-type GetGameType = 'selfCreate' | 'search' | 'publish'
+type GetGameType = 'selfCreate' | 'search' | 'publish' | 'star'
 
 interface IGameRequestData {
   searchContent?: string
@@ -78,7 +78,28 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
     } finally {
       setLoading(false)
     }
-  }, [reqData?.searchContent, limit, page, type])
+  }, [reqData?.searchContent, reqData?.userId, limit, page, type])
+
+  // 获取用户收藏的游戏
+  const getStarGame = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await gameService.getStarGame(
+        reqData?.userId || 0,
+        (page - 1) * limit,
+        limit
+      )
+      if (status === 200) {
+        setGameList(data.games)
+        setTotal(data.total)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [reqData?.searchContent, reqData?.userId, limit, page, type])
 
   useEffect(() => {
     if (type === 'selfCreate') {
@@ -87,6 +108,8 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
       searchGame()
     } else if (type === 'publish') {
       getGameOfUserPublish()
+    } else if (type === 'star') {
+      getStarGame()
     }
   }, [type, reqData?.searchContent, limit, page])
 

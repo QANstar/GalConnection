@@ -29,6 +29,10 @@ function TopNav () {
                 label: <Link to={`/userCenter/${user.id}`}>用户中心</Link>
               },
               {
+                key: 'star',
+                label: <Link to={`/moreUserStar/${user.id}`}>我的收藏</Link>
+              },
+              {
                 key: 'material',
                 label: (
                   <Link to={`/myMaterial/${user.groupId}/0`}>素材中心</Link>

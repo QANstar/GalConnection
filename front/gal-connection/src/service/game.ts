@@ -194,3 +194,9 @@ export const like = (gameId: number) =>
 // 取消点赞
 export const unLike = (gameId: number) =>
   request.post<boolean>(`/api/Game/UnLike?gameId=${gameId}`)
+
+// 获取用户收藏的游戏
+export const getStarGame = (userId: number, position: number, limit: number) =>
+  request.get<IPageGameList>(
+    `/api/Game/GetStarGame?userId=${userId}&position=${position}&limit=${limit}`
+  )

@@ -37,7 +37,11 @@ function UserCenter () {
   } = useUser()
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const navigate = useNavigate()
-  const { gameList } = useGetGameList('publish', {
+  const { gameList: publishList } = useGetGameList('publish', {
+    userId: parseInt(id || '0')
+  })
+
+  const { gameList: starList } = useGetGameList('star', {
     userId: parseInt(id || '0')
   })
 
@@ -218,7 +222,7 @@ function UserCenter () {
                     )}
               </div>
             </div>
-            <div className={style.mygame}>
+            <div className={style.gameList}>
               <div className={style.title}>
                 作品{' '}
                 <Button
@@ -234,7 +238,26 @@ function UserCenter () {
                 onItemClick={(gameData) => {
                   window.open(`/engine/${gameData.id}/info`)
                 }}
-                games={gameList}
+                games={publishList}
+              />
+            </div>
+            <div className={style.gameList}>
+              <div className={style.title}>
+                收藏{' '}
+                <Button
+                  onClick={() => {
+                    navigate(`/moreUserStar/${id}`)
+                  }}
+                  style={{ marginLeft: 20 }}
+                >
+                  更多 <RightOutlined />
+                </Button>
+              </div>
+              <GameShowList
+                onItemClick={(gameData) => {
+                  window.open(`/engine/${gameData.id}/info`)
+                }}
+                games={starList}
               />
             </div>
           </div>
