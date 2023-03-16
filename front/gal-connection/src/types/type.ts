@@ -1,4 +1,4 @@
-import { BindingType, EventEndType, GameState } from './enums'
+import { BindingType, EventEndType, GameState, NotificationType } from './enums'
 
 // 筛选文件类型
 export type FilterFileTye = 'all' | 'folder' | 'video' | 'picture' | 'sound'
@@ -368,4 +368,23 @@ export interface IGameState {
 export interface IBackLog {
   gameState: IGameState
   lines: ILines
+}
+
+// 通知
+export interface INotification {
+  id: number
+  userId: number
+  linkId?: number
+  type: NotificationType
+  notification1: string
+  time: number
+  sourceUserId: number
+  isRead: boolean
+  sourceUser?: IUser
+}
+
+// 通知列表响应结果
+export interface IPageNotification {
+  notifications: INotification[]
+  hasNext: boolean
 }

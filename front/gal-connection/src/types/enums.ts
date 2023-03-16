@@ -44,3 +44,13 @@ export enum GameState {
   DEVELOPMENT,
   PUBLISH
 }
+
+// 通知类型
+export enum NotificationType {
+  FOLLOW,
+  STAR,
+  LIKEGAME,
+  COMMENT,
+  REPLY,
+  LIKEREPLY
+}

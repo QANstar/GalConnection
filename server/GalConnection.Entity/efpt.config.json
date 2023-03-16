@@ -79,6 +79,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Notification]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Option]",
          "ObjectType": 0
       },

@@ -1,0 +1,55 @@
+.main {
+  width: 360px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.title {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.readAll {
+  color: #40a9ff;
+}
+
+.nickename {
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 10px;
+  &:hover {
+    color: #40a9ff;
+  }
+}
+
+.readBtn {
+  opacity: 0;
+  transition: 0.2s ease;
+  font-size: 20px;
+  cursor: pointer;
+  &:hover {
+    color: #ff85c0;
+  }
+}
+
+.list {
+  &:hover {
+    .readBtn {
+      opacity: 1;
+    }
+  }
+}
+
+.content {
+  cursor: pointer;
+  &:hover {
+    color: #40a9ff;
+  }
+}

@@ -34,6 +34,7 @@ namespace GalConnection.Entity
         public virtual DbSet<LinesVoice> LinesVoice { get; set; }
         public virtual DbSet<Material> Material { get; set; }
         public virtual DbSet<MaterialFile> MaterialFile { get; set; }
+        public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Option> Option { get; set; }
         public virtual DbSet<Star> Star { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
@@ -131,6 +132,15 @@ namespace GalConnection.Entity
                     .WithMany(p => p.LinesVoice)
                     .HasForeignKey(d => d.linesId)
                     .HasConstraintName("FK_LinesVoice_Lines");
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasOne(d => d.sourceUser)
+                    .WithMany(p => p.Notification)
+                    .HasForeignKey(d => d.sourceUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_User");
             });
 
             modelBuilder.Entity<Star>(entity =>

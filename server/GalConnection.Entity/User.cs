@@ -15,6 +15,7 @@ namespace GalConnection.Entity
             FollowfollowUser = new HashSet<Follow>();
             Followuser = new HashSet<Follow>();
             Game = new HashSet<Game>();
+            Notification = new HashSet<Notification>();
         }
 
         [Key]
@@ -45,5 +46,7 @@ namespace GalConnection.Entity
         public virtual ICollection<Follow> Followuser { get; set; }
         [InverseProperty("user")]
         public virtual ICollection<Game> Game { get; set; }
+        [InverseProperty("sourceUser")]
+        public virtual ICollection<Notification> Notification { get; set; }
     }
 }

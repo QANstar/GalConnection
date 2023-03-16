@@ -14,9 +14,11 @@ namespace GalConnection.Server.Services
     public class UserServices
     {
         readonly GalConnectionContext Context;
+        readonly NotificationServices notificationServices;
         public UserServices(GalConnectionContext context)
         {
             Context = context;
+            notificationServices = new NotificationServices(context);
         }
 
         /// <summary>
@@ -262,7 +264,14 @@ namespace GalConnection.Server.Services
             };
             Context.Follow.Add(newFollow);
             Context.SaveChanges();
-
+            NotificationModel newNotification = new()
+            {
+                linkId = followUserId,
+                type = NotificationType.FOLLOW,
+                sourceUserId = userId,
+                userId = followUserId
+            };
+            notificationServices.SendNotification(newNotification);
             return true;
         }
         /// <summary>

@@ -1,9 +1,12 @@
-import { MailOutlined, MenuOutlined, MessageOutlined } from '@ant-design/icons'
-import { Avatar, Drawer, Dropdown, Menu } from 'antd'
+import { BellOutlined, MenuOutlined, MessageOutlined } from '@ant-design/icons'
+import { Avatar, Badge, Drawer, Dropdown, Menu, Popover } from 'antd'
 import { Observer } from 'mobx-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import useNotification from '../../Hooks/useNotification'
 import useUser from '../../Hooks/useUser'
+import { NotificationType } from '../../types/enums'
+import NotificationList from '../NotificationList'
 import SearchInput from '../SearchInput'
 import style from './style.module.scss'
 
@@ -11,6 +14,15 @@ function TopNav () {
   const navigate = useNavigate()
   const { user, logout } = useUser()
   const [drawervisible, setDrawerVisible] = useState(false)
+  const {
+    notificationsCount,
+    notifications,
+    hasNext,
+    getNotifications,
+    read,
+    readAll
+  } = useNotification()
+  const [notificationOpen, setNotificationOpen] = useState(false)
 
   const showDrawer = () => {
     setDrawerVisible(true)
@@ -77,8 +89,57 @@ function TopNav () {
             }}
           />
           <div className={style.right}>
-            <MailOutlined className={style.actionIcon} />
-            <MessageOutlined className={style.actionIcon} />
+            <Popover
+              placement="bottomRight"
+              content={
+                <NotificationList
+                  onLinkClick={(type, linkId) => {
+                    switch (type) {
+                      case NotificationType.FOLLOW:
+                        window.open(`/userCenter/${linkId}`)
+                        break
+                      case NotificationType.LIKEGAME:
+                      case NotificationType.STAR:
+                        window.open(`/engine/${linkId}/info`)
+                        break
+                      default:
+                        break
+                    }
+                  }}
+                  onReadAllClick={readAll}
+                  onReadClick={read}
+                  onUserClick={(userId) => {
+                    window.open(`/userCenter/${userId}`)
+                  }}
+                  notifications={notifications}
+                  hasMore={hasNext}
+                  getMore={getNotifications}
+                />
+              }
+              trigger="click"
+              showArrow={false}
+              open={notificationOpen}
+              onOpenChange={setNotificationOpen}
+            >
+              <Badge
+                color="#ff85c0"
+                offset={[-8, 10]}
+                className={style.actionIcon}
+                count={notificationsCount}
+              >
+                <BellOutlined />
+              </Badge>
+            </Popover>
+
+            <Badge
+              color="#ff85c0"
+              offset={[-8, 10]}
+              className={style.actionIcon}
+              count={5}
+            >
+              <MessageOutlined />
+            </Badge>
+
             <Dropdown overlay={menu}>
               <Avatar className={style.avatar} src={user.avatar} size={40} />
             </Dropdown>

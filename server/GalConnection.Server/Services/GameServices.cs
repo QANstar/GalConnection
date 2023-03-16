@@ -13,11 +13,13 @@ namespace GalConnection.Server.Services
     public class GameServices
     {
         readonly GroupServices groupServices;
+        readonly NotificationServices notificationServices;
         readonly GalConnectionContext Context;
         public GameServices(GalConnectionContext context)
         {
             Context = context;
             groupServices = new GroupServices(context);
+            notificationServices = new NotificationServices(context);
         }
         /// <summary>
         /// 通过id获取游戏信息
@@ -1300,7 +1302,14 @@ namespace GalConnection.Server.Services
             };
             Context.Star.Add(newstar);
             Context.SaveChanges();
-
+            NotificationModel newNotification = new()
+            {
+                linkId = gameId,
+                type = NotificationType.STAR,
+                sourceUserId = userId,
+                userId = game.userId
+            };
+            notificationServices.SendNotification(newNotification);
             return true;
         }
         /// <summary>
@@ -1359,7 +1368,14 @@ namespace GalConnection.Server.Services
             };
             Context.Like.Add(newLike);
             Context.SaveChanges();
-
+            NotificationModel newNotification = new()
+            {
+                linkId = gameId,
+                type = NotificationType.LIKEGAME,
+                sourceUserId = userId,
+                userId = game.userId
+            };
+            notificationServices.SendNotification(newNotification);
             return true;
         }
         /// <summary>
