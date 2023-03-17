@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import useNotification from '../../Hooks/useNotification'
 import useUser from '../../Hooks/useUser'
 import { NotificationType } from '../../types/enums'
+import Chat from '../Chat'
 import NotificationList from '../NotificationList'
 import SearchInput from '../SearchInput'
 import style from './style.module.scss'
@@ -23,6 +24,7 @@ function TopNav () {
     readAll
   } = useNotification()
   const [notificationOpen, setNotificationOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
 
   const showDrawer = () => {
     setDrawerVisible(true)
@@ -131,14 +133,23 @@ function TopNav () {
               </Badge>
             </Popover>
 
-            <Badge
-              color="#ff85c0"
-              offset={[-8, 10]}
-              className={style.actionIcon}
-              count={5}
+            <Popover
+              placement="bottomRight"
+              content={<Chat />}
+              trigger="click"
+              showArrow={false}
+              open={chatOpen}
+              onOpenChange={setChatOpen}
             >
-              <MessageOutlined />
-            </Badge>
+              <Badge
+                color="#ff85c0"
+                offset={[-8, 10]}
+                className={style.actionIcon}
+                count={5}
+              >
+                <MessageOutlined />
+              </Badge>
+            </Popover>
 
             <Dropdown overlay={menu}>
               <Avatar className={style.avatar} src={user.avatar} size={40} />

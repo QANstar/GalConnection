@@ -388,3 +388,10 @@ export interface IPageNotification {
   notifications: INotification[]
   hasNext: boolean
 }
+
+// 聊天用户
+export interface IChatUser {
+  user: IUser
+  lastWord: string
+  time: number
+}

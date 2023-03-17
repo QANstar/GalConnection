@@ -1,0 +1,21 @@
+.chatGroup {
+  display: flex !important;
+  width: 90%;
+}
+
+.chatInput {
+  line-height: 40px !important;
+  flex: 1;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+  background-color: #f7f9ff;
+}
+
+.chatBtn {
+  height: 50px !important;
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+  width: 50px !important;
+  border-left: none !important;
+  background-color: #f7f9ff;
+}

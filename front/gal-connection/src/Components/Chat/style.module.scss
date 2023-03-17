@@ -1,0 +1,55 @@
+.main {
+  width: 1000px;
+  height: 600px;
+  display: flex;
+}
+
+.left {
+  width: 300px;
+  border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+}
+
+.right {
+  flex: 1;
+}
+
+.userList {
+  width: 100%;
+}
+
+.header {
+  height: 45px;
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  padding-left: 20px;
+}
+
+.room {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatMain {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.chatContent {
+  flex: 1;
+  overflow: auto;
+  background-color: #f4f5f7;
+}
+
+.chatBottom {
+  height: 80px;
+  width: 100%;
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
