@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using GalConnection.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,9 +56,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("any", builder =>
     {
-        builder.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-                //.AllowCredentials()//指定处理cookie
-                .AllowAnyOrigin().AllowAnyHeader(); //允许任何来源的主机访问
+        builder.SetIsOriginAllowed(origin => true).WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS").AllowAnyHeader().AllowCredentials();
     });
 });
 
@@ -74,11 +73,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = JwtConfig.issuer,//Issuer，这两项和前面签发jwt的设置一致
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey))//拿到SecurityKey
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/hub")))
+            {
+                // Read the token out of the query string
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 builder.Services.AddDbContext<GalConnectionContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -109,7 +126,7 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync(ex.Message);
     }
 });
-
+app.MapHub<ChatHub>("/hub").RequireCors("any");
 
 app.MapControllers();
 

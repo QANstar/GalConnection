@@ -38,6 +38,7 @@ const useUser = () => {
       const { data, status } = await userService.login(params)
       if (status === 200) {
         user.setToken(data)
+        store.signalR.init(data)
         await getSelfInfo()
         navigate('/')
       } else {

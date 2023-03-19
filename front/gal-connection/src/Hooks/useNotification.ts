@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { INotification } from '../types/type'
 import * as notificationsService from '../service/notifications'
+import stores from '../store'
 
 const limit = 10
 
@@ -11,6 +12,7 @@ const useNotification = () => {
   const [next, setNext] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const { signalR } = stores
 
   // 获取台词
   const getNotifications = useCallback(async () => {
@@ -24,8 +26,34 @@ const useNotification = () => {
       if (status === 200) {
         if (data.notifications.length > 0) {
           setNext(data.notifications[data.notifications.length - 1].id)
+          setNotifications(notifications.concat(data.notifications))
         }
-        setNotifications(notifications.concat(data.notifications))
+        setHasNext(data.hasNext)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [next, notifications])
+
+  // 初始化
+  const init = useCallback(async () => {
+    setHasNext(false)
+    setNotifications([])
+    setNext(0)
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await notificationsService.getNotifications({
+        nextId: 0,
+        limit
+      })
+      if (status === 200) {
+        if (data.notifications.length > 0) {
+          setNext(data.notifications[data.notifications.length - 1].id)
+          setNotifications(data.notifications)
+        }
         setHasNext(data.hasNext)
       }
     } catch (e: any) {
@@ -86,9 +114,28 @@ const useNotification = () => {
     }
   }, [notifications])
 
+  // signalR获取通知数量
+  const signalRGetNum = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.on('NotificationNum', (num: string) => {
+        setNotificationsCount(parseInt(num))
+      })
+    }
+  }, [])
+
+  // signalR移除监听
+  const removeSignalRListen = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.off('NotificationNum')
+    }
+  }, [])
+
   useEffect(() => {
-    getNotifications()
     getUnReadNum()
+    signalRGetNum()
+    return () => {
+      removeSignalRListen()
+    }
   }, [])
 
   return {
@@ -98,6 +145,7 @@ const useNotification = () => {
     hasNext,
     notificationsCount,
     getNotifications,
+    init,
     read,
     readAll
   }

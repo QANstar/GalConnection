@@ -21,6 +21,7 @@ function TopNav () {
     hasNext,
     getNotifications,
     read,
+    init,
     readAll
   } = useNotification()
   const [notificationOpen, setNotificationOpen] = useState(false)
@@ -121,7 +122,12 @@ function TopNav () {
               trigger="click"
               showArrow={false}
               open={notificationOpen}
-              onOpenChange={setNotificationOpen}
+              onOpenChange={(visable) => {
+                if (visable) {
+                  init()
+                }
+                setNotificationOpen(visable)
+              }}
             >
               <Badge
                 color="#ff85c0"

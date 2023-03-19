@@ -20,7 +20,7 @@ interface INotificationListProps {
 function NotificationList (props: INotificationListProps) {
   const { notifications, hasMore, getMore } = props
   return (
-    <div className={style.main}>
+    <div id="scrollableDiv" className={style.main}>
       <div className={style.header}>
         <div className={style.title}>通知</div>
         <Button
@@ -32,12 +32,12 @@ function NotificationList (props: INotificationListProps) {
         </Button>
       </div>
       <InfiniteScroll
+        scrollableTarget="scrollableDiv"
         dataLength={notifications.length}
         next={getMore}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>没有更多了 🤐</Divider>}
-        scrollableTarget="scrollableDiv"
       >
         <List
           dataSource={notifications}

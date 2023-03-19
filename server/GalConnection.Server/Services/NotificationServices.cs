@@ -1,7 +1,9 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
+using GalConnection.Server.Hubs;
 using GalConnection.Server.Setting;
 using GalConnection.Server.Utils;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace GalConnection.Server.Services
@@ -9,9 +11,11 @@ namespace GalConnection.Server.Services
     public class NotificationServices
     {
         readonly GalConnectionContext Context;
-        public NotificationServices(GalConnectionContext context)
+        readonly IHubContext<ChatHub> hubContext;
+        public NotificationServices(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
+            hubContext = _hubContext;
         }
         /// <summary>
         /// 发送通知
@@ -65,6 +69,7 @@ namespace GalConnection.Server.Services
             Context.Notification.Add(notification);
             Context.SaveChanges();
 
+            hubContext.Clients.User(notification.userId.ToString()).SendAsync("NotificationNum", GetUnReadNum(notification.userId));
             return true;
         }
         /// <summary>
@@ -76,11 +81,11 @@ namespace GalConnection.Server.Services
         /// <returns></returns>
         public string GetNotifications(int nextId, int userId, int limit = 10)
         {
-            List<Notification> notifications = Context.Notification.Include(x => x.sourceUser).OrderBy(x => x.time).Where(x => x.id > nextId && x.userId == userId).Take(limit).ToList();
+            List<Notification> notifications = Context.Notification.Include(x => x.sourceUser).OrderByDescending(x => x.time).Where(x => x.userId == userId && (nextId == 0 || x.id < nextId)).Take(limit).ToList();
             var res = new
             {
                 notifications,
-                hasNext = Context.Notification.OrderBy(x => x.time).Where(x => x.id > nextId && x.userId == userId).Count() > limit
+                hasNext = Context.Notification.OrderByDescending(x => x.time).Where(x => x.userId == userId && (nextId == 0 || x.id < nextId)).Count() > limit
             };
             return JsonUtils.ToJson(res);
         }

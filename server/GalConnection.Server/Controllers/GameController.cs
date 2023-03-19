@@ -1,11 +1,13 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
+using GalConnection.Server.Hubs;
 using GalConnection.Server.Services;
 using GalConnection.Server.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace GalConnection.Server.Controllers
@@ -16,10 +18,10 @@ namespace GalConnection.Server.Controllers
     {
         readonly GalConnectionContext Context;
         readonly GameServices gameServices;
-        public GameController(GalConnectionContext context)
+        public GameController(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
-            gameServices = new GameServices(context);
+            gameServices = new GameServices(context, _hubContext);
         }
         /// <summary>
         /// 创建游戏

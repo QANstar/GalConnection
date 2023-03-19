@@ -8,6 +8,8 @@ using System.Security.Claims;
 using GalConnection.Server.Services;
 using Microsoft.AspNetCore.Hosting;
 using GalConnection.Server.Utils;
+using GalConnection.Server.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GalConnection.Server.Controllers.User
 {
@@ -20,13 +22,13 @@ namespace GalConnection.Server.Controllers.User
         readonly GalConnectionContext Context;
         readonly OssServices ossServices;
         readonly UserServices userServices;
-        public UserController(GalConnectionContext context, IWebHostEnvironment webHostEnvironment)
+        public UserController(GalConnectionContext context, IWebHostEnvironment webHostEnvironment, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
             ossServices = new OssServices(Context);
             _webHostEnvironment = webHostEnvironment;
             filepath = _webHostEnvironment.ContentRootPath + "/fileCache/";
-            userServices = new UserServices(Context);
+            userServices = new UserServices(Context, _hubContext);
         }
         /// <summary>
         /// 注册

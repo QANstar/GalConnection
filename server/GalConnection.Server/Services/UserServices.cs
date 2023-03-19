@@ -8,6 +8,8 @@ using GalConnection.Server.Config;
 using GalConnection.Server.Setting;
 using GalConnection.Server.Utils;
 using Microsoft.EntityFrameworkCore;
+using GalConnection.Server.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GalConnection.Server.Services
 {
@@ -15,10 +17,10 @@ namespace GalConnection.Server.Services
     {
         readonly GalConnectionContext Context;
         readonly NotificationServices notificationServices;
-        public UserServices(GalConnectionContext context)
+        public UserServices(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
-            notificationServices = new NotificationServices(context);
+            notificationServices = new NotificationServices(context, _hubContext);
         }
 
         /// <summary>
@@ -76,7 +78,8 @@ namespace GalConnection.Server.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
                     new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddMinutes(60*24*7)).ToUnixTimeSeconds()}"),
-                    new Claim(ClaimTypes.Sid, result.id.ToString())
+                    new Claim(ClaimTypes.Sid, result.id.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, result.id.ToString()),
                 };
                 var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -1,9 +1,11 @@
 ﻿using GalConnection.Entity;
+using GalConnection.Server.Hubs;
 using GalConnection.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace GalConnection.Server.Controllers
@@ -14,10 +16,10 @@ namespace GalConnection.Server.Controllers
     {
         readonly GalConnectionContext Context;
         readonly NotificationServices notificationServices;
-        public NotificationController(GalConnectionContext context)
+        public NotificationController(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
-            notificationServices = new NotificationServices(context);
+            notificationServices = new NotificationServices(context, _hubContext);
         }
         /// <summary>
         /// 获取通知

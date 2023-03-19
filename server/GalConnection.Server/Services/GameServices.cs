@@ -1,7 +1,9 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
+using GalConnection.Server.Hubs;
 using GalConnection.Server.Setting;
 using GalConnection.Server.Utils;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.RegularExpressions;
@@ -15,11 +17,11 @@ namespace GalConnection.Server.Services
         readonly GroupServices groupServices;
         readonly NotificationServices notificationServices;
         readonly GalConnectionContext Context;
-        public GameServices(GalConnectionContext context)
+        public GameServices(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
             groupServices = new GroupServices(context);
-            notificationServices = new NotificationServices(context);
+            notificationServices = new NotificationServices(context, _hubContext);
         }
         /// <summary>
         /// 通过id获取游戏信息
