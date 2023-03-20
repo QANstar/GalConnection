@@ -200,6 +200,44 @@
 | editTime   | 编辑时间 | number |
 | state      | 状态     | int    |
 
+### 聊天室(ChatRoom)
+
+| 属性          | 解释               | 类型    |
+| ------------- | ------------------ | ------- |
+| id            | 聊天室id           | number  |
+| createTime    | 创建时间           | number  |
+| isGroup       | 是否群聊           | Boolean |
+| lastWords     | 最后一个聊天       | string  |
+| lastWordsTime | 最后一个聊天的时间 | number  |
+
+### 聊天室用户(ChatRoomUsers)
+
+| 属性     | 解释         | 类型   |
+| -------- | ------------ | ------ |
+| id       | 聊天室用户id | number |
+| userId   | 用户id       | number |
+| roomId   | 聊天室id     | number |
+| jionTime | 加入时间     | number |
+
+### 聊天内容(ChatContent)
+
+| 属性       | 解释         | 类型   |
+| ---------- | ------------ | ------ |
+| id         | 聊天内容id   | number |
+| chatUserId | 说话的用户id | number |
+| roomId     | 聊天室id     | number |
+| words      | 说话内容     | string |
+| createTime | 创建时间     | number |
+
+### 聊天内容状态(ChatContentState)
+
+| 属性          | 解释           | 类型    |
+| ------------- | -------------- | ------- |
+| id            | 聊天内容状态id | number  |
+| userId        | 用户id         | number  |
+| isRead        | 是否已读       | Boolean |
+| chatContentId | 聊天内容id     | number  |
+
 ## 使用技术
 
 前端：React、Typescript

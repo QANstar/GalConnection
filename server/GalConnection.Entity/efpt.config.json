@@ -15,6 +15,22 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "[dbo].[ChatContent]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ChatContentState]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ChatRoom]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ChatRoomUsers]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Event]",
          "ObjectType": 0
       },

@@ -18,6 +18,10 @@ namespace GalConnection.Entity
         {
         }
 
+        public virtual DbSet<ChatContent> ChatContent { get; set; }
+        public virtual DbSet<ChatContentState> ChatContentState { get; set; }
+        public virtual DbSet<ChatRoom> ChatRoom { get; set; }
+        public virtual DbSet<ChatRoomUsers> ChatRoomUsers { get; set; }
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<EventTreeViewData> EventTreeViewData { get; set; }
         public virtual DbSet<EventsMap> EventsMap { get; set; }
@@ -46,6 +50,51 @@ namespace GalConnection.Entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ChatContent>(entity =>
+            {
+                entity.HasOne(d => d.chatUser)
+                    .WithMany(p => p.ChatContent)
+                    .HasForeignKey(d => d.chatUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatContent_User");
+
+                entity.HasOne(d => d.room)
+                    .WithMany(p => p.ChatContent)
+                    .HasForeignKey(d => d.roomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatContent_ChatRoom");
+            });
+
+            modelBuilder.Entity<ChatContentState>(entity =>
+            {
+                entity.HasOne(d => d.chatContent)
+                    .WithMany(p => p.ChatContentState)
+                    .HasForeignKey(d => d.chatContentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatContentState_ChatContent");
+
+                entity.HasOne(d => d.user)
+                    .WithMany(p => p.ChatContentState)
+                    .HasForeignKey(d => d.userId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatContentState_User");
+            });
+
+            modelBuilder.Entity<ChatRoomUsers>(entity =>
+            {
+                entity.HasOne(d => d.room)
+                    .WithMany(p => p.ChatRoomUsers)
+                    .HasForeignKey(d => d.roomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatRoomUsers_ChatRoom");
+
+                entity.HasOne(d => d.user)
+                    .WithMany(p => p.ChatRoomUsers)
+                    .HasForeignKey(d => d.userId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChatRoomUsers_User");
+            });
+
             modelBuilder.Entity<EventTreeViewData>(entity =>
             {
                 entity.Property(e => e.eventid).ValueGeneratedNever();

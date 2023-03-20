@@ -395,3 +395,39 @@ export interface IChatUser {
   lastWord: string
   time: number
 }
+
+// 聊天室
+export interface IChatRoom {
+  id: number
+  createTime: number
+  isGroup: boolean
+  lastWords?: string
+  lastWordsTime?: number
+  ChatRoomUsers: {
+    id: number
+    userId: number
+    roomId: number
+    user: IUser
+  }[]
+}
+
+// 聊天内容
+export interface IChatContent {
+  id: number
+  chatUserId: number
+  roomId: number
+  words: string
+  createTime: number
+  chatUser: IUser
+  room: IChatRoom
+}
+
+// 聊天内容状态
+export interface IChatContentState {
+  id: number
+  userId: number
+  isRead: boolean
+  chatContentId: number
+  chatContent: IChatContent
+  user: IUser
+}

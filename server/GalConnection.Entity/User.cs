@@ -12,6 +12,9 @@ namespace GalConnection.Entity
     {
         public User()
         {
+            ChatContent = new HashSet<ChatContent>();
+            ChatContentState = new HashSet<ChatContentState>();
+            ChatRoomUsers = new HashSet<ChatRoomUsers>();
             FollowfollowUser = new HashSet<Follow>();
             Followuser = new HashSet<Follow>();
             Game = new HashSet<Game>();
@@ -40,6 +43,12 @@ namespace GalConnection.Entity
         public string banner { get; set; }
         public long createdAt { get; set; }
 
+        [InverseProperty("chatUser")]
+        public virtual ICollection<ChatContent> ChatContent { get; set; }
+        [InverseProperty("user")]
+        public virtual ICollection<ChatContentState> ChatContentState { get; set; }
+        [InverseProperty("user")]
+        public virtual ICollection<ChatRoomUsers> ChatRoomUsers { get; set; }
         [InverseProperty("followUser")]
         public virtual ICollection<Follow> FollowfollowUser { get; set; }
         [InverseProperty("user")]

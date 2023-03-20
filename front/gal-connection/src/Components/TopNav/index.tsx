@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useNotification from '../../Hooks/useNotification'
 import useUser from '../../Hooks/useUser'
+import stores from '../../store'
 import { NotificationType } from '../../types/enums'
 import Chat from '../Chat'
 import NotificationList from '../NotificationList'
@@ -25,8 +26,7 @@ function TopNav () {
     readAll
   } = useNotification()
   const [notificationOpen, setNotificationOpen] = useState(false)
-  const [chatOpen, setChatOpen] = useState(false)
-
+  const { chatCard } = stores
   const showDrawer = () => {
     setDrawerVisible(true)
   }
@@ -141,11 +141,16 @@ function TopNav () {
 
             <Popover
               placement="bottomRight"
-              content={<Chat />}
+              content={<Chat selectUserId={chatCard.selectUserId} />}
               trigger="click"
               showArrow={false}
-              open={chatOpen}
-              onOpenChange={setChatOpen}
+              open={chatCard.open}
+              onOpenChange={(visable) => {
+                chatCard.setOpen(visable)
+                if (!visable) {
+                  chatCard.init()
+                }
+              }}
             >
               <Badge
                 color="#ff85c0"

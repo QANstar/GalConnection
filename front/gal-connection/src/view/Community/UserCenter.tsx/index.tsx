@@ -1,4 +1,4 @@
-import { RightOutlined } from '@ant-design/icons'
+import { MessageOutlined, RightOutlined } from '@ant-design/icons'
 import {
   Avatar,
   Button,
@@ -17,6 +17,7 @@ import GameShowList from '../../../Components/GameShowList'
 import ImgCropper from '../../../Components/ImgCropper'
 import useGetGameList from '../../../Hooks/useGetGameList'
 import useUser from '../../../Hooks/useUser'
+import stores from '../../../store'
 import { IUser, OssFileType } from '../../../types/type'
 import style from './style.module.scss'
 
@@ -35,6 +36,7 @@ function UserCenter () {
     error,
     loading
   } = useUser()
+  const { chatCard } = stores
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const navigate = useNavigate()
   const { gameList: publishList } = useGetGameList('publish', {
@@ -204,19 +206,31 @@ function UserCenter () {
                   : (
                   <>
                     {userInfo && (
-                      <Button
-                        onClick={async () => {
-                          if (userInfo.isFollow) {
-                            await unFollowUser(userInfo.id)
-                          } else {
-                            await followUser(userInfo.id)
-                          }
-                          getUser()
-                        }}
-                        type={userInfo.isFollow ? 'default' : 'primary'}
-                      >
-                        {userInfo.isFollow ? '已关注' : '关注'}
-                      </Button>
+                      <>
+                        <Button
+                          onClick={async () => {
+                            if (userInfo.isFollow) {
+                              await unFollowUser(userInfo.id)
+                            } else {
+                              await followUser(userInfo.id)
+                            }
+                            getUser()
+                          }}
+                          type={userInfo.isFollow ? 'default' : 'primary'}
+                        >
+                          {userInfo.isFollow ? '已关注' : '关注'}
+                        </Button>
+                        <Button
+                          style={{ marginLeft: 15 }}
+                          icon={<MessageOutlined />}
+                          onClick={() => {
+                            chatCard.setOpen(true)
+                            chatCard.setSelectUserId(userInfo.id)
+                          }}
+                        >
+                          私信
+                        </Button>
+                      </>
                     )}
                   </>
                     )}

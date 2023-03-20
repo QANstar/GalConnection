@@ -1,59 +1,44 @@
 import React from 'react'
 import { Avatar, List } from 'antd'
-
 import style from './style.module.scss'
 import { getRelativeTime } from '../../Utils/TimeUtils'
+import { IChatRoom } from '../../types/type'
+import stores from '../../store'
 
-const data = [
-  {
-    id: 1,
-    avatar:
-      'https://galbucket.oss-cn-hangzhou.aliyuncs.com/user/avatar/63b1bab8-edc1-4784-ab19-c7494e7267f6',
-    name: 'QANstar',
-    word: '111',
-    time: 1679037276888
-  },
-  {
-    id: 2,
-    avatar:
-      'https://galbucket.oss-cn-hangzhou.aliyuncs.com/user/avatar/63b1bab8-edc1-4784-ab19-c7494e7267f6',
-    name: 'QANstar',
-    word: '111',
-    time: 1679037276888
-  },
-  {
-    id: 3,
-    avatar:
-      'https://galbucket.oss-cn-hangzhou.aliyuncs.com/user/avatar/63b1bab8-edc1-4784-ab19-c7494e7267f6',
-    name: 'QANstar',
-    word: '111',
-    time: 1679037276888
-  },
-  {
-    id: 14,
-    avatar:
-      'https://galbucket.oss-cn-hangzhou.aliyuncs.com/user/avatar/63b1bab8-edc1-4784-ab19-c7494e7267f6',
-    name: 'QANstar',
-    word: '111',
-    time: 1679037276888
-  }
-]
+interface IChatUserListProps {
+  chatRooms: IChatRoom[]
+}
 
-const ChatUserList = () => {
+const ChatUserList = (props: IChatUserListProps) => {
+  const { user } = stores
+  const { chatRooms } = props
   return (
     <div className={style.userList}>
       <header className={style.header}>消息</header>
       <List
         split={false}
-        dataSource={data}
+        dataSource={chatRooms}
         renderItem={(item) => (
           <List.Item key={item.id}>
             <List.Item.Meta
-              avatar={<Avatar size="large" src={item.avatar} />}
-              title={<div>{item.name}</div>}
-              description={item.word}
+              avatar={
+                <Avatar
+                  size="large"
+                  src={
+                    item.ChatRoomUsers.filter((x) => x.userId !== user.id)[0]
+                      .user.avatar || ''
+                  }
+                />
+              }
+              title={
+                <div>
+                  {item.ChatRoomUsers.filter((x) => x.userId !== user.id)[0]
+                    .user.nickname || ''}
+                </div>
+              }
+              description={item.lastWords}
             />
-            <div>{getRelativeTime(item.time)}</div>
+            <div>{getRelativeTime(item.lastWordsTime || 0)}</div>
           </List.Item>
         )}
       />
