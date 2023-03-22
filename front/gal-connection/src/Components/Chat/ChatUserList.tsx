@@ -7,11 +7,13 @@ import stores from '../../store'
 
 interface IChatUserListProps {
   chatRooms: IChatRoom[]
+  currentRoom?: IChatRoom
+  onItemClick: (room: IChatRoom) => void
 }
 
 const ChatUserList = (props: IChatUserListProps) => {
   const { user } = stores
-  const { chatRooms } = props
+  const { chatRooms, currentRoom, onItemClick } = props
   return (
     <div className={style.userList}>
       <header className={style.header}>消息</header>
@@ -19,7 +21,15 @@ const ChatUserList = (props: IChatUserListProps) => {
         split={false}
         dataSource={chatRooms}
         renderItem={(item) => (
-          <List.Item key={item.id}>
+          <List.Item
+            onClick={() => onItemClick(item)}
+            key={item.id}
+            className={
+              currentRoom && currentRoom.id === item.id
+                ? style.roomAvtiveItem
+                : style.roomItem
+            }
+          >
             <List.Item.Meta
               avatar={
                 <Avatar

@@ -43,7 +43,7 @@ namespace GalConnection.Entity
         public string banner { get; set; }
         public long createdAt { get; set; }
 
-        [InverseProperty("chatUser")]
+        [InverseProperty("user")]
         public virtual ICollection<ChatContent> ChatContent { get; set; }
         [InverseProperty("user")]
         public virtual ICollection<ChatContentState> ChatContentState { get; set; }

@@ -12,7 +12,6 @@ namespace GalConnection.Entity
     {
         public ChatRoom()
         {
-            ChatContent = new HashSet<ChatContent>();
             ChatRoomUsers = new HashSet<ChatRoomUsers>();
         }
 
@@ -24,8 +23,6 @@ namespace GalConnection.Entity
         public string lastWords { get; set; }
         public long? lastWordsTime { get; set; }
 
-        [InverseProperty("room")]
-        public virtual ICollection<ChatContent> ChatContent { get; set; }
         [InverseProperty("room")]
         public virtual ICollection<ChatRoomUsers> ChatRoomUsers { get; set; }
     }

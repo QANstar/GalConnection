@@ -3,6 +3,7 @@ import { Avatar, Badge, Drawer, Dropdown, Menu, Popover } from 'antd'
 import { Observer } from 'mobx-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import useChat from '../../Hooks/useChat'
 import useNotification from '../../Hooks/useNotification'
 import useUser from '../../Hooks/useUser'
 import stores from '../../store'
@@ -25,6 +26,14 @@ function TopNav () {
     init,
     readAll
   } = useNotification()
+  const {
+    chatRooms,
+    currentRoom,
+    chatContents,
+    getChatRoomByUserId,
+    changeRoom,
+    sendMessage
+  } = useChat()
   const [notificationOpen, setNotificationOpen] = useState(false)
   const { chatCard } = stores
   const showDrawer = () => {
@@ -34,6 +43,7 @@ function TopNav () {
   const onClose = () => {
     setDrawerVisible(false)
   }
+
   const menu = (
     <Menu
       items={
@@ -141,13 +151,24 @@ function TopNav () {
 
             <Popover
               placement="bottomRight"
-              content={<Chat selectUserId={chatCard.selectUserId} />}
+              content={
+                <Chat
+                  chatContents={chatContents}
+                  onSendMessage={sendMessage}
+                  selectUserId={chatCard.selectUserId}
+                  getChatRoomByUserId={getChatRoomByUserId}
+                  chatRooms={chatRooms}
+                  currentRoom={currentRoom}
+                  onItemClick={changeRoom}
+                />
+              }
               trigger="click"
               showArrow={false}
               open={chatCard.open}
               onOpenChange={(visable) => {
                 chatCard.setOpen(visable)
                 if (!visable) {
+                  changeRoom(undefined)
                   chatCard.init()
                 }
               }}

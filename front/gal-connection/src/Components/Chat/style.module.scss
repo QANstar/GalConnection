@@ -37,6 +37,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: auto;
 }
 
 .chatContent {
@@ -45,6 +46,7 @@
   background-color: #f4f5f7;
   margin: 5px;
   border-radius: 12px;
+  overflow: auto;
 }
 
 .chatBottom {
@@ -54,4 +56,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.roomItem {
+  transition: 0.1s ease-in;
+  cursor: pointer !important;
+  margin: 5px !important;
+  padding: 12px !important;
+  border-radius: 12px;
+  &:hover {
+    background-color: #f4f5f7 !important;
+  }
+}
+
+.roomAvtiveItem {
+  @extend .roomItem;
+  background-color: #f4f5f7 !important;
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

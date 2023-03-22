@@ -17,19 +17,16 @@ namespace GalConnection.Entity
 
         [Key]
         public int id { get; set; }
-        public int chatUserId { get; set; }
+        public int userId { get; set; }
         public int roomId { get; set; }
         [Required]
         [StringLength(1000)]
         public string words { get; set; }
         public long createTime { get; set; }
 
-        [ForeignKey("chatUserId")]
+        [ForeignKey("userId")]
         [InverseProperty("ChatContent")]
-        public virtual User chatUser { get; set; }
-        [ForeignKey("roomId")]
-        [InverseProperty("ChatContent")]
-        public virtual ChatRoom room { get; set; }
+        public virtual User user { get; set; }
         [InverseProperty("chatContent")]
         public virtual ICollection<ChatContentState> ChatContentState { get; set; }
     }

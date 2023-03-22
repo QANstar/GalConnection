@@ -1,10 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import * as chatService from '../service/chat'
-import { IChatRoom } from '../types/type'
+import stores from '../store'
+import { IChatContent, IChatRoom } from '../types/type'
+
+const limit = 10
 
 const useChat = () => {
+  const { signalR } = stores
   const [chatRooms, setChatRooms] = useState<IChatRoom[]>([])
-  const [currentRoomId, setCurrentRoomId] = useState<number>(0)
+  const [chatContents, setChatContents] = useState<IChatContent[]>([])
+  const [currentRoom, setCurrentRoom] = useState<IChatRoom>()
+  const [hasNext, setHasNext] = useState(false)
+  const [next, setNext] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -24,20 +31,76 @@ const useChat = () => {
     }
   }, [])
 
+  // 获取更多聊天内容列表
+  const getMoreChatContentList = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await chatService.getChatContentList({
+        roomId: currentRoom?.id || 0,
+        nextId: next,
+        limit
+      })
+      if (status === 200) {
+        if (data.messages.length > 0) {
+          setNext(data.messages[data.messages.length - 1].id)
+          setChatContents(data.messages.concat(chatContents))
+        }
+        setHasNext(data.hasNext)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [next, chatContents, currentRoom])
+
+  // 获取初始聊天内容
+  const getFirstChatContentList = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await chatService.getChatContentList({
+        roomId: currentRoom?.id || 0,
+        nextId: 0,
+        limit
+      })
+      if (status === 200) {
+        console.log(data)
+        if (data.messages.length > 0) {
+          setNext(data.messages[data.messages.length - 1].id)
+        }
+        console.log(data)
+
+        setChatContents(data.messages)
+        setHasNext(data.hasNext)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [chatContents, currentRoom])
+
   // 获取指定两个用户的聊天室
   const getChatRoomByUserId = useCallback(
     async (targetUserId: number) => {
       if (targetUserId === 0) {
-        setCurrentRoomId(0)
+        setCurrentRoom(undefined)
         return
       }
       try {
         setLoading(true)
         setError('')
-        const { status } = await chatService.getChatRoomByUserId(targetUserId)
+        const { data, status } = await chatService.getChatRoomByUserId(
+          targetUserId
+        )
         if (status === 200) {
-          getAllChatRoomsOfUser()
-          console.log(currentRoomId)
+          setCurrentRoom(data)
+          if (!chatRooms.find((x) => x.id === data.id)) {
+            chatRooms.unshift(data)
+            setChatRooms([...chatRooms])
+          }
         }
       } catch (e: any) {
         setError(e)
@@ -48,17 +111,99 @@ const useChat = () => {
     [chatRooms]
   )
 
+  // 改变房间
+  const changeRoom = useCallback(
+    async (room?: IChatRoom) => {
+      if (currentRoom) {
+        exitRoom(currentRoom.id)
+      }
+      setCurrentRoom(room)
+    },
+    [currentRoom]
+  )
+
+  // 发送消息
+  const sendMessage = useCallback(
+    async (words: string) => {
+      if (currentRoom) addChat({ roomId: currentRoom.id, words })
+    },
+    [currentRoom]
+  )
+
+  // 加入房间
+  const joinRoom = useCallback(async (roomId: number) => {
+    if (signalR.connection) {
+      signalR.connection.send('JoinRoom', roomId)
+    }
+  }, [])
+
+  // 离开房间
+  const exitRoom = useCallback(async (roomId: number) => {
+    if (signalR.connection) {
+      signalR.connection.send('ExitRoom', roomId)
+    }
+  }, [])
+
+  // 添加聊天
+  const addChat = useCallback(
+    async (val: { roomId: number; words: string }) => {
+      if (signalR.connection) {
+        signalR.connection.send('AddChat', val)
+      }
+    },
+    []
+  )
+
+  // 接受聊天
+  const getChatMessage = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.on('GetChatMessage', (content: string) => {
+        chatContents.push(JSON.parse(content))
+        setChatContents([...chatContents])
+      })
+    }
+  }, [chatContents])
+
+  // signalR移除监听
+  const removeSignalRListen = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.off('GetChatMessage')
+    }
+  }, [])
+
+  // signalR监听
+  const signalRListen = useCallback(async () => {
+    getChatMessage()
+  }, [chatContents])
+
   useEffect(() => {
     getAllChatRoomsOfUser()
+    signalRListen()
+    return () => {
+      removeSignalRListen()
+    }
   }, [])
+
+  useEffect(() => {
+    setNext(0)
+    if (currentRoom) {
+      joinRoom(currentRoom.id)
+      getFirstChatContentList()
+    }
+  }, [currentRoom])
 
   return {
     chatRooms,
     loading,
     error,
+    currentRoom,
+    chatContents,
+    hasNext,
+    getMoreChatContentList,
     getChatRoomByUserId,
-    setCurrentRoomId,
-    getAllChatRoomsOfUser
+    changeRoom,
+    getAllChatRoomsOfUser,
+    sendMessage
   }
 }
 

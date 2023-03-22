@@ -4,12 +4,18 @@ import React, { useState } from 'react'
 
 import style from './style.module.scss'
 
-const ChatInput = () => {
+interface IChatInputProps {
+  onSendMessage: (words: string) => void
+}
+
+const ChatInput = (props: IChatInputProps) => {
   const [value, setValue] = useState('')
   return (
     <Input.Group compact className={style.chatGroup}>
       <Input
-        onPressEnter={() => {}}
+        onPressEnter={() => {
+          props.onSendMessage(value)
+        }}
         value={value}
         onChange={(val) => {
           setValue(val.target.value)
@@ -18,7 +24,9 @@ const ChatInput = () => {
         placeholder="请输入"
       />
       <Button
-        onClick={() => {}}
+        onClick={() => {
+          props.onSendMessage(value)
+        }}
         icon={<SendOutlined />}
         className={style.chatBtn}
       />

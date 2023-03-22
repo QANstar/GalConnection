@@ -52,17 +52,11 @@ namespace GalConnection.Entity
         {
             modelBuilder.Entity<ChatContent>(entity =>
             {
-                entity.HasOne(d => d.chatUser)
+                entity.HasOne(d => d.user)
                     .WithMany(p => p.ChatContent)
-                    .HasForeignKey(d => d.chatUserId)
+                    .HasForeignKey(d => d.userId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChatContent_User");
-
-                entity.HasOne(d => d.room)
-                    .WithMany(p => p.ChatContent)
-                    .HasForeignKey(d => d.roomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ChatContent_ChatRoom");
             });
 
             modelBuilder.Entity<ChatContentState>(entity =>

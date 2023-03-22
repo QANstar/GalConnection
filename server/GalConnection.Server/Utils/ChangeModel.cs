@@ -36,5 +36,43 @@ namespace GalConnection.Server.Utils
                 followCount = followCount
             };
         }
+
+        public static UserSimpleInfoModel UserToSimpleInfoModel(User x)
+        {
+            return new UserSimpleInfoModel()
+            {
+                id = x.id,
+                email = x.email,
+                nickname = x.nickname,
+                avatar = x.avatar,
+                createdAt = x.createdAt,
+                introduce = x.introduce,
+                banner = x.banner,
+            };
+        }
+
+        public static ChatContentStateModel ChatContentStateToShowModel(ChatContentState state)
+        {
+            return new ChatContentStateModel()
+            {
+                id = state.id,
+                userId = state.userId,
+                isRead = state.isRead,
+            };
+        }
+
+        public static ChatContentsModel ChatToShowModel(ChatContent chat)
+        {
+            return new ChatContentsModel()
+            {
+                id = chat.id,
+                userId = chat.userId,
+                roomId = chat.roomId,
+                words = chat.words,
+                createTime = chat.createTime,
+                user = UserToSimpleInfoModel(chat.user),
+                ChatContentState = chat.ChatContentState.Select(x => ChatContentStateToShowModel(x)).ToList(),
+            };
+        }
     }
 }

@@ -85,5 +85,89 @@ namespace GalConnection.Server.Services
             };
             return item;
         }
+        /// <summary>
+        /// 检查是否是聊天时成员
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        public bool IsRoomMember(int userId, int roomId)
+        {
+            ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).FirstOrDefault(x => x.id == roomId);
+            if (chatRoom == null)
+            {
+                return false;
+            }
+            if (chatRoom.ChatRoomUsers.ToList().Exists(x => x.userId == userId))
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 添加聊天信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        public ChatContent AddChat(ChatAddModel chatAdd, int userId)
+        {
+
+            ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).FirstOrDefault(x => x.id == chatAdd.roomId);
+            if (chatRoom == null)
+            {
+                throw new Exception("聊天室不存在");
+            }
+            if (!IsRoomMember(userId, chatRoom.id))
+            {
+                throw new Exception("不是聊天室成员");
+            }
+            ChatContent newChat = new()
+            {
+                userId = userId,
+                roomId = chatRoom.id,
+                words = chatAdd.words,
+                createTime = TimeUtils.GetNowTime(),
+                ChatContentState = chatRoom.ChatRoomUsers.Select(x => new ChatContentState()
+                {
+                    userId = x.userId,
+                    isRead = x.userId == userId,
+                }).ToList()
+            };
+            Context.ChatContent.Add(newChat);
+            Context.SaveChanges();
+            ChatContent resChat = Context.ChatContent.Include(x => x.ChatContentState).Include(x => x.user).FirstOrDefault(x => x.id == newChat.id);
+            if (resChat == null)
+            {
+                throw new Exception("内容不存在");
+            }
+            return resChat;
+        }
+        /// <summary>
+        /// 获取聊天内容列表
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public string GetChatContentList(int roomId, int userId, int nextId, int limit = 10)
+        {
+            ChatRoom chatRoom = Context.ChatRoom.FirstOrDefault(x => x.id == roomId);
+            if (chatRoom == null)
+            {
+                throw new Exception("聊天室不存在");
+            }
+            if (!IsRoomMember(userId, roomId))
+            {
+                throw new Exception("不是聊天室成员");
+            }
+            List<ChatContent> messages = Context.ChatContent.OrderByDescending(x => x.createTime).Where(x => x.roomId == roomId && (nextId == 0 || x.id < nextId)).Include(x => x.ChatContentState).Include(x => x.user).Take(limit).ToList();
+            List<ChatContentsModel> chatContents = messages.Select(x => Utils.ChangeModel.ChatToShowModel(x)).ToList();
+            var res = new
+            {
+                messages = chatContents,
+                hasNext = Context.ChatContent.OrderByDescending(x => x.createTime).Where(x => x.roomId == roomId && (nextId == 0 || x.id < nextId)).Count() > limit
+            };
+            return JsonUtils.ToJson(res);
+        }
     }
 }

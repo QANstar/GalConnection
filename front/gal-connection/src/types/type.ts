@@ -411,6 +411,15 @@ export interface IChatRoom {
   }[]
 }
 
+// 聊天内容状态
+export interface IChatContentState {
+  id: number
+  userId: number
+  isRead: boolean
+  chatContentId: number
+  user: IUser
+}
+
 // 聊天内容
 export interface IChatContent {
   id: number
@@ -419,15 +428,12 @@ export interface IChatContent {
   words: string
   createTime: number
   chatUser: IUser
+  ChatContentState: IChatContentState
   room: IChatRoom
 }
 
-// 聊天内容状态
-export interface IChatContentState {
-  id: number
-  userId: number
-  isRead: boolean
-  chatContentId: number
-  chatContent: IChatContent
-  user: IUser
+// 聊天信息列表响应结果
+export interface IPageChatContent {
+  messages: IChatContent[]
+  hasNext: boolean
 }
