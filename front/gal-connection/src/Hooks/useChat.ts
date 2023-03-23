@@ -93,6 +93,16 @@ const useChat = () => {
     }
   }, [])
 
+  // 已读所有
+  const readAll = useCallback(async (roomId: number) => {
+    try {
+      setError('')
+      await chatService.readAll(roomId)
+    } catch (e: any) {
+      setError(e)
+    }
+  }, [])
+
   // 获取指定两个用户的聊天室
   const getChatRoomByUserId = useCallback(
     async (targetUserId: number) => {
@@ -241,6 +251,7 @@ const useChat = () => {
     if (currentRoom) {
       joinRoom(currentRoom.id)
       getFirstChatContentList()
+      readAll(currentRoom.id)
     }
   }, [currentRoom])
 

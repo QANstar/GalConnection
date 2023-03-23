@@ -23,3 +23,7 @@ export const getChatContentList = (params: {
 
 // 获取未读数量
 export const getUnReadNum = () => request.get<number>('/api/Chat/GetUnReadNum')
+
+// 已读所有
+export const readAll = (roomId: number) =>
+  request.post<boolean>(`/api/Chat/ReadAll?roomId=${roomId}`)

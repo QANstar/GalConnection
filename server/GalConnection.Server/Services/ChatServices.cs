@@ -192,6 +192,23 @@ namespace GalConnection.Server.Services
             return num;
         }
         /// <summary>
+        /// 已读所有
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool ReadAll(int userId, int roomId)
+        {
+            List<ChatContentState> states = Context.ChatContentState.Include(x => x.chatContent).Where(x => x.userId == userId && !x.isRead && x.chatContent.roomId == roomId).ToList();
+            states.ForEach(item =>
+            {
+                item.isRead = true;
+            });
+            Context.SaveChanges();
+            GetUnReadNum(userId);
+            GetChatRoomOfUser(roomId, userId);
+            return true;
+        }
+        /// <summary>
         /// 获取指定的聊天室用户信息
         /// </summary>
         /// <returns></returns>
