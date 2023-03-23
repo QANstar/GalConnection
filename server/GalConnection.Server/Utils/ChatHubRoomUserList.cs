@@ -34,7 +34,7 @@ namespace GalConnection.Server.Utils
 
         public static List<int> GetRoomUsers(int roomId)
         {
-            return RoomUserList.Select(x => x.userId).ToList();
+            return RoomUserList.Where(x => x.roomId == roomId).Select(x => x.userId).ToList();
         }
     }
 

@@ -13,13 +13,12 @@ namespace GalConnection.Server.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        private List<ChatHubRoomUserList> roomUserList = new();
         readonly GalConnectionContext DbContext;
         readonly ChatServices chatServices;
-        public ChatHub(GalConnectionContext context)
+        public ChatHub(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             DbContext = context;
-            chatServices = new ChatServices(context);
+            chatServices = new ChatServices(context, _hubContext);
         }
         public async Task NewMessage(long username, string message) => await Clients.All.SendAsync("messageReceived", "21365");
         /// <summary>

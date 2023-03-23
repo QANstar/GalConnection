@@ -10,10 +10,12 @@ namespace GalConnection.Server.Services
 {
     public class ChatServices
     {
+        readonly IHubContext<ChatHub> hubContext;
         readonly GalConnectionContext Context;
-        public ChatServices(GalConnectionContext context)
+        public ChatServices(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
+            hubContext = _hubContext;
         }
         /// <summary>
         /// 获取用户所有的聊天房间
@@ -144,6 +146,11 @@ namespace GalConnection.Server.Services
                 throw new Exception("内容不存在");
             }
             ChatContentsModel resChat = Utils.ChangeModel.ChatToShowModel(chat);
+            chatRoom.ChatRoomUsers.ToList().ForEach(x =>
+            {
+                GetUnReadNum(x.userId);
+                GetChatRoomOfUser(resChat.roomId, x.userId);
+            });
             return resChat;
         }
         /// <summary>
@@ -181,7 +188,26 @@ namespace GalConnection.Server.Services
         public int GetUnReadNum(int userId)
         {
             int num = Context.ChatContentState.Where(x => x.userId == userId && !x.isRead).Count();
+            hubContext.Clients.User(userId.ToString()).SendAsync("GetUnReadNum", num);
             return num;
+        }
+        /// <summary>
+        /// 获取指定的聊天室用户信息
+        /// </summary>
+        /// <returns></returns>
+        public ChatRoomOfUser GetChatRoomOfUser(int roomId, int userId)
+        {
+            ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).ThenInclude(x => x.user).FirstOrDefault(x => x.id == roomId);
+            if (chatRoom == null)
+            {
+                throw new Exception("房间不存在");
+            }
+            ChatRoomOfUser item = new(chatRoom)
+            {
+                unReadNum = Context.ChatContentState.Include(x => x.chatContent).Where(x => !x.isRead && x.chatContent.roomId == chatRoom.id && x.userId == userId).Count()
+            };
+            hubContext.Clients.User(userId.ToString()).SendAsync("GetChatRoomOfUser", JsonUtils.ToJson(item));
+            return item;
         }
     }
 }

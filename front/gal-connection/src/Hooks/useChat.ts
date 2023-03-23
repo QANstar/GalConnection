@@ -180,16 +180,51 @@ const useChat = () => {
     }
   }, [chatContents])
 
+  // 获取未读总数
+  const getUnReadNumListen = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.on('GetUnReadNum', (num: number) => {
+        setUnReadCount(num)
+      })
+    }
+  }, [chatContents])
+
+  // 获取聊天室列表信息
+  const getChatRoomOfUser = useCallback(async () => {
+    if (signalR.connection) {
+      signalR.connection.on('GetChatRoomOfUser', (res: string) => {
+        const roomInfo: IChatRoomOfUser = JSON.parse(res)
+        setChatRooms((rooms) => {
+          const room = rooms.find((x) => x.id === roomInfo.id)
+          if (room) {
+            room.lastWords = roomInfo.lastWords
+            room.lastWordsTime = roomInfo.lastWordsTime
+            room.unReadNum = roomInfo.unReadNum
+          } else {
+            rooms.unshift(roomInfo)
+          }
+          console.log(rooms)
+
+          const newRooms = [...rooms]
+          return newRooms
+        })
+      })
+    }
+  }, [chatContents])
+
   // signalR移除监听
   const removeSignalRListen = useCallback(async () => {
     if (signalR.connection) {
       signalR.connection.off('GetChatMessage')
+      signalR.connection.off('GetUnReadNum')
     }
   }, [])
 
   // signalR监听
   const signalRListen = useCallback(async () => {
     getChatMessage()
+    getUnReadNumListen()
+    getChatRoomOfUser()
   }, [chatContents])
 
   useEffect(() => {

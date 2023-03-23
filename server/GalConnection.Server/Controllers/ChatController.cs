@@ -18,10 +18,10 @@ namespace GalConnection.Server.Controllers
         readonly GalConnectionContext Context;
         readonly ChatServices chatServices;
 
-        public ChatController(GalConnectionContext context)
+        public ChatController(GalConnectionContext context, IHubContext<ChatHub> _hubContext)
         {
             Context = context;
-            chatServices = new ChatServices(context);
+            chatServices = new ChatServices(context, _hubContext);
         }
 
         /// <summary>
