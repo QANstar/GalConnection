@@ -28,7 +28,7 @@ namespace GalConnection.Server.Services
             {
                 ChatRoomOfUser item = new(room)
                 {
-                    unReadNum = Context.ChatContentState.Include(x => x.chatContent).Where(x => !x.isRead && x.chatContent.roomId == room.id).Count()
+                    unReadNum = Context.ChatContentState.Include(x => x.chatContent).Where(x => !x.isRead && x.chatContent.roomId == room.id && x.userId == userId).Count()
                 };
                 chatRoomOfUsers.Add(item);
             });
@@ -72,7 +72,7 @@ namespace GalConnection.Server.Services
         /// <param name="firstUserId"></param>
         /// <param name="secondUserId"></param>
         /// <returns></returns>
-        public ChatRoomOfUser GetChatRoomByUserId(int firstUserId, int secondUserId)
+        public ChatRoomOfUser GetChatRoomByUserId(int firstUserId, int secondUserId, int userId)
         {
             ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).ThenInclude(x => x.user).FirstOrDefault(x => x.ChatRoomUsers.FirstOrDefault(y => y.userId == firstUserId) != null && x.ChatRoomUsers.FirstOrDefault(y => y.userId == secondUserId) != null && !x.isGroup);
             if (chatRoom == null)
@@ -81,7 +81,7 @@ namespace GalConnection.Server.Services
             }
             ChatRoomOfUser item = new(chatRoom)
             {
-                unReadNum = Context.ChatContentState.Include(x => x.chatContent).Where(x => !x.isRead && x.chatContent.roomId == chatRoom.id).Count()
+                unReadNum = Context.ChatContentState.Include(x => x.chatContent).Where(x => !x.isRead && x.chatContent.roomId == chatRoom.id && x.userId == userId).Count()
             };
             return item;
         }
@@ -110,7 +110,7 @@ namespace GalConnection.Server.Services
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        public ChatContentsModel AddChat(ChatAddModel chatAdd, int userId)
+        public ChatContentsModel AddChat(ChatAddModel chatAdd, int userId, List<int> inRoomUser)
         {
 
             ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).FirstOrDefault(x => x.id == chatAdd.roomId);
@@ -131,7 +131,7 @@ namespace GalConnection.Server.Services
                 ChatContentState = chatRoom.ChatRoomUsers.Select(x => new ChatContentState()
                 {
                     userId = x.userId,
-                    isRead = x.userId == userId,
+                    isRead = x.userId == userId || inRoomUser.Exists(y => x.userId == y),
                 }).ToList()
             };
             chatRoom.lastWords = newChat.words;
@@ -171,6 +171,17 @@ namespace GalConnection.Server.Services
                 hasNext = Context.ChatContent.OrderByDescending(x => x.createTime).Where(x => x.roomId == roomId && (nextId == 0 || x.id < nextId)).Count() > limit
             };
             return JsonUtils.ToJson(res);
+        }
+
+        /// <summary>
+        /// 获取未读数量
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int GetUnReadNum(int userId)
+        {
+            int num = Context.ChatContentState.Where(x => x.userId == userId && !x.isRead).Count();
+            return num;
         }
     }
 }

@@ -411,6 +411,11 @@ export interface IChatRoom {
   }[]
 }
 
+//
+export interface IChatRoomOfUser extends IChatRoom {
+  unReadNum: number
+}
+
 // 聊天内容状态
 export interface IChatContentState {
   id: number

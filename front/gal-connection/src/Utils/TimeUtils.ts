@@ -15,3 +15,8 @@ export function getRelativeTime (time: number) {
 export function formatTime (time: number) {
   return dayjs(new Date(time)).format('YYYY-MM-DD HH:mm:ss')
 }
+
+// 格式化无秒时间
+export function formatTimeNoSecond (time: number) {
+  return dayjs(new Date(time)).format('YYYY-MM-DD HH:mm')
+}

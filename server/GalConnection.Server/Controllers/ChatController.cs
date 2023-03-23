@@ -60,7 +60,7 @@ namespace GalConnection.Server.Controllers
             {
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
-                return Ok(JsonUtils.ToJson(chatServices.GetChatRoomByUserId(userID, targetUserId)));
+                return Ok(JsonUtils.ToJson(chatServices.GetChatRoomByUserId(userID, targetUserId, userID)));
             }
             catch (Exception ex)
             {
@@ -84,6 +84,26 @@ namespace GalConnection.Server.Controllers
                 var auth = HttpContext.AuthenticateAsync();
                 int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
                 return Ok(chatServices.GetChatContentList(roomId, userID, nextId, limit));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取未读数量
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetUnReadNum()
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(chatServices.GetUnReadNum(userID));
             }
             catch (Exception ex)
             {

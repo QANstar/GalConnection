@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import * as chatService from '../service/chat'
 import stores from '../store'
-import { IChatContent, IChatRoom } from '../types/type'
+import { IChatContent, IChatRoom, IChatRoomOfUser } from '../types/type'
 
 const limit = 10
 
 const useChat = () => {
   const { signalR } = stores
-  const [chatRooms, setChatRooms] = useState<IChatRoom[]>([])
+  const [chatRooms, setChatRooms] = useState<IChatRoomOfUser[]>([])
   const [chatContents, setChatContents] = useState<IChatContent[]>([])
   const [currentRoom, setCurrentRoom] = useState<IChatRoom>()
+  const [unReadCount, setUnReadCount] = useState<number>(0)
   const [hasNext, setHasNext] = useState(false)
   const [next, setNext] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -78,6 +79,19 @@ const useChat = () => {
       setLoading(false)
     }
   }, [chatContents, currentRoom])
+
+  // 获取未读数量
+  const getUnReadNum = useCallback(async () => {
+    try {
+      setError('')
+      const { data, status } = await chatService.getUnReadNum()
+      if (status === 200) {
+        setUnReadCount(data)
+      }
+    } catch (e: any) {
+      setError(e)
+    }
+  }, [])
 
   // 获取指定两个用户的聊天室
   const getChatRoomByUserId = useCallback(
@@ -181,6 +195,7 @@ const useChat = () => {
   useEffect(() => {
     getAllChatRoomsOfUser()
     signalRListen()
+    getUnReadNum()
     return () => {
       removeSignalRListen()
     }
@@ -201,6 +216,7 @@ const useChat = () => {
     currentRoom,
     chatContents,
     hasNext,
+    unReadCount,
     getMoreChatContentList,
     getChatRoomByUserId,
     changeRoom,

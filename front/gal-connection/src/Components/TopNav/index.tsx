@@ -31,6 +31,7 @@ function TopNav () {
     currentRoom,
     chatContents,
     hasNext: chatHasNext,
+    unReadCount,
     getChatRoomByUserId,
     changeRoom,
     sendMessage,
@@ -181,7 +182,7 @@ function TopNav () {
                 color="#ff85c0"
                 offset={[-8, 10]}
                 className={style.actionIcon}
-                count={5}
+                count={unReadCount}
               >
                 <MessageOutlined />
               </Badge>

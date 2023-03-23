@@ -13,6 +13,7 @@ namespace GalConnection.Server.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
+        private List<ChatHubRoomUserList> roomUserList = new();
         readonly GalConnectionContext DbContext;
         readonly ChatServices chatServices;
         public ChatHub(GalConnectionContext context)
@@ -37,6 +38,8 @@ namespace GalConnection.Server.Hubs
                 string groupName = roomId.ToString();
                 await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
                 await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
+                ChatHubRoomUserList.AddUser(int.Parse(Context.UserIdentifier), roomId);
+
             }
         }
         /// <summary>
@@ -55,6 +58,7 @@ namespace GalConnection.Server.Hubs
                 string groupName = roomId.ToString();
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
                 await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has exit the group {groupName}.");
+                ChatHubRoomUserList.RemoveRoomUser(int.Parse(Context.UserIdentifier), roomId);
             }
         }
         /// <summary>
@@ -68,7 +72,7 @@ namespace GalConnection.Server.Hubs
             string groupName = chatAdd.roomId.ToString();
             try
             {
-                ChatContentsModel chat = chatServices.AddChat(chatAdd, userId);
+                ChatContentsModel chat = chatServices.AddChat(chatAdd, userId, ChatHubRoomUserList.GetRoomUsers(chatAdd.roomId));
                 await Clients.Group(groupName).SendAsync("GetChatMessage", JsonUtils.ToJson(chat));
             }
             catch (Exception ex)
@@ -85,6 +89,7 @@ namespace GalConnection.Server.Hubs
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
+            ChatHubRoomUserList.RemoveAllUser(int.Parse(Context.UserIdentifier));
             return base.OnDisconnectedAsync(exception);
         }
     }

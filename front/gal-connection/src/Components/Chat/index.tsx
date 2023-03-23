@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { IChatContent, IChatRoom } from '../../types/type'
+import { IChatContent, IChatRoom, IChatRoomOfUser } from '../../types/type'
 import ChatRoom from './ChatRoom'
 import ChatUserList from './ChatUserList'
 
@@ -9,7 +9,7 @@ interface IChatProps {
   selectUserId: number
   onItemClick: (room: IChatRoom) => void
   currentRoom?: IChatRoom
-  chatRooms: IChatRoom[]
+  chatRooms: IChatRoomOfUser[]
   getChatRoomByUserId: (id: number) => void
   onSendMessage: (words: string) => void
   chatContents: IChatContent[]
@@ -44,6 +44,7 @@ const Chat = (props: IChatProps) => {
       </div>
       <div className={style.right}>
         <ChatRoom
+          currentRoom={currentRoom}
           hasNext={hasNext}
           getMore={getMore}
           chatContents={chatContents}

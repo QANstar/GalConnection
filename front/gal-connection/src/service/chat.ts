@@ -1,13 +1,13 @@
-import { IChatRoom, IPageChatContent } from '../types/type'
+import { IChatRoomOfUser, IPageChatContent } from '../types/type'
 import request from './request'
 
 // 获取用户所有的聊天房间
 export const getAllChatRoomsOfUser = () =>
-  request.get<IChatRoom[]>('/api/Chat/GetAllChatRoomsOfUser')
+  request.get<IChatRoomOfUser[]>('/api/Chat/GetAllChatRoomsOfUser')
 
 // 获取指定两个用户的聊天室
 export const getChatRoomByUserId = (targetUserId: number) =>
-  request.get<IChatRoom>(
+  request.get<IChatRoomOfUser>(
     `/api/Chat/GetChatRoomByUserId?targetUserId=${targetUserId}`
   )
 
@@ -20,3 +20,6 @@ export const getChatContentList = (params: {
   request.get<IPageChatContent>(
     `/api/Chat/GetChatContentList?roomId=${params.roomId}&nextId=${params.nextId}&limit=${params.limit}`
   )
+
+// 获取未读数量
+export const getUnReadNum = () => request.get<number>('/api/Chat/GetUnReadNum')

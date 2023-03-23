@@ -2,6 +2,7 @@ import { Empty } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import stores from '../../store'
 import { IChatContent, IChatRoom } from '../../types/type'
+import { formatTimeNoSecond } from '../../Utils/TimeUtils'
 import ChatInput from './ChatInput'
 import ChatItem from './ChatItem'
 import style from './style.module.scss'
@@ -12,11 +13,13 @@ interface IChatRoomProps {
   getMore: () => void
   chatContents: IChatContent[]
   hasNext: boolean
+  currentRoom?: IChatRoom
 }
 
 const ChatRoom = (props: IChatRoomProps) => {
   const { user } = stores
-  const { room, chatContents, hasNext, onSendMessage, getMore } = props
+  const { room, chatContents, hasNext, currentRoom, onSendMessage, getMore } =
+    props
   const chatRoomRef = useRef<HTMLDivElement>(null)
   const [isViewHistoryMode, setIsViewHistoryMode] = useState(false)
 
@@ -45,11 +48,25 @@ const ChatRoom = (props: IChatRoomProps) => {
     }
   }
 
+  // 聊天发出的时间
+  const chatTime = (nowTime: number, lastTime?: number) => {
+    if (lastTime) {
+      if (nowTime - lastTime > 1000 * 60 * 10) {
+        return formatTimeNoSecond(nowTime)
+      }
+    }
+    return undefined
+  }
+
   useEffect(() => {
     if (!isViewHistoryMode) {
       scrollToAnchor('chatBottom')
     }
   }, [chatContents])
+
+  useEffect(() => {
+    scrollToAnchor('chatBottom')
+  }, [currentRoom])
 
   return (
     <div className={style.room}>
@@ -66,8 +83,17 @@ const ChatRoom = (props: IChatRoomProps) => {
               onScroll={chatRoomScroll}
               className={style.chatContent}
             >
-              {chatContents.map((item) => (
-                <ChatItem key={item.id} chatContents={item} />
+              {chatContents.map((item, index) => (
+                <div key={item.id}>
+                  <div className={style.time}>
+                    {index - 1 >= 0 &&
+                      chatTime(
+                        item.createTime,
+                        chatContents[index - 1].createTime
+                      )}
+                  </div>
+                  <ChatItem chatContents={item} />
+                </div>
               ))}
               <div id="chatBottom"></div>
             </div>
