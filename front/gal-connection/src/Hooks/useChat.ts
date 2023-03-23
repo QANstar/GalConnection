@@ -43,7 +43,7 @@ const useChat = () => {
       })
       if (status === 200) {
         if (data.messages.length > 0) {
-          setNext(data.messages[data.messages.length - 1].id)
+          setNext(data.messages[0].id)
           setChatContents(data.messages.concat(chatContents))
         }
         setHasNext(data.hasNext)
@@ -66,12 +66,9 @@ const useChat = () => {
         limit
       })
       if (status === 200) {
-        console.log(data)
         if (data.messages.length > 0) {
-          setNext(data.messages[data.messages.length - 1].id)
+          setNext(data.messages[0].id)
         }
-        console.log(data)
-
         setChatContents(data.messages)
         setHasNext(data.hasNext)
       }
@@ -158,8 +155,13 @@ const useChat = () => {
   const getChatMessage = useCallback(async () => {
     if (signalR.connection) {
       signalR.connection.on('GetChatMessage', (content: string) => {
-        chatContents.push(JSON.parse(content))
-        setChatContents([...chatContents])
+        const res: IChatContent = JSON.parse(content)
+        setChatContents((item) => {
+          item.push(res)
+          const newItem = [...item]
+          return newItem
+        })
+        setNext(res.id)
       })
     }
   }, [chatContents])

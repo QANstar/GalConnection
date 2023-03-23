@@ -30,9 +30,11 @@ function TopNav () {
     chatRooms,
     currentRoom,
     chatContents,
+    hasNext: chatHasNext,
     getChatRoomByUserId,
     changeRoom,
-    sendMessage
+    sendMessage,
+    getMoreChatContentList
   } = useChat()
   const [notificationOpen, setNotificationOpen] = useState(false)
   const { chatCard } = stores
@@ -153,6 +155,8 @@ function TopNav () {
               placement="bottomRight"
               content={
                 <Chat
+                  hasNext={chatHasNext}
+                  getMore={getMoreChatContentList}
                   chatContents={chatContents}
                   onSendMessage={sendMessage}
                   selectUserId={chatCard.selectUserId}

@@ -423,11 +423,11 @@ export interface IChatContentState {
 // 聊天内容
 export interface IChatContent {
   id: number
-  chatUserId: number
+  userId: number
   roomId: number
   words: string
   createTime: number
-  chatUser: IUser
+  user: IUser
   ChatContentState: IChatContentState
   room: IChatRoom
 }

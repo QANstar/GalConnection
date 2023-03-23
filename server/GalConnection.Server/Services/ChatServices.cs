@@ -110,7 +110,7 @@ namespace GalConnection.Server.Services
         /// <param name="userId"></param>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        public ChatContent AddChat(ChatAddModel chatAdd, int userId)
+        public ChatContentsModel AddChat(ChatAddModel chatAdd, int userId)
         {
 
             ChatRoom chatRoom = Context.ChatRoom.Include(x => x.ChatRoomUsers).FirstOrDefault(x => x.id == chatAdd.roomId);
@@ -134,13 +134,16 @@ namespace GalConnection.Server.Services
                     isRead = x.userId == userId,
                 }).ToList()
             };
+            chatRoom.lastWords = newChat.words;
+            chatRoom.lastWordsTime = newChat.createTime;
             Context.ChatContent.Add(newChat);
             Context.SaveChanges();
-            ChatContent resChat = Context.ChatContent.Include(x => x.ChatContentState).Include(x => x.user).FirstOrDefault(x => x.id == newChat.id);
-            if (resChat == null)
+            ChatContent chat = Context.ChatContent.Include(x => x.ChatContentState).Include(x => x.user).FirstOrDefault(x => x.id == newChat.id);
+            if (chat == null)
             {
                 throw new Exception("内容不存在");
             }
+            ChatContentsModel resChat = Utils.ChangeModel.ChatToShowModel(chat);
             return resChat;
         }
         /// <summary>
@@ -160,7 +163,7 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("不是聊天室成员");
             }
-            List<ChatContent> messages = Context.ChatContent.OrderByDescending(x => x.createTime).Where(x => x.roomId == roomId && (nextId == 0 || x.id < nextId)).Include(x => x.ChatContentState).Include(x => x.user).Take(limit).ToList();
+            List<ChatContent> messages = Context.ChatContent.OrderByDescending(x => x.createTime).Where(x => x.roomId == roomId && (nextId == 0 || x.id < nextId)).Include(x => x.ChatContentState).Include(x => x.user).Take(limit).OrderBy(x => x.createTime).ToList();
             List<ChatContentsModel> chatContents = messages.Select(x => Utils.ChangeModel.ChatToShowModel(x)).ToList();
             var res = new
             {

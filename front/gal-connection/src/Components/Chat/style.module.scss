@@ -47,6 +47,7 @@
   margin: 5px;
   border-radius: 12px;
   overflow: auto;
+  padding: 10px;
 }
 
 .chatBottom {
@@ -80,4 +81,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.words {
+  max-width: 70%;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  margin: 0 10px;
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-top: 10px;
+}
+
+.chatItem {
+  display: flex;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.chatLeftItem {
+  @extend .chatItem;
+  .words {
+    border-top-left-radius: 0px;
+  }
+}
+
+.chatRightItem {
+  @extend .chatItem;
+  .words {
+    border-top-right-radius: 0px;
+    color: #fff;
+    background-color: #40a9ff;
+  }
+  justify-content: flex-start;
+  flex-direction: row-reverse;
 }

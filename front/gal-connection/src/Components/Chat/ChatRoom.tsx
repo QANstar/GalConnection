@@ -1,19 +1,56 @@
 import { Empty } from 'antd'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import stores from '../../store'
 import { IChatContent, IChatRoom } from '../../types/type'
 import ChatInput from './ChatInput'
+import ChatItem from './ChatItem'
 import style from './style.module.scss'
 
 interface IChatRoomProps {
   room?: IChatRoom
   onSendMessage: (words: string) => void
+  getMore: () => void
   chatContents: IChatContent[]
+  hasNext: boolean
 }
 
 const ChatRoom = (props: IChatRoomProps) => {
   const { user } = stores
-  const { room, chatContents, onSendMessage } = props
+  const { room, chatContents, hasNext, onSendMessage, getMore } = props
+  const chatRoomRef = useRef<HTMLDivElement>(null)
+  const [isViewHistoryMode, setIsViewHistoryMode] = useState(false)
+
+  const scrollToAnchor = (anchorName: string) => {
+    if (anchorName) {
+      const anchorElement = document.getElementById(anchorName)
+      if (anchorElement) {
+        anchorElement.scrollIntoView({ block: 'start', behavior: 'auto' })
+      }
+    }
+  }
+
+  const chatRoomScroll = () => {
+    if (chatRoomRef.current) {
+      const heightClient = chatRoomRef.current.clientHeight
+      const heightScrollTop = chatRoomRef.current.scrollTop
+      const heightScroll = chatRoomRef.current.scrollHeight
+      if (heightScrollTop < 10 && isViewHistoryMode && hasNext) {
+        getMore()
+      }
+      if (heightClient + heightScrollTop + 20 > heightScroll) {
+        if (isViewHistoryMode) setIsViewHistoryMode(false)
+      } else {
+        if (!isViewHistoryMode) setIsViewHistoryMode(true)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!isViewHistoryMode) {
+      scrollToAnchor('chatBottom')
+    }
+  }, [chatContents])
+
   return (
     <div className={style.room}>
       {room
@@ -24,10 +61,15 @@ const ChatRoom = (props: IChatRoomProps) => {
               .nickname || ''}
           </header>
           <main className={style.chatMain}>
-            <div className={style.chatContent}>
+            <div
+              ref={chatRoomRef}
+              onScroll={chatRoomScroll}
+              className={style.chatContent}
+            >
               {chatContents.map((item) => (
-                <div key={item.id}>{item.words}</div>
+                <ChatItem key={item.id} chatContents={item} />
               ))}
+              <div id="chatBottom"></div>
             </div>
             <div className={style.chatBottom}>
               <ChatInput onSendMessage={onSendMessage} />

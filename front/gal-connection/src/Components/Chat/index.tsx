@@ -13,6 +13,8 @@ interface IChatProps {
   getChatRoomByUserId: (id: number) => void
   onSendMessage: (words: string) => void
   chatContents: IChatContent[]
+  getMore: () => void
+  hasNext: boolean
 }
 
 const Chat = (props: IChatProps) => {
@@ -22,7 +24,9 @@ const Chat = (props: IChatProps) => {
     chatContents,
     getChatRoomByUserId,
     onItemClick,
-    onSendMessage
+    onSendMessage,
+    getMore,
+    hasNext
   } = props
 
   useEffect(() => {
@@ -40,6 +44,8 @@ const Chat = (props: IChatProps) => {
       </div>
       <div className={style.right}>
         <ChatRoom
+          hasNext={hasNext}
+          getMore={getMore}
           chatContents={chatContents}
           onSendMessage={onSendMessage}
           room={currentRoom}

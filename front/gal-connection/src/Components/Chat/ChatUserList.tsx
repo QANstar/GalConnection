@@ -48,7 +48,9 @@ const ChatUserList = (props: IChatUserListProps) => {
               }
               description={item.lastWords}
             />
-            <div>{getRelativeTime(item.lastWordsTime || 0)}</div>
+            <div>
+              {item.lastWordsTime ? getRelativeTime(item.lastWordsTime) : ''}
+            </div>
           </List.Item>
         )}
       />

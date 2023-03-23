@@ -68,7 +68,7 @@ namespace GalConnection.Server.Hubs
             string groupName = chatAdd.roomId.ToString();
             try
             {
-                ChatContent chat = chatServices.AddChat(chatAdd, userId);
+                ChatContentsModel chat = chatServices.AddChat(chatAdd, userId);
                 await Clients.Group(groupName).SendAsync("GetChatMessage", JsonUtils.ToJson(chat));
             }
             catch (Exception ex)

@@ -10,12 +10,14 @@ interface IChatInputProps {
 
 const ChatInput = (props: IChatInputProps) => {
   const [value, setValue] = useState('')
+  const onSend = () => {
+    setValue('')
+    props.onSendMessage(value)
+  }
   return (
     <Input.Group compact className={style.chatGroup}>
       <Input
-        onPressEnter={() => {
-          props.onSendMessage(value)
-        }}
+        onPressEnter={onSend}
         value={value}
         onChange={(val) => {
           setValue(val.target.value)
@@ -24,9 +26,7 @@ const ChatInput = (props: IChatInputProps) => {
         placeholder="请输入"
       />
       <Button
-        onClick={() => {
-          props.onSendMessage(value)
-        }}
+        onClick={onSend}
         icon={<SendOutlined />}
         className={style.chatBtn}
       />
