@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import style from './style.module.scss'
 import wave from '../../../assets/img/wave.svg'
 import { Link, useParams } from 'react-router-dom'
@@ -16,12 +16,17 @@ import {
 import { formatTime } from '../../../Utils/TimeUtils'
 import copy from 'copy-to-clipboard'
 import FloatMenu from '../../../Components/FloatMenu'
+import UserItem from '../../../Components/UserPaginationList/item'
+import { IUser } from '../../../types/type'
+import useUser from '../../../Hooks/useUser'
 
 const GameInfoPage = () => {
   const { gameId } = useParams()
   const { gameInfo, star, unStar, like, unLike } = useGameInfo(
     parseInt(gameId || '0')
   )
+  const [userInfo, setUserInfo] = useState<IUser>()
+  const { getUserInfo, followUser, unFollowUser } = useUser()
 
   const scrollToAnchor = (anchorName: string) => {
     if (anchorName) {
@@ -31,6 +36,19 @@ const GameInfoPage = () => {
       }
     }
   }
+
+  const getUser = async () => {
+    if (gameInfo?.userId) {
+      const res = await getUserInfo(gameInfo.userId)
+      if (res) {
+        setUserInfo(res)
+      }
+    }
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [gameInfo?.userId])
 
   const floatMenu = useMemo(() => {
     return [
@@ -127,11 +145,23 @@ const GameInfoPage = () => {
           viewport={{ once: false }}
           transition={{ duration: 1 }}
         >
-          <div className={style.tags}>
-            {gameInfo?.Tag.map((tag) => (
-              <Tag key={tag.tagId}>{tag.tag1}</Tag>
-            ))}
-          </div>
+          {userInfo && (
+            <UserItem
+              user={userInfo}
+              onUserClick={(userData) => {
+                window.open(`/userCenter/${userData.id}`)
+              }}
+              onFllowClick={async (val) => {
+                if (val.isFollow) {
+                  await unFollowUser(val.id)
+                } else {
+                  await followUser(val.id)
+                }
+                getUser()
+              }}
+            />
+          )}
+
           <div className={style.flowData}>
             {gameInfo && (
               <>
@@ -152,6 +182,11 @@ const GameInfoPage = () => {
           </div>
 
           <div className={style.introduce}> {gameInfo?.introduce}</div>
+          <div className={style.tags}>
+            {gameInfo?.Tag.map((tag) => (
+              <Tag key={tag.tagId}>{tag.tag1}</Tag>
+            ))}
+          </div>
         </motion.div>
         <div className={style.imgList}>
           <Image.PreviewGroup>
