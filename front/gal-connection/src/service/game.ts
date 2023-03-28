@@ -2,6 +2,7 @@ import {
   IAddEvent,
   IAddEventResponse,
   IBinding,
+  IComment,
   ICreateGame,
   IEdge,
   IEditEvent,
@@ -13,6 +14,7 @@ import {
   IGameRunData,
   ILines,
   IOptions,
+  IPageComment,
   IPageGameList,
   ISave
 } from '../types/type'
@@ -200,3 +202,15 @@ export const getStarGame = (userId: number, position: number, limit: number) =>
   request.get<IPageGameList>(
     `/api/Game/GetStarGame?userId=${userId}&position=${position}&limit=${limit}`
   )
+
+// 获取评论
+export const getComment = (gameId: number, position: number, limit: number) =>
+  request.get<IPageComment>(
+    `/api/Game/GetComment?gameId=${gameId}&position=${position}&limit=${limit}`
+  )
+
+// 添加评论
+export const addComment = (params: {
+  gameId: number
+  commentContent: string
+}) => request.post<IComment>('/api/Game/AddComment', params)

@@ -22,6 +22,7 @@ namespace GalConnection.Entity
         public virtual DbSet<ChatContentState> ChatContentState { get; set; }
         public virtual DbSet<ChatRoom> ChatRoom { get; set; }
         public virtual DbSet<ChatRoomUsers> ChatRoomUsers { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<EventTreeViewData> EventTreeViewData { get; set; }
         public virtual DbSet<EventsMap> EventsMap { get; set; }
@@ -87,6 +88,15 @@ namespace GalConnection.Entity
                     .HasForeignKey(d => d.userId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChatRoomUsers_User");
+            });
+
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasOne(d => d.user)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.userId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Comment_User");
             });
 
             modelBuilder.Entity<EventTreeViewData>(entity =>

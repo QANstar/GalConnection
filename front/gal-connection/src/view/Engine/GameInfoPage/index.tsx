@@ -19,6 +19,8 @@ import FloatMenu from '../../../Components/FloatMenu'
 import UserItem from '../../../Components/UserPaginationList/item'
 import { IUser } from '../../../types/type'
 import useUser from '../../../Hooks/useUser'
+import Comments from '../../../Components/Comments'
+import useComment from '../../../Hooks/useComment'
 
 const GameInfoPage = () => {
   const { gameId } = useParams()
@@ -27,6 +29,9 @@ const GameInfoPage = () => {
   )
   const [userInfo, setUserInfo] = useState<IUser>()
   const { getUserInfo, followUser, unFollowUser } = useUser()
+  const { comments, addComment, page, total, setPage, limit } = useComment(
+    parseInt(gameId || '0')
+  )
 
   const scrollToAnchor = (anchorName: string) => {
     if (anchorName) {
@@ -119,7 +124,7 @@ const GameInfoPage = () => {
             <div className={style.menu}>
               <ul>
                 <li onClick={() => scrollToAnchor('introduce')}>介绍</li>|
-                <li>评论</li>
+                <li onClick={() => scrollToAnchor('comments')}>评论</li>
               </ul>
             </div>
           </div>
@@ -128,7 +133,7 @@ const GameInfoPage = () => {
           <img src={wave} alt="波浪" />
         </div>
       </div>
-      <div id="introduce" className={style.introduction}>
+      <div id="introduce" className={style.content}>
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -211,6 +216,38 @@ const GameInfoPage = () => {
             ))}
           </Image.PreviewGroup>
         </div>
+      </div>
+      <div id="comments" className={style.content}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+          className={style.header}
+        >
+          <h1>评论</h1>
+          <span>comments</span>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+        >
+          <Comments
+            current={page}
+            total={total}
+            limit={limit}
+            onPageChange={setPage}
+            comments={comments}
+            onAddClick={(val) => {
+              addComment({
+                gameId: parseInt(gameId || '0'),
+                commentContent: val
+              })
+            }}
+          />
+        </motion.div>
       </div>
       <FloatMenu menus={floatMenu} />
     </div>

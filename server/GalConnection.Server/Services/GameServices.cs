@@ -1426,5 +1426,52 @@ namespace GalConnection.Server.Services
             };
             return JsonUtils.ToJson(res);
         }
+        /// <summary>
+        /// 添加评论
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Comment AddComment(CommentModel newComment, int userId)
+        {
+            Game game = Context.Game.FirstOrDefault(x => x.id == newComment.gameId);
+            if (game == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            Comment comment = new()
+            {
+                createTime = TimeUtils.GetNowTime(),
+                gameId = game.id,
+                userId = userId,
+                commentContent = newComment.commentContent
+            };
+            Context.Comment.Add(comment);
+            Context.SaveChanges();
+            Comment res = Context.Comment.Include(x => x.user).FirstOrDefault(x => x.id == comment.id);
+            if (res == null)
+            {
+                throw new Exception("评论不存在");
+            }
+            return res;
+        }
+        /// <summary>
+        /// 获取评论
+        /// </summary>
+        /// <param name="gameid"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public string GetComment(int gameid, int position, int limit)
+        {
+            List<Comment> comments = Context.Comment.Include(x => x.user).Where(x => x.gameId == gameid).OrderByDescending(x => x.createTime).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                comments,
+                total = Context.Comment.Include(x => x.user).Where(x => x.gameId == gameid).Count()
+            };
+            return JsonUtils.ToJson(res);
+        }
     }
 }

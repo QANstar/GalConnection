@@ -442,3 +442,19 @@ export interface IPageChatContent {
   messages: IChatContent[]
   hasNext: boolean
 }
+
+// 评论
+export interface IComment {
+  id: number
+  gameId: number
+  userId: number
+  createTime: number
+  commentContent: string
+  user: IUser
+}
+
+// 评论列表响应结果
+export interface IPageComment {
+  comments: IComment[]
+  total: number
+}

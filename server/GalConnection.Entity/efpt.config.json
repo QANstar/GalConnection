@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Comment]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Event]",
          "ObjectType": 0
       },
