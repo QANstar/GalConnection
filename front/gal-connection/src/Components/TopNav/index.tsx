@@ -1,21 +1,20 @@
 import { BellOutlined, MenuOutlined, MessageOutlined } from '@ant-design/icons'
-import { Avatar, Badge, Drawer, Dropdown, Menu, Popover } from 'antd'
+import { Badge, Drawer, Popover } from 'antd'
 import { Observer } from 'mobx-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useChat from '../../Hooks/useChat'
 import useNotification from '../../Hooks/useNotification'
-import useUser from '../../Hooks/useUser'
 import stores from '../../store'
 import { NotificationType } from '../../types/enums'
 import Chat from '../Chat'
 import NotificationList from '../NotificationList'
 import SearchInput from '../SearchInput'
 import style from './style.module.scss'
+import UserMenu from './UserMenu'
 
 function TopNav () {
   const navigate = useNavigate()
-  const { user, logout } = useUser()
   const [drawervisible, setDrawerVisible] = useState(false)
   const {
     notificationsCount,
@@ -47,47 +46,6 @@ function TopNav () {
     setDrawerVisible(false)
   }
 
-  const menu = (
-    <Menu
-      items={
-        user.token !== ''
-          ? [
-              {
-                key: 'userCenter',
-                label: <Link to={`/userCenter/${user.id}`}>用户中心</Link>
-              },
-              {
-                key: 'star',
-                label: <Link to={`/moreUserStar/${user.id}`}>我的收藏</Link>
-              },
-              {
-                key: 'material',
-                label: (
-                  <Link to={`/myMaterial/${user.groupId}/0`}>素材中心</Link>
-                )
-              },
-              {
-                key: 'creation',
-                label: <Link to={'/creation'}>创作中心</Link>
-              },
-              {
-                key: 'logout',
-                label: <div onClick={logout}>登出</div>
-              }
-            ]
-          : [
-              {
-                key: 'login',
-                label: <Link to="/login">登录</Link>
-              },
-              {
-                key: 'signin',
-                label: <Link to="/signup">注册</Link>
-              }
-            ]
-      }
-    />
-  )
   return (
     <Observer>
       {() => (
@@ -188,9 +146,7 @@ function TopNav () {
               </Badge>
             </Popover>
 
-            <Dropdown overlay={menu}>
-              <Avatar className={style.avatar} src={user.avatar} size={40} />
-            </Dropdown>
+            <UserMenu />
           </div>
           <Drawer
             width="250px"

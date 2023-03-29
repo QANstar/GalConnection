@@ -20,10 +20,6 @@
   align-items: center;
 }
 
-.avatar {
-  cursor: pointer;
-}
-
 .title {
   transition: 0.2s ease-in;
   cursor: pointer;
@@ -83,4 +79,86 @@
 .connection {
   color: $theme;
   font-size: 16px;
+}
+
+.menu {
+  width: 200px;
+}
+
+.userInfo {
+  margin-left: 10px;
+}
+
+.nickname {
+  color: #ff85c0;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.follow {
+  margin-top: 2px;
+  display: flex;
+  cursor: pointer;
+  a {
+    color: #40a9ff;
+    font-size: 14px;
+    margin-right: 20px;
+  }
+}
+
+.userAvatarMask {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  z-index: 901;
+}
+
+.avatar {
+  transition: 0.2s ease-in;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  z-index: 901;
+}
+
+.activeAcatar {
+  @extend .avatar;
+  transform: scale(2) translateY(20px) translateX(-12px);
+}
+
+.menuList {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  transition: 0.2s ease;
+  margin: 2px 0;
+  padding: 8px;
+  color: #595959;
+  cursor: pointer;
+  border-radius: 8px;
+  &:hover {
+    color: #ff85c0;
+    background-color: #f5f5f5;
+  }
+}
+
+.logoutMenuItem {
+  @extend .menuItem;
+  color: #ff7875;
+  &:hover {
+    color: #f5222d;
+  }
+}
+
+.menuIcon {
+  margin-right: 15px;
 }
