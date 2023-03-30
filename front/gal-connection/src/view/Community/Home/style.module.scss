@@ -1,0 +1,76 @@
+$moreWidth: 360px;
+
+.home {
+  height: 100%;
+  padding: 10px 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.recommender {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  transition: 0.2s ease-out;
+  padding-right: $moreWidth;
+}
+
+.recommenderMoreUnOpen {
+  @extend .recommender;
+  padding-right: 0;
+}
+
+.more {
+  transition: 0.2s ease-out;
+  width: $moreWidth;
+  height: 100%;
+  border-left: 1px solid #e3e5e7;
+  overflow-x: visible;
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  top: 0;
+  background-color: #fff;
+}
+
+.moreUnOpen {
+  @extend .more;
+  right: -360px;
+}
+
+.moreMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.moreBtn {
+  transition: 0.2s ease-out;
+  margin-left: 10px;
+  margin-top: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.moreBtnUnOpen {
+  @extend .moreBtn;
+  left: -80px;
+}
+
+.moreGames {
+  flex: 1;
+  overflow: auto;
+}
+
+.tabs {
+  margin-top: 35px;
+}
+
+@media screen and (max-width: 700px) {
+  .recommender {
+    padding-right: 0;
+  }
+}

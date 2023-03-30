@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar } from 'antd'
-import React from 'react'
+import { Avatar, Tag } from 'antd'
+import React, { useMemo } from 'react'
 import { IGame } from '../../types/type'
 import { getRelativeTime } from '../../Utils/TimeUtils'
 import style from './style.module.scss'
@@ -8,12 +8,30 @@ import style from './style.module.scss'
 interface IGameShowItemProps {
   game: IGame
   onClick: () => void
+  showIndex?: boolean
+  index: number
 }
 
 function GameShowItem (props: IGameShowItemProps) {
+  const tagColor = useMemo(() => {
+    if (props.index === 0) {
+      return '#ffc53d'
+    } else if (props.index === 1) {
+      return '#ff85c0'
+    } else if (props.index === 2) {
+      return '#ffd666'
+    } else {
+      return '#d9d9d9'
+    }
+  }, [props.index])
   return (
     <div className={style.main}>
       <div onClick={() => props.onClick()} className={style.image}>
+        {props.showIndex && (
+          <Tag className={style.tag} color={tagColor}>
+            {props.index + 1}
+          </Tag>
+        )}
         <div
           className={style.gameCover}
           style={{ backgroundImage: `url(${props.game.cover})` }}

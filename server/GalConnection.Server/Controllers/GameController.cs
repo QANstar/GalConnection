@@ -135,11 +135,51 @@ namespace GalConnection.Server.Controllers
         [EnableCors("any")]
         [HttpGet]
         [Authorize]
-        public IActionResult GetRecommenderGameList(int lastId)
+        public IActionResult GetRecommenderGameList(int lastId, int limit = 10)
         {
             try
             {
-                return Ok(JsonUtils.ToJson(gameServices.GetRecommenderGameList(lastId)));
+                return Ok(gameServices.GetRecommenderGameList(lastId, limit));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取关注的人的游戏
+        /// </summary>
+        /// <param name="lastId"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFollowGameList(int lastId, int limit = 10)
+        {
+            try
+            {
+                var auth = HttpContext.AuthenticateAsync();
+                int userID = int.Parse(auth.Result.Principal.Claims.First(t => t.Type.Equals(ClaimTypes.Sid))?.Value);
+                return Ok(gameServices.GetFollowGameList(userID, lastId, limit));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取top10游戏
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetTopTenGameList()
+        {
+            try
+            {
+                return Ok(JsonUtils.ToJson(gameServices.GetTopTenGameList()));
             }
             catch (Exception ex)
             {

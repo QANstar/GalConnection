@@ -45,7 +45,8 @@ function UserMenu () {
           </Link>
           <Link className={style.menuItem} to={`/myMaterial/${user.groupId}/0`}>
             <div>
-              <FolderOutlined className={style.menuIcon} /> 素材中心
+              <FolderOutlined className={style.menuIcon} />
+              素材中心
             </div>
             <RightOutlined />
           </Link>

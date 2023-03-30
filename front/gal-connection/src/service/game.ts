@@ -12,6 +12,7 @@ import {
   IGame,
   IGameCreateInfo,
   IGameRunData,
+  IKeyPageGameList,
   ILines,
   IOptions,
   IPageComment,
@@ -170,8 +171,23 @@ export const delGame = (params: { gameId: number }) =>
   request.post<boolean>(`/api/Game/DelGame?gameId=${params.gameId}`)
 
 // 获取游戏推荐
-export const getRecommenderGameList = () =>
-  request.get<IGame[]>('/api/Game/GetRecommenderGameList')
+export const getRecommenderGameList = (params: {
+  lastId: number
+  limit: number
+}) =>
+  request.get<IKeyPageGameList>(
+    `/api/Game/GetRecommenderGameList?lastId=${params.lastId}&limit=${params.limit}`
+  )
+
+// 获取关注的人的游戏
+export const getFollowGameList = (params: { lastId: number; limit: number }) =>
+  request.get<IKeyPageGameList>(
+    `/api/Game/GetFollowGameList?lastId=${params.lastId}&limit=${params.limit}`
+  )
+
+// 获取top10游戏
+export const getTopTenGameList = () =>
+  request.get<IGame[]>('/api/Game/GetTopTenGameList')
 
 // 存档
 export const saveGame = (params: ISave) =>

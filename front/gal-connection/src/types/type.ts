@@ -154,6 +154,12 @@ export interface IPageGameList {
   games: IGame[]
 }
 
+// 游戏键分页结果
+export interface IKeyPageGameList {
+  hasNext: boolean
+  games: IGame[]
+}
+
 // 标签
 export interface ITag {
   tagId: number

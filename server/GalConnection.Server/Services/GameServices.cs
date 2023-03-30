@@ -6,6 +6,7 @@ using GalConnection.Server.Utils;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static GalConnection.Model.CreateLinesModel;
 using static GalConnection.Model.EventAddModel;
@@ -292,9 +293,40 @@ namespace GalConnection.Server.Services
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public List<Game> GetRecommenderGameList(int lastId)
+        public string GetRecommenderGameList(int lastId, int limit = 10)
         {
             List<Game> games = Context.Game.Include(x => x.user).Where(x => x.id > lastId && x.state == GameState.PUBLISH).Take(10).ToList();
+            var res = new
+            {
+                games,
+                hasNext = Context.Game.Where(x => x.id > lastId && x.state == GameState.PUBLISH).Count() > limit
+            };
+            return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 获取关注的人的游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="lastId"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public string GetFollowGameList(int userId, int lastId, int limit = 10)
+        {
+            List<Game> games = Context.Game.Include(x => x.user).OrderByDescending(x => x.id).Where(x => x.state == GameState.PUBLISH && Context.Follow.FirstOrDefault(y => y.userId == userId && y.followUserId == x.userId) != null && (lastId == 0 || x.id < lastId)).Take(10).ToList();
+            var res = new
+            {
+                games,
+                hasNext = Context.Game.Where(x => x.state == GameState.PUBLISH && Context.Follow.FirstOrDefault(x => x.userId == userId && x.followUserId == x.userId) != null && (lastId == 0 || x.id < lastId)).Count() > limit
+            };
+            return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 获取top10游戏
+        /// </summary>
+        /// <returns></returns>
+        public List<Game> GetTopTenGameList()
+        {
+            List<Game> games = Context.Game.Include(x => x.user).OrderByDescending(x => x.playNum).Where(x => x.state == GameState.PUBLISH).Take(10).ToList();
             return games;
         }
         /// <summary>
