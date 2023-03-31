@@ -11,6 +11,7 @@ interface IPlayLinesProps {
   skipClick: () => void
   backLogClick: () => void
   isDevMode?: boolean
+  currentLinesText?: string
 }
 function PlayLines (props: IPlayLinesProps) {
   const { gameId } = useParams()
@@ -41,7 +42,11 @@ function PlayLines (props: IPlayLinesProps) {
       {props.data && (
         <div className={style.lines}>
           <div className={style.name}>{props.data.characters}</div>
-          <div className={style.text}>{props.data.linesContent1}</div>
+          <div className={style.text}>
+            {props.isDevMode
+              ? props.data.linesContent1
+              : props.currentLinesText}
+          </div>
         </div>
       )}
       {!props.isDevMode && (

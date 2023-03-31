@@ -28,6 +28,7 @@ const useGame = (gameId: number, state?: IGameState) => {
   const [saves, setSaves] = useState<ISave[]>([])
   const [linesNow, setLinesNow] = useState<ILines>()
   const [evnetNow, setEventNow] = useState<IEvent>()
+  const [currentLinesText, setCurrentLinesText] = useState<string>('')
   const [backLog, setBackLog] = useState<IBackLog[]>([])
   const [options, setOptions] = useState<IOptions[]>([])
   const [choOptions, setChoOptions] = useState<string[]>([])
@@ -302,6 +303,25 @@ const useGame = (gameId: number, state?: IGameState) => {
     nextLinesRef.current = nextLines
   })
 
+  useEffect(() => {
+    setCurrentLinesText('')
+    let currentIndex = 0
+    let intervalId: any = null
+    if (linesNow && linesNow.LinesContent[0].linesContent1.length > 0) {
+      const content = '      ' + linesNow.LinesContent[0].linesContent1
+      intervalId = setInterval(() => {
+        setCurrentLinesText((prevText) => {
+          return prevText + content[currentIndex]
+        })
+        currentIndex++
+        if (currentIndex >= content.length - 1) {
+          clearInterval(intervalId)
+        }
+      }, 10)
+    }
+    return () => clearInterval(intervalId)
+  }, [linesNow])
+
   return {
     loading,
     error,
@@ -313,6 +333,7 @@ const useGame = (gameId: number, state?: IGameState) => {
     optionsVisable,
     saves,
     backLog,
+    currentLinesText,
     nextLines,
     selectOptions,
     saveGame,

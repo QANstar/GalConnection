@@ -26,6 +26,7 @@ interface IGameProps {
   autoClick?: () => void
   skipClick?: () => void
   jumpClick?: (gameState: IGameState) => void
+  currentLinesText?: string
 }
 
 function Game (props: IGameProps) {
@@ -117,6 +118,7 @@ function Game (props: IGameProps) {
           charaPics={props.lines.LinesChara}
         />
         <PlayLines
+          currentLinesText={props.currentLinesText}
           autoClick={() => {
             if (props.autoClick) {
               props.autoClick()

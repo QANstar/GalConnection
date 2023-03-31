@@ -26,6 +26,7 @@ function Play () {
     optionsVisable,
     saves,
     backLog,
+    currentLinesText,
     selectOptions,
     nextLines,
     saveGame,
@@ -40,6 +41,7 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          currentLinesText={currentLinesText}
           jumpClick={loadGame}
           backLogData={backLog}
           onDelSave={delSave}
