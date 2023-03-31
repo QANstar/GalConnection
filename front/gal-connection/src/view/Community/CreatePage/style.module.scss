@@ -13,6 +13,9 @@
   left: 0;
   top: $navHight;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .navMenuCollapsed {

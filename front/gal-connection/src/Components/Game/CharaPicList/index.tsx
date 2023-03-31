@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import React, { useEffect, useRef } from 'react'
 import { ILinesChara } from '../../../types/type'
 import style from './style.module.scss'
@@ -30,7 +31,14 @@ const CharaPicList = (props: ICharaPicListProps) => {
   return (
     <div ref={charaImgList} className={style.cover}>
       {props.charaPics.map((charaPic, index) => (
-        <img key={index} src={charaPic.charaPics} />
+        <motion.img
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.2 }}
+          key={index}
+          src={charaPic.charaPics}
+        />
       ))}
     </div>
   )

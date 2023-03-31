@@ -53,31 +53,49 @@ function CreatePage () {
   return (
     <div className={style.main}>
       <div style={{ width: collapsed ? 80 : 165 }} className={style.navMenu}>
-        <div className={style.collapsedBtn}>
-          <Button
-            block
-            type="default"
-            onClick={() => {
-              setCollapsed(!collapsed)
-            }}
-            style={{ marginBottom: 16 }}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </Button>
-          <a target="_blank" href={`/engine/${gameId}/info`} rel="noreferrer">
-            <Button block type="default" style={{ marginBottom: 16 }}>
-              {collapsed
-                ? (
-                <PlayCircleOutlined />
-                  )
-                : (
-                <div className={style.playBtn}>
-                  <PlayCircleOutlined style={{ marginRight: 10 }} />
-                  试玩
-                </div>
-                  )}
+        <div>
+          <div className={style.collapsedBtn}>
+            <Button
+              block
+              type="default"
+              onClick={() => {
+                setCollapsed(!collapsed)
+              }}
+              style={{ marginBottom: 16 }}
+            >
+              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Button>
-          </a>
+            <a target="_blank" href={`/engine/${gameId}/info`} rel="noreferrer">
+              <Button block type="default" style={{ marginBottom: 16 }}>
+                {collapsed
+                  ? (
+                  <PlayCircleOutlined />
+                    )
+                  : (
+                  <div className={style.playBtn}>
+                    <PlayCircleOutlined style={{ marginRight: 10 }} />
+                    试玩
+                  </div>
+                    )}
+              </Button>
+            </a>
+          </div>
+          <Menu
+            selectedKeys={[
+              location.pathname.split('/')[
+                location.pathname.split('/').length - 1
+              ]
+            ]}
+            onSelect={(data) => {
+              navigate(data.key)
+            }}
+            mode="inline"
+            inlineCollapsed={collapsed}
+            items={items}
+          />
+        </div>
+
+        <div style={{ marginBottom: 40 }} className={style.collapsedBtn}>
           <Button
             block
             danger={gameInfo?.state === GameState.PUBLISH}
@@ -148,20 +166,6 @@ function CreatePage () {
                 )}
           </Button>
         </div>
-
-        <Menu
-          selectedKeys={[
-            location.pathname.split('/')[
-              location.pathname.split('/').length - 1
-            ]
-          ]}
-          onSelect={(data) => {
-            navigate(data.key)
-          }}
-          mode="inline"
-          inlineCollapsed={collapsed}
-          items={items}
-        />
       </div>
       <div
         style={{ paddingLeft: collapsed ? 80 : 165 }}

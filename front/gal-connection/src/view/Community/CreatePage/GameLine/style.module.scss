@@ -24,7 +24,7 @@
 .right {
   width: 300px;
   height: 100%;
-  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px;
   overflow: auto;
@@ -43,9 +43,10 @@
 .lineSetting {
   width: 100%;
   height: 150px;
-  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 5px;
+  margin-bottom: 5px;
 }
 
 .noLinesPage {
@@ -67,7 +68,7 @@
 .top {
   width: 100%;
   height: 50px;
-  box-shadow: 0 0 1px 0 rgba(#185ee0, 0.15), 0 6px 12px 0 rgba(#185ee0, 0.15);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px;
   display: flex;

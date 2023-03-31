@@ -39,10 +39,10 @@ function PlayLines (props: IPlayLinesProps) {
   return (
     <div className={style.play_lines}>
       {props.data && (
-        <>
+        <div className={style.lines}>
           <div className={style.name}>{props.data.characters}</div>
           <div className={style.text}>{props.data.linesContent1}</div>
-        </>
+        </div>
       )}
       {!props.isDevMode && (
         <div className={style.play_tool}>
@@ -55,7 +55,7 @@ function PlayLines (props: IPlayLinesProps) {
             <li onClick={backLogClick}>BackLog</li>
             <li onClick={openSave}>Save</li>
             <li onClick={openLoad}>Load</li>
-            <li>Config</li>
+            {/* <li>Config</li> */}
           </ul>
         </div>
       )}

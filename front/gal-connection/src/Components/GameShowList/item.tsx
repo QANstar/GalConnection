@@ -1,5 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Tag } from 'antd'
+import { motion } from 'framer-motion'
 import React, { useMemo } from 'react'
 import { IGame } from '../../types/type'
 import { getRelativeTime } from '../../Utils/TimeUtils'
@@ -25,7 +26,13 @@ function GameShowItem (props: IGameShowItemProps) {
     }
   }, [props.index])
   return (
-    <div className={style.main}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: false }}
+      transition={{ duration: 0.2 }}
+      className={style.main}
+    >
       <div onClick={() => props.onClick()} className={style.image}>
         {props.showIndex && (
           <Tag className={style.tag} color={tagColor}>
@@ -56,7 +63,7 @@ function GameShowItem (props: IGameShowItemProps) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

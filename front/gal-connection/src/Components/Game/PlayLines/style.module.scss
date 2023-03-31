@@ -2,12 +2,27 @@
   z-index: 101;
   position: absolute;
   bottom: 0;
-  left: 15%;
-  right: 15%;
+  left: 0;
+  right: 0;
   height: 25%;
-  border-radius: 8px;
-  padding: 2% 3%;
-  background-color: rgba(59, 59, 59, 0.6);
+  padding: 2% 20%;
+  padding-bottom: 1%;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+    rgba($color: #000000, $alpha: 0.1),
+    rgba($color: #000000, $alpha: 0.8)
+  );
+  display: flex;
+  flex-direction: column;
+  &:hover {
+    .play_tool ul {
+      opacity: 1;
+    }
+  }
+}
+
+.lines {
+  flex: 1;
 }
 
 .name {
@@ -21,7 +36,6 @@
   color: #fff;
   font-size: 90%;
   overflow: hidden;
-  height: 70%;
 }
 
 .play_lines::before {
@@ -37,16 +51,24 @@
 }
 
 .play_tool ul {
+  transition: 0.2s ease-in;
   padding: 0px;
   display: flex;
   justify-content: space-evenly;
+  opacity: 0;
 }
 
 .play_tool li {
+  height: 20px;
   list-style: none;
   color: #fff;
-  font-size: 80%;
+  font-size: 16px;
+  line-height: 20px;
   cursor: pointer;
+  a {
+    font-size: 16px;
+    line-height: 20px;
+  }
 }
 
 .play_tool li:hover {
