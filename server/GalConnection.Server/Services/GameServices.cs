@@ -74,6 +74,23 @@ namespace GalConnection.Server.Services
             return JsonUtils.ToJson(res);
         }
         /// <summary>
+        /// 获取用户删除的游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="position"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public string GetDelGameOfUser(int userId, int position, int limit)
+        {
+            List<Game> games = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state == GameState.DELETE).OrderByDescending(x => x.createdAt).Skip(position).Take(limit).ToList();
+            var res = new
+            {
+                games,
+                total = Context.Game.Include(x => x.user).Include(x => x.Tag).Where(x => x.userId == userId && x.state == GameState.DELETE).Count()
+            };
+            return JsonUtils.ToJson(res);
+        }
+        /// <summary>
         /// 获取用户发布的游戏
         /// </summary>
         /// <param name="userId"></param>
@@ -393,6 +410,50 @@ namespace GalConnection.Server.Services
                 throw new Exception("无权限");
             }
             gameInfo.state = GameState.DELETE;
+            Context.SaveChanges();
+            return true;
+        }
+        /// <summary>
+        /// 彻底删除游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool CompletelyDelGame(int userId, int gameId)
+        {
+            Game gameInfo = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.id == gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            Context.Game.Remove(gameInfo);
+            Context.SaveChanges();
+            return true;
+        }
+        /// <summary>
+        /// 恢复游戏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public bool RestoreGame(int userId, int gameId)
+        {
+            Game gameInfo = Context.Game.Include(x => x.Tag).FirstOrDefault(x => x.id == gameId);
+            if (gameInfo == null)
+            {
+                throw new Exception("游戏不存在");
+            }
+            if (!groupServices.CheckRole(gameInfo.groupId, userId, GroupRole.WRITER))
+            {
+                throw new Exception("无权限");
+            }
+            gameInfo.state = GameState.DEVELOPMENT;
             Context.SaveChanges();
             return true;
         }

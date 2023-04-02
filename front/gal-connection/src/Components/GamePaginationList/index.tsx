@@ -12,12 +12,18 @@ interface IGameShowListProps {
   limit: number
   onPageChange: (page: number) => void
   loading?: boolean
+  isRecycleBin?: boolean
+  onDelClick?: (gameId: number) => void
+  onRestoreClick?: (gameId: number) => void
 }
 
 function GamePaginationList (props: IGameShowListProps) {
   return (
     <div className={style.main}>
       <GameShowList
+        onDelClick={props.onDelClick}
+        onRestoreClick={props.onRestoreClick}
+        isRecycleBin={props.isRecycleBin}
         loading={props.loading}
         games={props.games}
         onItemClick={props.onItemClick}

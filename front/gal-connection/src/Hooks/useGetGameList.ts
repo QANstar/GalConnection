@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { IGame } from '../types/type'
 import * as gameService from '../service/game'
+import { message } from 'antd'
 
-type GetGameType = 'selfCreate' | 'search' | 'publish' | 'star'
+type GetGameType = 'selfCreate' | 'search' | 'publish' | 'star' | 'delete'
 
 interface IGameRequestData {
   searchContent?: string
@@ -80,6 +81,26 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
     }
   }, [reqData?.searchContent, reqData?.userId, limit, page, type])
 
+  // 获取用户删除的游戏
+  const getDelGameOfUser = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { data, status } = await gameService.getDelGameOfUser(
+        (page - 1) * limit,
+        limit
+      )
+      if (status === 200) {
+        setGameList(data.games)
+        setTotal(data.total)
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [reqData?.searchContent, reqData?.userId, limit, page, type])
+
   // 获取用户收藏的游戏
   const getStarGame = useCallback(async () => {
     try {
@@ -101,7 +122,39 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
     }
   }, [reqData?.searchContent, reqData?.userId, limit, page, type])
 
-  useEffect(() => {
+  const completelyDelGame = useCallback(async (gameId: number) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { status } = await gameService.completelyDelGame({ gameId })
+      if (status === 200) {
+        getData()
+        message.success('彻底删除成功')
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const restoreGame = useCallback(async (gameId: number) => {
+    try {
+      setLoading(true)
+      setError('')
+      const { status } = await gameService.restoreGame({ gameId })
+      if (status === 200) {
+        getData()
+        message.success('已还原')
+      }
+    } catch (e: any) {
+      setError(e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const getData = () => {
     if (type === 'selfCreate') {
       getGamesOfUser()
     } else if (type === 'search') {
@@ -110,7 +163,13 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
       getGameOfUserPublish()
     } else if (type === 'star') {
       getStarGame()
+    } else if (type === 'delete') {
+      getDelGameOfUser()
     }
+  }
+
+  useEffect(() => {
+    getData()
   }, [type, reqData?.searchContent, limit, page])
 
   return {
@@ -120,7 +179,9 @@ const useGetGameList = (type: GetGameType, reqData?: IGameRequestData) => {
     page,
     total,
     limit,
-    setPage
+    setPage,
+    completelyDelGame,
+    restoreGame
   }
 }
 

@@ -133,7 +133,7 @@ function CreatePage () {
           </Button>
           <Button
             block
-            danger={gameInfo?.state === GameState.PUBLISH}
+            danger
             type="primary"
             style={{ marginBottom: 16 }}
             onClick={() => {

@@ -51,6 +51,12 @@ export const getGamesOfUser = (position: number, limit: number) =>
     `/api/Game/GetGamesOfUser?position=${position}&limit=${limit}`
   )
 
+// 获取用户删除的游戏
+export const getDelGameOfUser = (position: number, limit: number) =>
+  request.get<IPageGameList>(
+    `/api/Game/GetDelGameOfUser?position=${position}&limit=${limit}`
+  )
+
 // 获取用户发布的游戏
 export const getGameOfUserPublish = (
   userId: number,
@@ -169,6 +175,14 @@ export const gamePublish = (params: { gameId: number; isPublish: boolean }) =>
 // 删除游戏
 export const delGame = (params: { gameId: number }) =>
   request.post<boolean>(`/api/Game/DelGame?gameId=${params.gameId}`)
+
+// 彻底删除游戏
+export const completelyDelGame = (params: { gameId: number }) =>
+  request.post<boolean>(`/api/Game/CompletelyDelGame?gameId=${params.gameId}`)
+
+// 恢复游戏
+export const restoreGame = (params: { gameId: number }) =>
+  request.post<boolean>(`/api/Game/RestoreGame?gameId=${params.gameId}`)
 
 // 获取游戏推荐
 export const getRecommenderGameList = (params: {

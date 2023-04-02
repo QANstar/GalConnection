@@ -9,6 +9,9 @@ interface IGameShowListProps {
   onItemClick: (game: IGame) => void
   showIndex?: boolean
   loading?: boolean
+  isRecycleBin?: boolean
+  onDelClick?: (gameId: number) => void
+  onRestoreClick?: (gameId: number) => void
 }
 
 function GameShowList (props: IGameShowListProps) {
@@ -30,6 +33,9 @@ function GameShowList (props: IGameShowListProps) {
         <>
           {props.games.map((item, index) => (
             <GameShowItem
+              onDelClick={props.onDelClick}
+              onRestoreClick={props.onRestoreClick}
+              isRecycleBin={props.isRecycleBin}
               index={index}
               showIndex={props.showIndex}
               onClick={() => props.onItemClick(item)}

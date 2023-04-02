@@ -25,6 +25,7 @@ import MoreUserGame from '../Community/MoreUserGame'
 import FollowList from '../Community/FollowsAndFans/FollowList'
 import FansList from '../Community/FollowsAndFans/FansList'
 import MoreUserStar from '../Community/MoreUserStar'
+import MyDelCreation from '../Community/MyDelCreation'
 
 function App () {
   const { getSelfInfo } = useUser()
@@ -50,6 +51,7 @@ function App () {
         <Route path="/userNotFound" element={<UserNotFound />} />
         <Route path="/creation" element={<CreationLayout />}>
           <Route path="" element={<MyCreation />} />
+          <Route path="delete" element={<MyDelCreation />} />
         </Route>
         <Route path="/myMaterial/:groupId/:pid" element={<MyMaterial />} />
         <Route path="/startCreate" element={<StartCreate />} />

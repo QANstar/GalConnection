@@ -14,9 +14,9 @@ function CreationLayout () {
       key: 'mygame'
     },
     {
-      link: '/creation/statistics',
-      text: '统计',
-      key: 'myMaterial'
+      link: '/creation/delete',
+      text: '回收站',
+      key: 'delete'
     }
   ]
 

@@ -1,5 +1,9 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Tag } from 'antd'
+import {
+  DeleteOutlined,
+  RollbackOutlined,
+  UserOutlined
+} from '@ant-design/icons'
+import { Avatar, Button, Tag } from 'antd'
 import { motion } from 'framer-motion'
 import React, { useMemo } from 'react'
 import { IGame } from '../../types/type'
@@ -10,7 +14,10 @@ interface IGameShowItemProps {
   game: IGame
   onClick: () => void
   showIndex?: boolean
+  isRecycleBin?: boolean
   index: number
+  onDelClick?: (gameId: number) => void
+  onRestoreClick?: (gameId: number) => void
 }
 
 function GameShowItem (props: IGameShowItemProps) {
@@ -20,7 +27,7 @@ function GameShowItem (props: IGameShowItemProps) {
     } else if (props.index === 1) {
       return '#ff85c0'
     } else if (props.index === 2) {
-      return '#ffd666'
+      return '#40a9ff'
     } else {
       return '#d9d9d9'
     }
@@ -39,9 +46,40 @@ function GameShowItem (props: IGameShowItemProps) {
             {props.index + 1}
           </Tag>
         )}
+        {props.isRecycleBin && (
+          <div className={style.recycleBinAction}>
+            <Button
+              size="large"
+              ghost
+              shape="circle"
+              icon={<RollbackOutlined />}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (props.onRestoreClick) {
+                  props.onRestoreClick(props.game.id)
+                }
+              }}
+            ></Button>
+            <Button
+              size="large"
+              ghost
+              danger
+              shape="circle"
+              icon={<DeleteOutlined />}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (props.onDelClick) {
+                  props.onDelClick(props.game.id)
+                }
+              }}
+            ></Button>
+          </div>
+        )}
         <div
           className={style.gameCover}
-          style={{ backgroundImage: `url(${props.game.cover})` }}
+          style={{
+            backgroundImage: `url(${props.game.cover}?x-oss-process=style/low)`
+          }}
         ></div>
       </div>
       <div className={style.content}>

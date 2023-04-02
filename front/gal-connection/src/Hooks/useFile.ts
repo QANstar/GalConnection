@@ -67,7 +67,7 @@ const useFile = (params: IUseFile) => {
           name
         })
         if (status === 200) {
-          getFiles()
+          getFilesByType()
         } else {
           setError(data.toString())
         }
@@ -91,7 +91,7 @@ const useFile = (params: IUseFile) => {
           link
         })
         if (status === 200) {
-          getFiles()
+          getFilesByType()
         } else {
           setError(data.toString())
         }
@@ -131,7 +131,7 @@ const useFile = (params: IUseFile) => {
         setError('')
         const { status, data } = await fileService.moveFolder(value)
         if (status === 200) {
-          getFiles()
+          getFilesByType()
         } else {
           setError(data.toString())
         }
@@ -149,7 +149,7 @@ const useFile = (params: IUseFile) => {
         setError('')
         const { status, data } = await fileService.delFile(fileId)
         if (status === 200) {
-          getFiles()
+          getFilesByType()
         } else {
           setError(data.toString())
         }
