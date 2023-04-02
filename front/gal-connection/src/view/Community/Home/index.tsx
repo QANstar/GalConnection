@@ -7,7 +7,7 @@ import MoreGames from './MoreGames'
 import style from './style.module.scss'
 
 function Home () {
-  const { games, getData, hasNext } = useHomeGames('recommend')
+  const { games, getData, hasNext, loading } = useHomeGames('recommend')
   const [moreGamesOpen, setMoreGamesOpen] = useState(true)
   return (
     <div className={style.home}>
@@ -26,6 +26,7 @@ function Home () {
           endMessage={<Divider plain>没有更多了 🤐</Divider>}
         >
           <GameShowList
+            loading={loading}
             onItemClick={(gameData) => {
               window.open(`/engine/${gameData.id}/info`)
             }}

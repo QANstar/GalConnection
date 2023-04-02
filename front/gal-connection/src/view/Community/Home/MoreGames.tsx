@@ -18,8 +18,13 @@ interface IMoreGamesProps {
 
 function MoreGames (props: IMoreGamesProps) {
   const [isHotData, setIsHotData] = useState(true)
-  const { games: followGames, getData, hasNext } = useHomeGames('follow')
-  const { games: hotGames } = useHomeGames('hot')
+  const {
+    games: followGames,
+    getData,
+    hasNext,
+    loading: followLoading
+  } = useHomeGames('follow')
+  const { games: hotGames, loading: hotLoading } = useHomeGames('hot')
   const { moreGamesOpen, onMoreClick } = props
 
   const items: TabsProps['items'] = [
@@ -73,6 +78,7 @@ function MoreGames (props: IMoreGamesProps) {
         {isHotData
           ? (
           <GameShowList
+            loading={hotLoading}
             showIndex
             onItemClick={(gameData) => {
               window.open(`/engine/${gameData.id}/info`)
@@ -90,6 +96,7 @@ function MoreGames (props: IMoreGamesProps) {
             endMessage={<Divider plain>没有更多了 🤐</Divider>}
           >
             <GameShowList
+              loading={followLoading}
               onItemClick={(gameData) => {
                 window.open(`/engine/${gameData.id}/info`)
               }}

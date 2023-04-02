@@ -11,12 +11,17 @@ interface IGameShowListProps {
   current: number
   limit: number
   onPageChange: (page: number) => void
+  loading?: boolean
 }
 
 function GamePaginationList (props: IGameShowListProps) {
   return (
     <div className={style.main}>
-      <GameShowList games={props.games} onItemClick={props.onItemClick} />
+      <GameShowList
+        loading={props.loading}
+        games={props.games}
+        onItemClick={props.onItemClick}
+      />
       <div className={style.page}>
         <Pagination
           onChange={(current) => {

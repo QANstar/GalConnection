@@ -26,6 +26,7 @@
   font-weight: bold;
   line-height: 21px;
   color: $theme;
+  margin-left: 20px;
   &:hover {
     transform: translateY(-2px);
   }
@@ -44,8 +45,9 @@
 
 .menu_btn {
   @extend .iconBtn;
-  margin: 0 20px;
+  margin-left: 20px;
   font-size: 21px;
+  display: none;
 }
 
 .actionIcon {

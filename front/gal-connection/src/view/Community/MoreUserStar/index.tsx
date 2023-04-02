@@ -11,9 +11,12 @@ import style from './style.module.scss'
 function MoreUserStar () {
   const navigate = useNavigate()
   const { userId } = useParams()
-  const { gameList, page, total, limit, setPage } = useGetGameList('star', {
-    userId: parseInt(userId || '0')
-  })
+  const { gameList, page, total, limit, loading, setPage } = useGetGameList(
+    'star',
+    {
+      userId: parseInt(userId || '0')
+    }
+  )
   const [userInfo, setUserInfo] = useState<IUser>()
   const { getUserInfo } = useUser()
 
@@ -59,6 +62,7 @@ function MoreUserStar () {
       {gameList.length > 0
         ? (
         <GamePaginationList
+          loading={loading}
           games={gameList}
           current={page}
           total={total}

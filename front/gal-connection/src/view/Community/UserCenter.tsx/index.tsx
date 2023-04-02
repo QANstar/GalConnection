@@ -39,11 +39,14 @@ function UserCenter () {
   const { chatCard } = stores
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const navigate = useNavigate()
-  const { gameList: publishList } = useGetGameList('publish', {
-    userId: parseInt(id || '0')
-  })
+  const { gameList: publishList, loading: publishLoading } = useGetGameList(
+    'publish',
+    {
+      userId: parseInt(id || '0')
+    }
+  )
 
-  const { gameList: starList } = useGetGameList('star', {
+  const { gameList: starList, loading: starLoading } = useGetGameList('star', {
     userId: parseInt(id || '0')
   })
 
@@ -249,6 +252,7 @@ function UserCenter () {
                 </Button>
               </div>
               <GameShowList
+                loading={publishLoading}
                 onItemClick={(gameData) => {
                   window.open(`/engine/${gameData.id}/info`)
                 }}
@@ -268,6 +272,7 @@ function UserCenter () {
                 </Button>
               </div>
               <GameShowList
+                loading={starLoading}
                 onItemClick={(gameData) => {
                   window.open(`/engine/${gameData.id}/info`)
                 }}
