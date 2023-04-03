@@ -370,6 +370,12 @@ export interface IGameState {
   choOptions: string
 }
 
+// 本地进度存档
+export interface ILocalCurrentSave {
+  gameId: number
+  state: IGameState
+}
+
 // 台词回顾
 export interface IBackLog {
   gameState: IGameState

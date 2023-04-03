@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   IBackLog,
   IEdge,
   IEvent,
   IGameState,
   ILines,
+  ILocalCurrentSave,
   IOptions,
   ISave,
   OssFileType
@@ -225,6 +226,22 @@ const useGame = (gameId: number, state?: IGameState) => {
     }, 100)
   }
 
+  // 继续游戏
+  const continueGameData = useMemo(() => {
+    const localName = 'localCurrentSaveData'
+    let currentSaveStr = window.localStorage.getItem(localName)
+    if (!currentSaveStr) {
+      window.localStorage.setItem(localName, '[]')
+      currentSaveStr = '[]'
+    }
+    const currentSaveList: ILocalCurrentSave[] = JSON.parse(currentSaveStr)
+    const thisCurrentSave = currentSaveList.find((x) => x.gameId === gameId)
+    if (!thisCurrentSave) {
+      return null
+    }
+    return thisCurrentSave
+  }, [gameId])
+
   useEffect(() => {
     getGamePlayData()
   }, [gameId])
@@ -239,6 +256,36 @@ const useGame = (gameId: number, state?: IGameState) => {
       }
     },
     [isAuto]
+  )
+
+  // 记录本地进度
+  const localCurrentSave = useCallback(
+    (linesNowId: number, choOptionsData: string) => {
+      const localName = 'localCurrentSaveData'
+      let currentSaveStr = window.localStorage.getItem(localName)
+      if (!currentSaveStr) {
+        window.localStorage.setItem(localName, '[]')
+        currentSaveStr = '[]'
+      }
+      const currentSaveList: ILocalCurrentSave[] = JSON.parse(currentSaveStr)
+      const thisCurrentSave = currentSaveList.find((x) => x.gameId === gameId)
+      if (!thisCurrentSave) {
+        currentSaveList.push({
+          gameId,
+          state: {
+            linesId: linesNowId,
+            choOptions: choOptionsData
+          }
+        })
+      } else {
+        thisCurrentSave.state = {
+          linesId: linesNowId,
+          choOptions: choOptionsData
+        }
+      }
+      window.localStorage.setItem(localName, JSON.stringify(currentSaveList))
+    },
+    [gameId]
   )
 
   useEffect(() => {
@@ -304,6 +351,12 @@ const useGame = (gameId: number, state?: IGameState) => {
   })
 
   useEffect(() => {
+    if (linesNow && linesNow.id) {
+      localCurrentSave(linesNow.id, choOptions.join(','))
+    }
+  }, [linesNow, choOptions])
+
+  useEffect(() => {
     setCurrentLinesText('')
     let currentIndex = 0
     let intervalId: any = null
@@ -334,6 +387,7 @@ const useGame = (gameId: number, state?: IGameState) => {
     saves,
     backLog,
     currentLinesText,
+    continueGameData,
     nextLines,
     selectOptions,
     saveGame,

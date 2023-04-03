@@ -6,6 +6,7 @@ export interface INav {
   text: string
   subtext: string
   key: string
+  disable?: boolean
 }
 
 interface LeftNavProps {
@@ -17,7 +18,11 @@ function LeftNav (props: LeftNavProps) {
     <div className={style.leftNav}>
       <ul>
         {props.items.map((item) => (
-          <li onClick={item.onClick} key={item.key}>
+          <li
+            className={item.disable ? style.navitemDisable : style.navitem}
+            onClick={item.onClick}
+            key={item.key}
+          >
             <div>{item.text}</div>
             <div className={style.subtitle}>{item.subtext}</div>
           </li>

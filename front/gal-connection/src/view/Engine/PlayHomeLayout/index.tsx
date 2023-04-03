@@ -9,14 +9,22 @@ import useGame from '../../../Hooks/useGame'
 function PlayHomeLayout () {
   const { gameId } = useParams()
   const navigate = useNavigate()
-  const { saves, delSave } = useGame(parseInt(gameId || '0'))
+  const { saves, continueGameData, delSave } = useGame(parseInt(gameId || '0'))
   const { gameInfo } = useGameInfo(parseInt(gameId || '0'))
   const [saveAndLoadOpen, setSaveAndLoadOpen] = useState(false)
   const navItems: INav[] = [
     {
       text: '继续',
       subtext: 'Continue',
-      key: 'Continue'
+      key: 'Continue',
+      disable: continueGameData === null,
+      onClick: () => {
+        if (continueGameData) {
+          navigate(`/engine/${gameId}/play`, {
+            state: continueGameData.state
+          })
+        }
+      }
     },
     {
       onClick: () => {
