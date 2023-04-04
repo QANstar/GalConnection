@@ -37,7 +37,8 @@ function App () {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route path="" element={<Home />} />
+        <Route path="" element={<Navigate to={'tag/all'} />} />
+        <Route path="tag/:tag" element={<Home />} />
         <Route path="/search/:content" element={<SearchPage />}>
           <Route path="" element={<Navigate to={'games'} />} />
           <Route path="games" element={<SearchGamePage />} />

@@ -306,13 +306,13 @@ namespace GalConnection.Server.Services
             return addEventResponseModel;
         }
         /// <summary>
-        /// 获取游戏推荐
+        /// 获取游戏推荐，根据标签
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public string GetRecommenderGameList(int lastId, int limit = 10)
+        public string GetRecommenderGameList(string tag, int lastId, int limit = 10)
         {
-            List<Game> games = Context.Game.Include(x => x.user).Where(x => x.id > lastId && x.state == GameState.PUBLISH).Take(10).ToList();
+            List<Game> games = Context.Game.Include(x => x.Tag).Include(x => x.user).Where(x => x.id > lastId && x.state == GameState.PUBLISH && (tag == "all" || x.Tag.FirstOrDefault(y => y.tag1 == tag) != null)).Take(10).ToList();
             var res = new
             {
                 games,
@@ -1565,6 +1565,20 @@ namespace GalConnection.Server.Services
                 total = Context.Comment.Include(x => x.user).Where(x => x.gameId == gameid).Count()
             };
             return JsonUtils.ToJson(res);
+        }
+        /// <summary>
+        /// 获取top10标签
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetTopTags()
+        {
+            string[] tags = Context.Tag.GroupBy(x => x.tag1, (x, y) => new
+            {
+                num = y.Count(),
+                tag = x
+            }).OrderByDescending(x => x.num).Select(x => x.tag).Take(10).ToArray();
+
+            return tags;
         }
     }
 }

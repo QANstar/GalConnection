@@ -186,11 +186,12 @@ export const restoreGame = (params: { gameId: number }) =>
 
 // 获取游戏推荐
 export const getRecommenderGameList = (params: {
+  tag: string
   lastId: number
   limit: number
 }) =>
   request.get<IKeyPageGameList>(
-    `/api/Game/GetRecommenderGameList?lastId=${params.lastId}&limit=${params.limit}`
+    `/api/Game/GetRecommenderGameList?tag=${params.tag}&lastId=${params.lastId}&limit=${params.limit}`
   )
 
 // 获取关注的人的游戏
@@ -244,3 +245,6 @@ export const addComment = (params: {
   gameId: number
   commentContent: string
 }) => request.post<IComment>('/api/Game/AddComment', params)
+
+// 获取top10标签
+export const getTopTags = () => request.get<string[]>('/api/Game/GetTopTags')

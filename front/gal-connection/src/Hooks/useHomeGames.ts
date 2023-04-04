@@ -5,7 +5,7 @@ import { IGame } from '../types/type'
 type dataType = 'recommend' | 'follow' | 'hot'
 const limit = 10
 
-const useHomeGames = (type: dataType) => {
+const useHomeGames = (type: dataType, tag?: string) => {
   const [games, setGames] = useState<IGame[]>([])
   const [hasNext, setHasNext] = useState(false)
   const [next, setNext] = useState(0)
@@ -13,27 +13,35 @@ const useHomeGames = (type: dataType) => {
   const [error, setError] = useState('')
 
   // 获取游戏推荐
-  const getRecommenderGameList = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const { data, status } = await gameService.getRecommenderGameList({
-        lastId: next,
-        limit
-      })
-      if (status === 200) {
-        if (data.games.length > 0) {
-          setNext(data.games[data.games.length - 1].id)
-          setGames(games.concat(data.games))
+  const getRecommenderGameList = useCallback(
+    async (isInit?: boolean) => {
+      try {
+        setLoading(true)
+        setError('')
+        const { data, status } = await gameService.getRecommenderGameList({
+          tag: tag || 'all',
+          lastId: isInit ? 0 : next,
+          limit
+        })
+        if (status === 200) {
+          if (data.games.length > 0) {
+            setNext(data.games[data.games.length - 1].id)
+            if (isInit) {
+              setGames(data.games)
+            } else {
+              setGames(games.concat(data.games))
+            }
+          }
+          setHasNext(data.hasNext)
         }
-        setHasNext(data.hasNext)
+      } catch (e: any) {
+        setError(e)
+      } finally {
+        setLoading(false)
       }
-    } catch (e: any) {
-      setError(e)
-    } finally {
-      setLoading(false)
-    }
-  }, [games, limit, next])
+    },
+    [games, limit, next, tag]
+  )
 
   // 获取游戏推荐
   const getFollowGameList = useCallback(async () => {
@@ -74,9 +82,9 @@ const useHomeGames = (type: dataType) => {
     }
   }, [])
 
-  const getData = () => {
+  const getData = (isInit?: boolean) => {
     if (type === 'recommend') {
-      getRecommenderGameList()
+      getRecommenderGameList(isInit)
     } else if (type === 'follow') {
       getFollowGameList()
     } else if (type === 'hot') {
@@ -85,8 +93,11 @@ const useHomeGames = (type: dataType) => {
   }
 
   useEffect(() => {
-    getData()
-  }, [type])
+    setHasNext(false)
+    setNext(0)
+    setGames([])
+    getData(true)
+  }, [type, tag])
 
   return {
     games,

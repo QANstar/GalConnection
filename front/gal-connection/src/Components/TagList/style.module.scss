@@ -1,0 +1,31 @@
+.tagList {
+  display: flex;
+  margin: 0 12px;
+  margin-top: 20px;
+}
+
+.tagItem {
+  transition: 0.2s ease;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #6e6d7a;
+  padding: 10px 20px;
+  &:hover {
+    background: rgba(13, 12, 34, 0.05);
+    color: #0d0c22;
+  }
+}
+
+.tagItemActive {
+  @extend .tagItem;
+  background: rgba(13, 12, 34, 0.05);
+  color: #0d0c22;
+}
+
+.tagItems {
+  flex: 1;
+  display: flex;
+}

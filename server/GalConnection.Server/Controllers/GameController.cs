@@ -158,11 +158,11 @@ namespace GalConnection.Server.Controllers
         [EnableCors("any")]
         [HttpGet]
         [Authorize]
-        public IActionResult GetRecommenderGameList(int lastId, int limit = 10)
+        public IActionResult GetRecommenderGameList(string tag, int lastId, int limit = 10)
         {
             try
             {
-                return Ok(gameServices.GetRecommenderGameList(lastId, limit));
+                return Ok(gameServices.GetRecommenderGameList(tag, lastId, limit));
             }
             catch (Exception ex)
             {
@@ -970,6 +970,25 @@ namespace GalConnection.Server.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 获取top10标签
+        /// </summary>
+        /// <returns></returns>
+        [EnableCors("any")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetTopTags()
+        {
+            try
+            {
+                return Ok(gameServices.GetTopTags());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
             }
         }
     }

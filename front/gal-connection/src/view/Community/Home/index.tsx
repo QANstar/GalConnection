@@ -5,9 +5,15 @@ import GameShowList from '../../../Components/GameShowList'
 import useHomeGames from '../../../Hooks/useHomeGames'
 import MoreGames from './MoreGames'
 import style from './style.module.scss'
+import TagList from '../../../Components/TagList'
+import useTags from '../../../Hooks/useTags'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function Home () {
-  const { games, getData, hasNext, loading } = useHomeGames('recommend')
+  const { tag } = useParams()
+  const navigate = useNavigate()
+  const { games, getData, hasNext, loading } = useHomeGames('recommend', tag)
+  const { tags } = useTags()
   const [moreGamesOpen, setMoreGamesOpen] = useState(true)
   return (
     <div className={style.home}>
@@ -17,6 +23,13 @@ function Home () {
           moreGamesOpen ? style.recommender : style.recommenderMoreUnOpen
         }
       >
+        <TagList
+          onItemClick={(itemTag) => {
+            navigate(`/tag/${itemTag}`)
+          }}
+          activeTag={tag || 'all'}
+          tags={tags}
+        />
         <InfiniteScroll
           scrollableTarget="scrollableDiv"
           dataLength={games.length}
