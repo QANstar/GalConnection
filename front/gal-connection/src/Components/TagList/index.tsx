@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import TagItem from './item'
 import style from './style.module.scss'
 import { Button } from 'antd'
@@ -10,12 +10,29 @@ interface ITagListProps {
   onItemClick: (tag: string) => void
 }
 
+const onceScrollWidth = 200
+
 const TagList = (props: ITagListProps) => {
   const { tags, activeTag, onItemClick } = props
+  const listScrollRef = useRef<HTMLDivElement>(null)
+  const [scrollNum, setScrollNum] = useState(0)
   return (
     <div className={style.tagList}>
-      <Button type="link" icon={<LeftOutlined />}></Button>
-      <div className={style.tagItems}>
+      <Button
+        onClick={() => {
+          if (listScrollRef.current) {
+            const num = scrollNum === 0 ? 0 : scrollNum - 1
+            listScrollRef.current.scrollTo({
+              left: onceScrollWidth * num,
+              behavior: 'smooth'
+            })
+            setScrollNum(num)
+          }
+        }}
+        type="link"
+        icon={<LeftOutlined />}
+      ></Button>
+      <div ref={listScrollRef} className={style.tagItems}>
         <TagItem
           onItemClick={() => onItemClick('all')}
           isActive={activeTag === 'all'}
@@ -32,7 +49,25 @@ const TagList = (props: ITagListProps) => {
         ))}
       </div>
 
-      <Button type="link" icon={<RightOutlined />}></Button>
+      <Button
+        onClick={() => {
+          if (listScrollRef.current) {
+            const width = listScrollRef.current.scrollWidth
+            const clientWidth = listScrollRef.current.clientWidth
+            const num =
+              scrollNum * onceScrollWidth + clientWidth >= width
+                ? scrollNum
+                : scrollNum + 1
+            listScrollRef.current.scrollTo({
+              left: onceScrollWidth * num,
+              behavior: 'smooth'
+            })
+            setScrollNum(num)
+          }
+        }}
+        type="link"
+        icon={<RightOutlined />}
+      ></Button>
     </div>
   )
 }

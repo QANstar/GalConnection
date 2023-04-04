@@ -13,6 +13,7 @@
   font-weight: bold;
   color: #6e6d7a;
   padding: 10px 20px;
+  white-space: nowrap;
   &:hover {
     background: rgba(13, 12, 34, 0.05);
     color: #0d0c22;
@@ -28,4 +29,5 @@
 .tagItems {
   flex: 1;
   display: flex;
+  overflow: hidden;
 }
