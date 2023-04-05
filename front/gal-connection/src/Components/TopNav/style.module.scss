@@ -164,3 +164,15 @@
 .menuIcon {
   margin-right: 15px;
 }
+
+@media screen and (max-width: 700px) {
+  .title {
+    display: none;
+  }
+  .actionIcon {
+    margin-right: 5px;
+  }
+  .left {
+    margin-right: 10px;
+  }
+}

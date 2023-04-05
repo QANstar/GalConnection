@@ -176,6 +176,8 @@ namespace GalConnection.Server.Services
                 events = events,
                 saves = saves
             };
+            game.playNum++;
+            Context.SaveChanges();
             return gamePlayModel;
         }
         /// <summary>
