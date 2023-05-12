@@ -1,21 +1,23 @@
 ﻿using GalConnection.Entity;
 using GalConnection.Model;
+using System.Text;
 
 namespace GalConnection.Server.Utils
 {
     public class ChangeModel
     {
-        public static User signUpToUser(SignUpModel x)
+        public static User signUpToUser(SignUpModel x, byte[] salt)
         {
             return new User()
             {
                 email = x.email,
-                password = x.password,
+                password = HashPasswordUtils.HashPassword(x.password, salt),
                 nickname = x.nickname,
                 avatar = "",
                 banner = "",
                 introduce = "",
-                createdAt = TimeUtils.GetNowTime()
+                createdAt = TimeUtils.GetNowTime(),
+                salt = salt
             };
         }
 

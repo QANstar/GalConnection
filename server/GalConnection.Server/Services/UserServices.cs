@@ -10,6 +10,8 @@ using GalConnection.Server.Utils;
 using Microsoft.EntityFrameworkCore;
 using GalConnection.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Cryptography;
+using System.Collections;
 
 namespace GalConnection.Server.Services
 {
@@ -41,7 +43,12 @@ namespace GalConnection.Server.Services
             {
                 throw new Exception("用户名已被注册");
             }
-            Entity.User user = Utils.ChangeModel.signUpToUser(userInfo);
+            byte[] salt = new byte[32];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            Entity.User user = Utils.ChangeModel.signUpToUser(userInfo, salt);
             Group group = new()
             {
                 createTime = TimeUtils.GetNowTime(),
@@ -71,32 +78,37 @@ namespace GalConnection.Server.Services
         /// <exception cref="Exception"></exception>
         public string Login(LoginModel user)
         {
-            Entity.User result = Context.User.FirstOrDefault(x => x.email == user.email && x.password == user.password);
-            if (result != null)
+            Entity.User result = Context.User.FirstOrDefault(x => x.email == user.email);
+            if (result == null)
             {
-                var claims = new[]
+                throw new Exception("账号或密码错误");
+            }
+            if (result.salt != null)
+            {
+                byte[] password = HashPasswordUtils.HashPassword(user.password, result.salt);
+                if (!password.SequenceEqual(result.password))
                 {
+                    throw new Exception("账号或密码错误");
+                }
+            }
+            var claims = new[]
+            {
                     new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
                     new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddMinutes(60*24*7)).ToUnixTimeSeconds()}"),
                     new Claim(ClaimTypes.Sid, result.id.ToString()),
                     new Claim(ClaimTypes.NameIdentifier, result.id.ToString()),
                 };
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    issuer: JwtConfig.issuer,
-                    audience: JwtConfig.audience,
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(60 * 24 * 7),
-                    signingCredentials: creds);
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfig.securityKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                issuer: JwtConfig.issuer,
+                audience: JwtConfig.audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60 * 24 * 7),
+                signingCredentials: creds);
 
-                var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-                return jwtToken;
-            }
-            else
-            {
-                throw new Exception("账号或密码错误");
-            }
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwtToken;
         }
         /// <summary>
         /// 显示本人用户信息

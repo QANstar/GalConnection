@@ -28,8 +28,8 @@ namespace GalConnection.Entity
         [StringLength(50)]
         public string email { get; set; }
         [Required]
-        [StringLength(50)]
-        public string password { get; set; }
+        [MaxLength(50)]
+        public byte[] password { get; set; }
         [Required]
         [StringLength(50)]
         public string nickname { get; set; }
@@ -43,6 +43,8 @@ namespace GalConnection.Entity
         [StringLength(1000)]
         public string banner { get; set; }
         public long createdAt { get; set; }
+        [MaxLength(50)]
+        public byte[] salt { get; set; }
 
         [InverseProperty("user")]
         public virtual ICollection<ChatContent> ChatContent { get; set; }
