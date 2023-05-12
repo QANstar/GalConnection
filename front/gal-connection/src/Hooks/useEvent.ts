@@ -17,6 +17,21 @@ const useEvent = (gameId: number) => {
   const [error, setError] = useState('')
 
   // 通过游戏id获取事件列表
+  const setEvent = useCallback(
+    async (event: IEditEvent) => {
+      const findEvent = evnets.find((x) => x.id === event.id)
+      if (findEvent) {
+        findEvent.endType = event.endType
+        findEvent.enterCondition = event.enterCondition.join(',')
+        findEvent.eventName = event.eventName
+        findEvent.video = event.video
+        setEvents([...evnets])
+      }
+    },
+    [evnets]
+  )
+
+  // 通过游戏id获取事件列表
   const getEventList = useCallback(async () => {
     try {
       setLoading(true)
@@ -172,7 +187,8 @@ const useEvent = (gameId: number) => {
     addEdge,
     eventCho,
     delEvnet,
-    editEvent
+    editEvent,
+    setEvent
   }
 }
 

@@ -1,12 +1,14 @@
-import { DeleteOutlined, SaveOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Popconfirm, Select } from 'antd'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OptionsEditList from '../../../../Components/OptionsEditList'
 import useOption from '../../../../Hooks/useOption'
 import { EventEndType } from '../../../../types/enums'
 import { IEditEvent, IEvent } from '../../../../types/type'
 import style from './style.module.scss'
+import CloudeFileSelect from '../../../../Components/CloudeFileSelect'
+import ImgSelectShow from '../../../../Components/ImgSelectShow'
 
 interface IEventSettingProps {
   event?: IEvent
@@ -14,6 +16,7 @@ interface IEventSettingProps {
   gameId: number
   onDelClick: (eventId: number) => void
   onSaveClick: (event: IEditEvent) => void
+  onChange: (event: IEditEvent) => void
 }
 
 const endTypeOptions = [
@@ -33,6 +36,9 @@ function EventSetting (props: IEventSettingProps) {
   } = useOption(props.gameId, props.event?.id)
   const [form] = Form.useForm()
   const navigate = useNavigate()
+  const [videoUrl, setVideoUrl] = useState<string>(
+    props.event ? props.event.video || '' : ''
+  )
 
   const groupOptions = useMemo(() => {
     const list = props.events.map((x) => {
@@ -80,7 +86,8 @@ function EventSetting (props: IEventSettingProps) {
                 id: props.event?.id,
                 eventName: form.getFieldValue('eventName'),
                 endType: form.getFieldValue('endType'),
-                enterCondition: form.getFieldValue('enterCondition')
+                enterCondition: form.getFieldValue('enterCondition'),
+                video: videoUrl
               }
               props.onSaveClick(editEventData)
             }
@@ -105,7 +112,23 @@ function EventSetting (props: IEventSettingProps) {
       </header>
       <main className={style.formMain}>
         {props.event && (
-          <Form form={form} layout="vertical">
+          <Form
+            onValuesChange={() => {
+              if (props.event) {
+                const editEventData: IEditEvent = {
+                  id: props.event?.id,
+                  eventName: form.getFieldValue('eventName'),
+                  endType: form.getFieldValue('endType'),
+                  enterCondition: form.getFieldValue('enterCondition'),
+                  video: videoUrl
+                }
+
+                props.onChange(editEventData)
+              }
+            }}
+            form={form}
+            layout="vertical"
+          >
             <Form.Item name="eventName" label="事件名称">
               <Input placeholder="事件名称" />
             </Form.Item>
@@ -130,6 +153,59 @@ function EventSetting (props: IEventSettingProps) {
             <Form.Item name="enterCondition" label="进入条件">
               <Select mode="multiple" allowClear options={groupOptions} />
             </Form.Item>
+
+            {props.event.endType === EventEndType.VIDEO && (
+              <Form.Item label="视频">
+                {props.event.video && props.event.video !== ''
+                  ? (
+                  <ImgSelectShow
+                    onDelClick={() => {
+                      if (props.event) {
+                        const editEventData: IEditEvent = {
+                          id: props.event?.id,
+                          eventName: form.getFieldValue('eventName'),
+                          endType: form.getFieldValue('endType'),
+                          enterCondition: form.getFieldValue('enterCondition'),
+                          video: ''
+                        }
+                        props.onChange(editEventData)
+                      }
+                      setVideoUrl('')
+                    }}
+                    url={`${props.event.video}?x-oss-process=video/snapshot,t_1000,m_fast`}
+                  />
+                    )
+                  : (
+                  <CloudeFileSelect
+                    onFileSure={(url: string) => {
+                      if (url !== '') {
+                        setVideoUrl(url)
+                        if (props.event) {
+                          const editEventData: IEditEvent = {
+                            id: props.event?.id,
+                            eventName: form.getFieldValue('eventName'),
+                            endType: form.getFieldValue('endType'),
+                            enterCondition:
+                              form.getFieldValue('enterCondition'),
+                            video: url
+                          }
+                          props.onChange(editEventData)
+                        }
+                      }
+                    }}
+                    type="video"
+                  >
+                    <Button
+                      size="large"
+                      icon={<PlusOutlined />}
+                      className={style.choImgBtn}
+                      type="dashed"
+                    ></Button>
+                  </CloudeFileSelect>
+                    )}
+              </Form.Item>
+            )}
+
             <Button
               style={{ marginTop: 20 }}
               type="primary"

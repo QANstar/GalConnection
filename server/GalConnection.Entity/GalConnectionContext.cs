@@ -139,7 +139,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.game)
                     .WithMany(p => p.Like)
                     .HasForeignKey(d => d.gameId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Like_Game");
             });
 
@@ -201,7 +200,6 @@ namespace GalConnection.Entity
                 entity.HasOne(d => d.game)
                     .WithMany(p => p.Star)
                     .HasForeignKey(d => d.gameId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Star_Game");
             });
 

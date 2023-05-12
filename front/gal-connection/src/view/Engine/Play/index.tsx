@@ -27,13 +27,16 @@ function Play () {
     saves,
     backLog,
     currentLinesText,
+    currentVideo,
     selectOptions,
     nextLines,
     saveGame,
     loadGame,
     autoMode,
     skipMode,
-    delSave
+    delSave,
+    onVideoEnd,
+    videoVisable
   } = useGame(parseInt(gameId || '0'), gameState)
   useEffect(() => {}, [])
 
@@ -41,6 +44,8 @@ function Play () {
     <div className={style.gameView}>
       {linesNow && (
         <Game
+          video={currentVideo}
+          isVideoVisable={videoVisable}
           currentLinesText={currentLinesText}
           jumpClick={loadGame}
           backLogData={backLog}
@@ -53,6 +58,7 @@ function Play () {
           options={optionsNow}
           isOptionVisable={optionsVisable}
           choOption={selectOptions}
+          onVideoEnd={onVideoEnd}
           lines={linesNow}
           nextLinesClick={() => {
             skipMode(false)

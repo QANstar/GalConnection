@@ -13,5 +13,6 @@ namespace GalConnection.Model
         public string eventName { get; set; }
         public int endType { get; set; }
         public int[] enterCondition { get; set; }
+        public string? video { get; set; }
     }
 }

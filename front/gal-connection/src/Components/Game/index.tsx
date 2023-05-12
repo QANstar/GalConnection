@@ -10,12 +10,15 @@ import OptionList from './OptionList'
 import PlayLines from './PlayLines'
 import SaveAndLoad from './SaveAndLoad'
 import style from './style.module.scss'
+import GameVideo from './GameVideo'
 
 interface IGameProps {
   lines: ILines
   isDevMode?: boolean
   nextLinesClick?: () => void
   options?: IOptions[]
+  video?: string
+  isVideoVisable?: boolean
   isOptionVisable?: boolean
   choOption?: (data: number) => void
   saveList?: ISave[]
@@ -26,6 +29,7 @@ interface IGameProps {
   autoClick?: () => void
   skipClick?: () => void
   jumpClick?: (gameState: IGameState) => void
+  onVideoEnd?: () => void
   currentLinesText?: string
 }
 
@@ -104,6 +108,14 @@ function Game (props: IGameProps) {
         }}
         className={style.main}
       >
+        {props.video && props.isVideoVisable && (
+          <GameVideo
+            onVideoEnd={props.onVideoEnd}
+            width={width}
+            height={height}
+            url={props.video}
+          />
+        )}
         {props.options && props.isOptionVisable && (
           <OptionList
             choOption={(choId) => {

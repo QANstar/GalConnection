@@ -283,6 +283,7 @@ namespace GalConnection.Server.Services
                 EventTreeViewData = new() { position = addEvent.eventTreeViewData.position },
                 state = EventState.EXIST,
                 groupId = game.groupId,
+                video = addEvent.video
             };
             Context.Event.Add(newEvent);
             Context.SaveChanges();
@@ -600,6 +601,10 @@ namespace GalConnection.Server.Services
             @event.eventName = eventEditData.eventName;
             @event.endType = eventEditData.endType;
             @event.enterCondition = string.Join(',', eventEditData.enterCondition);
+            if (eventEditData.video != null)
+            {
+                @event.video = eventEditData.video;
+            }
             Context.SaveChanges();
             return @event;
         }

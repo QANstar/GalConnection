@@ -215,6 +215,7 @@ export interface IEvent {
   enterCondition: string
   isStartEvent: boolean
   EventTreeViewData: IEventTreeViewData
+  video?: string
 }
 
 // 后端获取事件图
@@ -231,6 +232,7 @@ export interface IAddEvent {
   edge?: {
     source: number
   }
+  video?: string
 }
 
 // 改变事件树节点在视图的位置
@@ -251,6 +253,7 @@ export interface IEditEvent {
   eventName: string
   endType: EventEndType
   enterCondition: number[]
+  video?: string
 }
 
 // 台词内容

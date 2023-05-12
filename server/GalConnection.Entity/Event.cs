@@ -22,6 +22,8 @@ namespace GalConnection.Entity
         public bool isStartEvent { get; set; }
         public int state { get; set; }
         public int? groupId { get; set; }
+        [StringLength(500)]
+        public string video { get; set; }
 
         [InverseProperty("_event")]
         public virtual EventTreeViewData EventTreeViewData { get; set; }

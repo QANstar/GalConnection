@@ -18,7 +18,8 @@ function EventPage () {
     addEvent,
     editEventPosition,
     delEvnet,
-    editEvent
+    editEvent,
+    setEvent
   } = useEvent(parseInt(gameId || '0'))
 
   useEffect(() => {
@@ -53,6 +54,7 @@ function EventPage () {
       </div>
       <div className={style.setting}>
         <EventSetting
+          onChange={setEvent}
           events={evnets}
           gameId={parseInt(gameId || '0')}
           onSaveClick={editEvent}

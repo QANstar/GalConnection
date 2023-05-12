@@ -17,6 +17,7 @@ namespace GalConnection.Model
         }
         public int gameId { get; set; }
         public string eventName { get; set; }
+        public string? video { get; set; }
         public EventTreeViewDataAddModel eventTreeViewData { get; set; }
         public bool? isStartEvent { get; set; }
         public EdgeAddModel? edge { get; set; }

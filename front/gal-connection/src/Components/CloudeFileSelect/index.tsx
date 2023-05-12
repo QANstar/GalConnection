@@ -28,7 +28,7 @@ const CloudeFileSelect = (props: ICloudeFileSelectProps) => {
       setGroupId(data.groupId)
       setPid(data.id)
       setChoFile('')
-    } else if (data.type === FileType.PICTURE && url) {
+    } else if (url) {
       setChoFile(url)
     }
   }

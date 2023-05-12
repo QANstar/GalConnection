@@ -32,9 +32,11 @@ const useGame = (gameId: number, state?: IGameState) => {
   const [currentLinesText, setCurrentLinesText] = useState<string>('')
   const [backLog, setBackLog] = useState<IBackLog[]>([])
   const [options, setOptions] = useState<IOptions[]>([])
+  const [currentVideo, setCurrentVideo] = useState<string>('')
   const [choOptions, setChoOptions] = useState<string[]>([])
   const [optionsNow, setOptionsNow] = useState<IOptions[]>([])
   const [optionsVisable, setOptionsVisable] = useState<boolean>(false)
+  const [videoVisable, setVideoVisable] = useState<boolean>(false)
 
   const [isAuto, setIsAuto] = useState(false)
   const [isSkip, setIsSkip] = useState(false)
@@ -158,26 +160,33 @@ const useGame = (gameId: number, state?: IGameState) => {
   const nextLines = useCallback(async () => {
     if (linesNow) {
       if (linesNow.next === 0) {
-        checkEndType()
+        checkEndType(evnetNow)
       } else {
         const nextLines = lines.find((x) => x.id === linesNow.next)
         setLinesNow(nextLines)
       }
     } else {
-      checkEndType()
+      checkEndType(evnetNow)
     }
   }, [gameId, events, lines, edges, linesNow, evnetNow])
 
   // 检查结束类型
-  const checkEndType = () => {
-    if (evnetNow) {
-      if (evnetNow.endType === EventEndType.NEXT) {
+  const checkEndType = (currentEvent?: IEvent) => {
+    if (currentEvent) {
+      if (currentEvent.endType === EventEndType.NEXT) {
         changeEvent()
-      } else if (evnetNow.endType === EventEndType.OPTION) {
+      } else if (currentEvent.endType === EventEndType.OPTION) {
         setIsAuto(false)
         setIsSkip(false)
         setOptionsVisable(true)
-        setOptionsNow(options.filter((x) => x.eventId === evnetNow.id))
+        setOptionsNow(options.filter((x) => x.eventId === currentEvent.id))
+      } else if (currentEvent.endType === EventEndType.VIDEO) {
+        if (currentEvent.video) {
+          setCurrentVideo(currentEvent.video)
+        }
+        setVideoVisable(true)
+        setIsAuto(false)
+        setIsSkip(false)
       } else {
         setIsAuto(false)
         setIsSkip(false)
@@ -213,7 +222,12 @@ const useGame = (gameId: number, state?: IGameState) => {
     const nextLines = lines.find(
       (item) => item.pre === 0 && item.eventId === nextEvent!.id
     )
-    setLinesNow(nextLines)
+
+    if (!nextLines) {
+      checkEndType(nextEvent)
+    } else {
+      setLinesNow(nextLines)
+    }
   }
 
   // 选择选项
@@ -221,6 +235,15 @@ const useGame = (gameId: number, state?: IGameState) => {
     choOptions.push(optionsId.toString())
     setChoOptions([...choOptions])
     setOptionsVisable(false)
+    setTimeout(() => {
+      changeEvent()
+    }, 100)
+  }
+
+  // 视频播放结束
+  const onVideoEnd = () => {
+    setCurrentVideo('')
+    setVideoVisable(false)
     setTimeout(() => {
       changeEvent()
     }, 100)
@@ -388,13 +411,16 @@ const useGame = (gameId: number, state?: IGameState) => {
     backLog,
     currentLinesText,
     continueGameData,
+    currentVideo,
+    videoVisable,
     nextLines,
     selectOptions,
     saveGame,
     loadGame,
     autoMode,
     skipMode,
-    delSave
+    delSave,
+    onVideoEnd
   }
 }
 
